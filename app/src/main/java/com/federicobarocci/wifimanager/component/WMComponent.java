@@ -2,6 +2,7 @@ package com.federicobarocci.wifimanager.component;
 
 import com.federicobarocci.wifimanager.DetailActivity;
 import com.federicobarocci.wifimanager.MainActivity;
+import com.federicobarocci.wifimanager.MapActivity;
 import com.federicobarocci.wifimanager.WMApplication;
 import com.federicobarocci.wifimanager.adapter.ScanResultAdapter;
 import com.federicobarocci.wifimanager.model.DaggerModule;
@@ -25,4 +26,5 @@ public interface WMComponent {
     void inject(WMApplication application);
     void inject(MainActivity mainActivity);
     void inject(DetailActivity detailActivity);
+    void inject(MapActivity mapActivity);
 }
