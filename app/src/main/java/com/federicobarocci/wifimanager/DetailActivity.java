@@ -16,32 +16,24 @@
 
 package com.federicobarocci.wifimanager;
 
-import android.content.Intent;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
+import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
-import android.view.View;
-import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.google.android.gms.common.GooglePlayServicesNotAvailableException;
-import com.google.android.gms.maps.CameraUpdate;
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.MapsInitializer;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
-import butterknife.OnClick;
 
 public class DetailActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -54,10 +46,6 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
     @Bind(R.id.toolbar)
     Toolbar toolbar;
 
-    //@Bind(R.id.backdrop)
-    //MapView mapView;
-    //ImageView imageView;
-
     @Bind(R.id.card1)
     TextView card1;
 
@@ -67,6 +55,7 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
     @Bind(R.id.card3)
     TextView card3;
 
+    @Bind(R.id.backdrop)
     MapView mapView;
 
     @Override
@@ -74,13 +63,8 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_detail);
 
-        mapView = (MapView) this.findViewById(R.id.backdrop);
-        mapView.onCreate(savedInstanceState);
-        mapView.getMapAsync(this);
-        //mapView.onCreate(savedInstanceState);
-
         initializeInjectors();
-        initializeViewComponents();
+        initializeViewComponents(savedInstanceState);
     }
 
     private void initializeInjectors() {
@@ -88,12 +72,17 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
         ((WMApplication) getApplication()).getComponent().inject(this);
     }
 
-    private void initializeViewComponents() {
+    private void initializeViewComponents(Bundle savedInstanceState) {
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        mapView.onCreate(savedInstanceState);
+        mapView.getMapAsync(this);
+
         final ScanResult scanResult = getIntent().getParcelableExtra(EXTRA_NAME);
         collapsingToolbar.setTitle(scanResult.SSID);
+        //collapsingToolbar.setExpandedTitleColor(R.color.trasparent);
+        //collapsingToolbar.setExpandedTitleColor(ContextCompat.getColor(getBaseContext(), android.R.color.transparent));
         card1.setText(String.format("%s %s %d", scanResult.BSSID, scanResult.capabilities, scanResult.frequency));
         card2.setText(String.format("RSSI: %d dBm", scanResult.level));
         card3.setText(String.format("Signal level: %d", WifiManager.calculateSignalLevel(scanResult.level, RSSI_LEVEL)));
@@ -118,10 +107,10 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
         return true;
     }
 
-    @OnClick(R.id.fab_showmap)
+    /*@OnClick(R.id.fab_showmap)
     public void fabClick(View view) {
         startActivity(new Intent(this, MapActivity.class));
-    }
+    }*/
 
     @Override
     public void onResume() {
