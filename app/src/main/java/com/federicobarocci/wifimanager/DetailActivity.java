@@ -19,18 +19,19 @@ package com.federicobarocci.wifimanager;
 import android.net.wifi.ScanResult;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
+import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Pair;
 import android.view.Menu;
-import android.view.View;
-import android.widget.Toast;
 
 import com.federicobarocci.wifimanager.adapter.DetailResultAdapter;
 import com.federicobarocci.wifimanager.component.DaggerWMDetailComponent;
-import com.federicobarocci.wifimanager.component.WMDetailComponent;
-import com.federicobarocci.wifimanager.model.DetailDataContainer;
 import com.federicobarocci.wifimanager.model.DetailModule;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import javax.inject.Inject;
 
@@ -52,23 +53,6 @@ public class DetailActivity extends AppCompatActivity {
 
     @Inject
     DetailResultAdapter detailResultAdapter;
-/*
-    @Inject
-    DetailDataContainer detailDataContainer;
-
-    private ScanResult scanResult;
-
-    private WMDetailComponent component;
-
-    public ScanResult getScanResult() {
-        return scanResult;
-    }
-
-    public WMDetailComponent getComponent() {
-        return component;
-    }
-*/
-    private WMDetailComponent component;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -81,32 +65,30 @@ public class DetailActivity extends AppCompatActivity {
 
     private void initializeInjectors() {
         ButterKnife.bind(this);
-
-        component = DaggerWMDetailComponent.builder()
+        DaggerWMDetailComponent.builder()
                 .detailModule(new DetailModule(this))
-                .build();
-        component.inject(this);
+                .build().inject(this);
     }
 
     private void initializeViewComponents() {
         ScanResult scanResult = getIntent().getParcelableExtra(EXTRA_NAME);
-        //detailDataContainer.setScanResult(scanResult);
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(scanResult.SSID);
 
-        detailResultAdapter.setScanResult(scanResult);
+        detailResultAdapter.addFragments(buildFragments(scanResult));
         viewPager.setAdapter(detailResultAdapter);
         tabLayout.setupWithViewPager(viewPager);
+    }
 
-        //viewPager.setAdapter(new DetailResultAdapter(getSupportFragmentManager()));
-        //viewPager.setTag(scanResult);
-//        toolbar.setTitle(scanResult.SSID);
-        //Toast.makeText(getBaseContext(), scanResult.SSID, Toast.LENGTH_SHORT).show();
-        /*card1.setText(String.format("%s %s %d", scanResult.BSSID, scanResult.capabilities, scanResult.frequency));
-        card2.setText(String.format("RSSI: %d dBm", scanResult.level));
-        card3.setText(String.format("Signal level: %d", WifiManager.calculateSignalLevel(scanResult.level, RSSI_LEVEL)));*/
+    private List<Pair<String, Fragment>> buildFragments(ScanResult scanResult) {
+        List<Pair<String, Fragment>> listFragments = new ArrayList<>();
+
+        listFragments.add(Pair.<String, Fragment>create(DetailFragment.NAME, DetailFragment.newInstance(scanResult)));
+        listFragments.add(Pair.<String, Fragment>create(DetailMapFragment.NAME, DetailMapFragment.newInstance(scanResult)));
+
+        return listFragments;
     }
 
     @Override

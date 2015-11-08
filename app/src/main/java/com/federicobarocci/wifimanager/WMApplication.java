@@ -5,7 +5,6 @@ import android.app.Application;
 import com.federicobarocci.wifimanager.component.DaggerWMComponent;
 import com.federicobarocci.wifimanager.component.WMComponent;
 import com.federicobarocci.wifimanager.model.DaggerModule;
-import com.federicobarocci.wifimanager.model.DetailModule;
 
 
 /**

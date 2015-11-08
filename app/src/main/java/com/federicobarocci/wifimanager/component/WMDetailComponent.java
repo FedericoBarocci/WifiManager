@@ -1,7 +1,6 @@
 package com.federicobarocci.wifimanager.component;
 
 import com.federicobarocci.wifimanager.DetailActivity;
-import com.federicobarocci.wifimanager.DetailFragment;
 import com.federicobarocci.wifimanager.adapter.DetailResultAdapter;
 import com.federicobarocci.wifimanager.model.DetailModule;
 
@@ -18,5 +17,4 @@ public interface WMDetailComponent {
     DetailResultAdapter provideDetailResultAdapter();
 
     void inject(DetailActivity detailActivity);
-    void inject(DetailFragment detailFragment);
 }

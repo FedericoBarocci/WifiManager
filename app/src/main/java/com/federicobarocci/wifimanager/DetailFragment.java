@@ -16,8 +16,9 @@ import butterknife.ButterKnife;
  * Created by federico on 07/11/15.
  */
 public class DetailFragment extends Fragment {
+    public static final String ARGS = "ScanResult";
+    public static final String NAME = "Info";
     public static final int RSSI_LEVEL = 7;
-    public static final String SCAN_RESULT = "ScanResult";
 
     @Bind(R.id.card1)
     TextView card1;
@@ -32,16 +33,18 @@ public class DetailFragment extends Fragment {
 
     public static DetailFragment newInstance(ScanResult scanResult) {
         Bundle args = new Bundle();
-        args.putParcelable(SCAN_RESULT, scanResult);
+
+        args.putParcelable(ARGS, scanResult);
         DetailFragment fragment = new DetailFragment();
         fragment.setArguments(args);
+
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        scanResult = getArguments().getParcelable(SCAN_RESULT);
+        scanResult = getArguments().getParcelable(ARGS);
     }
 
     @Override

@@ -1,7 +1,6 @@
 package com.federicobarocci.wifimanager.model;
 
 
-import android.content.Context;
 import android.support.v4.app.FragmentManager;
 
 import com.federicobarocci.wifimanager.DetailActivity;
@@ -37,11 +36,5 @@ public class DetailModule {
     @Singleton
     DetailResultAdapter provideDetailResultAdapter(FragmentManager fragmentManager) {
         return new DetailResultAdapter(fragmentManager);
-    }
-
-    @Provides
-    @Singleton
-    DetailDataContainer provideDetailDataContainer() {
-        return new DetailDataContainer();
     }
 }
