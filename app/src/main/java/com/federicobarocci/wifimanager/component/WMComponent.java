@@ -1,6 +1,5 @@
 package com.federicobarocci.wifimanager.component;
 
-import com.federicobarocci.wifimanager.DetailActivity;
 import com.federicobarocci.wifimanager.MainActivity;
 import com.federicobarocci.wifimanager.MapActivity;
 import com.federicobarocci.wifimanager.WMApplication;
@@ -17,7 +16,7 @@ import dagger.Component;
  * Created by federico on 20/10/15.
  */
 @Singleton
-@Component(modules = {DaggerModule.class})
+@Component(modules = DaggerModule.class)
 public interface WMComponent {
     WifiUtilDelegate provideWifiUtilDelegate();
     ScanResultAdapter provideScanResultAdapter();
@@ -25,6 +24,6 @@ public interface WMComponent {
 
     void inject(WMApplication application);
     void inject(MainActivity mainActivity);
-    void inject(DetailActivity detailActivity);
+    //void inject(DetailActivity detailActivity);
     void inject(MapActivity mapActivity);
 }

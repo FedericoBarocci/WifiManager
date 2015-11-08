@@ -17,46 +17,58 @@
 package com.federicobarocci.wifimanager;
 
 import android.net.wifi.ScanResult;
-import android.net.wifi.WifiManager;
 import android.os.Bundle;
-import android.support.design.widget.AppBarLayout;
-import android.support.design.widget.CollapsingToolbarLayout;
+import android.support.design.widget.TabLayout;
+import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
-import android.widget.TextView;
+import android.view.View;
+import android.widget.Toast;
 
-import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.MapView;
-import com.google.android.gms.maps.OnMapReadyCallback;
-import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.MarkerOptions;
+import com.federicobarocci.wifimanager.adapter.DetailResultAdapter;
+import com.federicobarocci.wifimanager.component.DaggerWMDetailComponent;
+import com.federicobarocci.wifimanager.component.WMDetailComponent;
+import com.federicobarocci.wifimanager.model.DetailDataContainer;
+import com.federicobarocci.wifimanager.model.DetailModule;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
-public class DetailActivity extends AppCompatActivity implements OnMapReadyCallback {
+public class DetailActivity extends AppCompatActivity {
 
     public static final String EXTRA_NAME = "scan_result";
-    public static final int RSSI_LEVEL = 7;
-
-    @Bind(R.id.collapsing_toolbar)
-    CollapsingToolbarLayout collapsingToolbar;
 
     @Bind(R.id.toolbar)
     Toolbar toolbar;
 
-    @Bind(R.id.card1)
-    TextView card1;
+    @Bind(R.id.viewpager)
+    ViewPager viewPager;
 
-    @Bind(R.id.card2)
-    TextView card2;
+    @Bind(R.id.tabs)
+    TabLayout tabLayout;
 
-    @Bind(R.id.card3)
-    TextView card3;
+    @Inject
+    DetailResultAdapter detailResultAdapter;
+/*
+    @Inject
+    DetailDataContainer detailDataContainer;
 
-    @Bind(R.id.backdrop)
-    MapView mapView;
+    private ScanResult scanResult;
+
+    private WMDetailComponent component;
+
+    public ScanResult getScanResult() {
+        return scanResult;
+    }
+
+    public WMDetailComponent getComponent() {
+        return component;
+    }
+*/
+    private WMDetailComponent component;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -64,82 +76,42 @@ public class DetailActivity extends AppCompatActivity implements OnMapReadyCallb
         setContentView(R.layout.activity_detail);
 
         initializeInjectors();
-        initializeViewComponents(savedInstanceState);
+        initializeViewComponents();
     }
 
     private void initializeInjectors() {
         ButterKnife.bind(this);
-        ((WMApplication) getApplication()).getComponent().inject(this);
+
+        component = DaggerWMDetailComponent.builder()
+                .detailModule(new DetailModule(this))
+                .build();
+        component.inject(this);
     }
 
-    private void initializeViewComponents(Bundle savedInstanceState) {
+    private void initializeViewComponents() {
+        ScanResult scanResult = getIntent().getParcelableExtra(EXTRA_NAME);
+        //detailDataContainer.setScanResult(scanResult);
+
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setTitle(scanResult.SSID);
 
-        mapView.onCreate(savedInstanceState);
-        mapView.getMapAsync(this);
+        detailResultAdapter.setScanResult(scanResult);
+        viewPager.setAdapter(detailResultAdapter);
+        tabLayout.setupWithViewPager(viewPager);
 
-        final ScanResult scanResult = getIntent().getParcelableExtra(EXTRA_NAME);
-        collapsingToolbar.setTitle(scanResult.SSID);
-        //collapsingToolbar.setExpandedTitleColor(R.color.trasparent);
-        //collapsingToolbar.setExpandedTitleColor(ContextCompat.getColor(getBaseContext(), android.R.color.transparent));
-        card1.setText(String.format("%s %s %d", scanResult.BSSID, scanResult.capabilities, scanResult.frequency));
+        //viewPager.setAdapter(new DetailResultAdapter(getSupportFragmentManager()));
+        //viewPager.setTag(scanResult);
+//        toolbar.setTitle(scanResult.SSID);
+        //Toast.makeText(getBaseContext(), scanResult.SSID, Toast.LENGTH_SHORT).show();
+        /*card1.setText(String.format("%s %s %d", scanResult.BSSID, scanResult.capabilities, scanResult.frequency));
         card2.setText(String.format("RSSI: %d dBm", scanResult.level));
-        card3.setText(String.format("Signal level: %d", WifiManager.calculateSignalLevel(scanResult.level, RSSI_LEVEL)));
-
-        /*map = mapView.getMap();
-        map.getUiSettings().setMyLocationButtonEnabled(false);
-        map.setMyLocationEnabled(true);
-
-        // Needs to call MapsInitializer before doing any CameraUpdateFactory calls
-        MapsInitializer.initialize(this);
-
-        // Updates the location and zoom of the MapView
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(new LatLng(43.1, -87.9), 10);
-        map.animateCamera(cameraUpdate);*/
-
-        //Glide.with(this).load(R.drawable.cheese_1).centerCrop().into(imageView);
+        card3.setText(String.format("Signal level: %d", WifiManager.calculateSignalLevel(scanResult.level, RSSI_LEVEL)));*/
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.sample_actions, menu);
         return true;
-    }
-
-    /*@OnClick(R.id.fab_showmap)
-    public void fabClick(View view) {
-        startActivity(new Intent(this, MapActivity.class));
-    }*/
-
-    @Override
-    public void onResume() {
-        super.onResume();
-        mapView.onResume();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        mapView.onPause();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-        mapView.onDestroy();
-    }
-
-    @Override
-    public void onLowMemory() {
-        super.onLowMemory();
-        mapView.onLowMemory();
-    }
-
-    @Override
-    public void onMapReady(GoogleMap googleMap) {
-        googleMap.addMarker(new MarkerOptions()
-                .position(new LatLng(0, 0))
-                .title("Marker"));
     }
 }
