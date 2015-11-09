@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
+import android.location.Location;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -22,6 +23,12 @@ import android.view.View;
 import android.widget.Toast;
 
 import com.federicobarocci.wifimanager.model.TaskExecutor;
+import com.google.android.gms.common.ConnectionResult;
+import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 
 import javax.inject.Inject;
 
@@ -29,7 +36,13 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements
+        NavigationView.OnNavigationItemSelectedListener,
+        GoogleApiClient.ConnectionCallbacks,
+        GoogleApiClient.OnConnectionFailedListener,
+        LocationListener {
+
+    private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 1000;
 
     @Bind(R.id.drawer_layout)
     DrawerLayout mDrawerLayout;
@@ -49,6 +62,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Inject
     TaskExecutor taskExecutor;
 
+    private GoogleApiClient mGoogleApiClient;
+    private Location mLastLocation;
+    private LocationRequest mLocationRequest;
+
     BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context c, Intent intent) {
@@ -63,6 +80,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         initializeInjectors();
         initializeViewComponents();
+
+        if(checkPlayServices()) {
+            buildGoogleApiClient();
+            createLocationRequest();
+        }
 
         taskExecutor.checkToInitialize();
         registerReceiver(broadcastReceiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
@@ -96,6 +118,37 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         getBaseContext().unregisterReceiver(broadcastReceiver);
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        if (mGoogleApiClient != null) {
+            mGoogleApiClient.connect();
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if (checkPlayServices() && mGoogleApiClient != null && mGoogleApiClient.isConnected()) {
+            startLocationUpdates();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        stopLocationUpdates();
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if (mGoogleApiClient.isConnected()) {
+            mGoogleApiClient.disconnect();
+        }
+    }
+
     @OnClick(R.id.fab)
     public void fabClick(View view) {
         taskExecutor.scanWifi();
@@ -126,5 +179,80 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             mDrawerLayout.closeDrawers();
 
         return true;
+    }
+
+    protected synchronized void buildGoogleApiClient() {
+        mGoogleApiClient = new GoogleApiClient.Builder(this)
+                .addConnectionCallbacks(this)
+                .addOnConnectionFailedListener(this)
+                .addApi(LocationServices.API)
+                .build();
+    }
+
+    protected void createLocationRequest() {
+        mLocationRequest = new LocationRequest();
+        mLocationRequest.setInterval(10000);
+        mLocationRequest.setFastestInterval(5000);
+        mLocationRequest.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+    }
+
+    protected void startLocationUpdates() {
+        LocationServices.FusedLocationApi.requestLocationUpdates(mGoogleApiClient, mLocationRequest, this);
+    }
+
+    private void displayLocation() {
+        mLastLocation = LocationServices.FusedLocationApi.getLastLocation(mGoogleApiClient);
+        Toast.makeText(getApplicationContext(), String.format("lat %f long %f",
+                mLastLocation.getLatitude(), mLastLocation.getLongitude()), Toast.LENGTH_SHORT).show();
+    }
+
+    private boolean checkPlayServices() {
+        int resultCode = GooglePlayServicesUtil.isGooglePlayServicesAvailable(this);
+
+        if (resultCode != ConnectionResult.SUCCESS) {
+            if (GooglePlayServicesUtil.isUserRecoverableError(resultCode)) {
+                GooglePlayServicesUtil.getErrorDialog(resultCode, this, PLAY_SERVICES_RESOLUTION_REQUEST).show();
+            } else {
+                Toast.makeText(getApplicationContext(), "This device is not supported.", Toast.LENGTH_LONG).show();
+                finish();
+            }
+
+            return false;
+        }
+
+        return true;
+    }
+
+    @Override
+    public void onConnected(Bundle bundle) {
+        displayLocation();
+        startLocationUpdates();
+    }
+
+    /**
+     * Stopping location updates
+     */
+    protected void stopLocationUpdates() {
+        LocationServices.FusedLocationApi.removeLocationUpdates(mGoogleApiClient, this);
+    }
+
+    @Override
+    public void onConnectionSuspended(int i) {
+        mGoogleApiClient.connect();
+    }
+
+    @Override
+    public void onConnectionFailed(ConnectionResult connectionResult) {
+        Toast.makeText(getApplicationContext(), "Connection Fail", Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void onLocationChanged(Location location) {
+        mLastLocation = location;
+        //mLastUpdateTime = DateFormat.getTimeInstance().format(new Date());
+        /*Toast.makeText(getApplicationContext(), String.format("lat %f long %f",
+                mLastLocation.getLatitude(), mLastLocation.getLongitude()), Toast.LENGTH_SHORT).show();*/
+        Toast.makeText(getApplicationContext(), "Location changed", Toast.LENGTH_SHORT).show();
+        displayLocation();
     }
 }
