@@ -50,6 +50,11 @@
                 android:value=".DetailActivity" />
         </activity>
 
+        <service
+            android:name=".FusedLocationService"
+            android:label="FusedLocationService" >
+        </service>
+
     </application>
 
 </manifest>
