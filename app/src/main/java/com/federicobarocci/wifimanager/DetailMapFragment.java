@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.federicobarocci.wifimanager.model.WifiElement;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -22,13 +23,13 @@ public class DetailMapFragment extends Fragment implements OnMapReadyCallback {
     public static final String ARGS = "ScanResult";
     public static final String NAME = "Map";
 
-    private ScanResult scanResult;
+    private WifiElement wifiElement;
     //private SupportMapFragment mapFragment;
 
-    public static DetailMapFragment newInstance(ScanResult scanResult) {
+    public static DetailMapFragment newInstance(WifiElement wifiElement) {
         Bundle args = new Bundle();
 
-        args.putParcelable(ARGS, scanResult);
+        args.putParcelable(ARGS, wifiElement);
         DetailMapFragment fragment = new DetailMapFragment();
         fragment.setArguments(args);
 
@@ -38,7 +39,7 @@ public class DetailMapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        scanResult = getArguments().getParcelable(ARGS);
+        wifiElement = getArguments().getParcelable(ARGS);
     }
 
     @Override

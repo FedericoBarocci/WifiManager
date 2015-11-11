@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">Wifi Manager</string>
-    <string name="menu_settings">Settings</string>
 
     <string name="notify.scan">Refresh wifi AP list…</string>
     <string name="notify.enable_scan">Turning on wifi…</string>
@@ -10,4 +9,9 @@
     <string name="detail.card1.title">Info</string>
     <string name="detail.card2.title">RSSI (dBm)</string>
     <string name="detail.card3.title">Signal Level</string>
+
+    <string name="main.show.map">Map</string>
+    <string name="main.show.favourites">Favourites</string>
+    <string name="activity.favourites.title">Favourites</string>
+    <string name="activity.map.title">Wifi Map</string>
 </resources>

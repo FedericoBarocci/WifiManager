@@ -20,32 +20,12 @@
             app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
             app:layout_scrollFlags="enterAlways" />
 
-        <!--<android.support.design.widget.TabLayout
-            android:id="@+id/tabs"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />-->
-
     </android.support.design.widget.AppBarLayout>
 
-    <!--<android.support.v4.view.ViewPager
-        android:id="@+id/viewpager"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_behavior="@string/appbar_scrolling_view_behavior" />-->
-
     <android.support.v7.widget.RecyclerView
-        android:id="@+id/mainRecyclerView"
+        android:id="@+id/favouritesRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/common_action_bar_splitter"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"/>
-
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fab"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="end|bottom"
-        android:layout_margin="@dimen/fab_margin"
-        android:src="@drawable/ic_perm_scan_wifi_white_24dp" />
 
 </android.support.design.widget.CoordinatorLayout>

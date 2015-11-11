@@ -9,6 +9,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.federicobarocci.wifimanager.model.WifiElement;
+
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
@@ -29,12 +31,12 @@ public class DetailFragment extends Fragment {
     @Bind(R.id.card3)
     TextView card3;
 
-    private ScanResult scanResult;
+    private WifiElement wifiElement;
 
-    public static DetailFragment newInstance(ScanResult scanResult) {
+    public static DetailFragment newInstance(WifiElement wifiElement) {
         Bundle args = new Bundle();
 
-        args.putParcelable(ARGS, scanResult);
+        args.putParcelable(ARGS, wifiElement);
         DetailFragment fragment = new DetailFragment();
         fragment.setArguments(args);
 
@@ -44,7 +46,7 @@ public class DetailFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        scanResult = getArguments().getParcelable(ARGS);
+        wifiElement = getArguments().getParcelable(ARGS);
     }
 
     @Override
@@ -52,9 +54,9 @@ public class DetailFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_detail, container, false);
         ButterKnife.bind(this, view);
 
-        card1.setText(String.format("%s %s %d", scanResult.BSSID, scanResult.capabilities, scanResult.frequency));
-        card2.setText(String.format("RSSI: %d dBm", scanResult.level));
-        card3.setText(String.format("Signal level: %d", WifiManager.calculateSignalLevel(scanResult.level, RSSI_LEVEL)));
+        card1.setText(String.format("%s %s %d", wifiElement.getBSSID(), wifiElement.getCapabilities(), wifiElement.getFrequency()));
+        card2.setText(String.format("RSSI: %d dBm", wifiElement.getLevel()));
+        card3.setText(String.format("Signal level: %d", WifiManager.calculateSignalLevel(wifiElement.getLevel(), RSSI_LEVEL)));
 
         return view;
     }

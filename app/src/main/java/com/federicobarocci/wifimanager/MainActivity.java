@@ -43,7 +43,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Bind(R.id.nav_view)
     NavigationView navigationView;
 
-    @Bind(R.id.recyclerview)
+    @Bind(R.id.mainRecyclerView)
     RecyclerView recyclerView;
 
     @Bind(R.id.fab)
@@ -82,7 +82,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         checkPlayServices();
 
         startService(new Intent(this, FusedLocationService.class));
-        LocalBroadcastManager.getInstance(this).registerReceiver(fusedLocationReceiver, new IntentFilter(FusedLocationService.INTENT_FILTER));
+        LocalBroadcastManager.getInstance(this).registerReceiver(fusedLocationReceiver, new IntentFilter(FusedLocationService.INTENT_LOCATION_CHANGED));
 
         taskExecutor.checkToInitialize();
         registerReceiver(scanResultAvailableReceiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
@@ -112,40 +112,41 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     protected void onDestroy() {
-        super.onDestroy();
         getBaseContext().unregisterReceiver(scanResultAvailableReceiver);
         stopService(new Intent(this, FusedLocationService.class));
         LocalBroadcastManager.getInstance(this).unregisterReceiver(fusedLocationReceiver);
+
+        super.onDestroy();
     }
 /*
     @Override
     protected void onResume() {
         super.onResume();
         startService(new Intent(this, FusedLocationService.class));
-        LocalBroadcastManager.getInstance(this).registerReceiver(fusedLocationReceiver, new IntentFilter(FusedLocationService.INTENT_FILTER));
+        LocalBroadcastManager.getInstance(this).registerReceiver(fusedLocationReceiver, new IntentFilter(FusedLocationService.INTENT_LOCATION_CHANGED));
     }
-*/
+
     @Override
     protected void onPause() {
         super.onPause();
         stopService(new Intent(this, FusedLocationService.class));
         LocalBroadcastManager.getInstance(this).unregisterReceiver(fusedLocationReceiver);
     }
-/*
+
     @Override
     protected void onStart() {
         super.onStart();
         startService(new Intent(this, FusedLocationService.class));
-        LocalBroadcastManager.getInstance(this).registerReceiver(fusedLocationReceiver, new IntentFilter(FusedLocationService.INTENT_FILTER));
+        LocalBroadcastManager.getInstance(this).registerReceiver(fusedLocationReceiver, new IntentFilter(FusedLocationService.INTENT_LOCATION_CHANGED));
     }
-*/
+
     @Override
     protected void onStop() {
         super.onStop();
         stopService(new Intent(this, FusedLocationService.class));
         LocalBroadcastManager.getInstance(this).unregisterReceiver(fusedLocationReceiver);
     }
-
+*/
     @OnClick(R.id.fab)
     public void fabClick(View view) {
         taskExecutor.scanWifi();
@@ -153,7 +154,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.sample_actions, menu);
+        getMenuInflater().inflate(R.menu.toolbar_actions, menu);
         return true;
     }
 
@@ -162,6 +163,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         switch (item.getItemId()) {
             case android.R.id.home:
                 mDrawerLayout.openDrawer(GravityCompat.START);
+                return true;
+
+            case R.id.main_show_favourites:
+                startActivity(new Intent(this, FavouritesActivity.class));
+                return true;
+
+            case R.id.main_show_map:
+                startActivity(new Intent(this, MapActivity.class));
                 return true;
         }
         return super.onOptionsItemSelected(item);

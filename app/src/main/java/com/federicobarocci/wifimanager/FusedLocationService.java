@@ -6,7 +6,6 @@ import android.location.Location;
 import android.os.Binder;
 import android.os.Bundle;
 import android.os.IBinder;
-import android.support.annotation.Nullable;
 import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 
@@ -24,15 +23,17 @@ public class FusedLocationService extends Service implements GoogleApiClient.Con
         GoogleApiClient.OnConnectionFailedListener,
         LocationListener {
 
-    public static final String INTENT_FILTER = "Location_Changed";
+    public static final String INTENT_LOCATION_CHANGED = "Location_Changed";
     public static final String LOCATION = "Location_Extra";
+
+    private static final String TAG = "FusedLocationService";
     private static final long INTERVAL = 10000;
     private static final long FASTEST_INTERVAL = 5000;
 
     private final IBinder mBinder = new LocalBinder();
     private final FusedLocationProviderApi fusedLocationProviderApi = LocationServices.FusedLocationApi;
-    private final LocationRequest locationRequest;
 
+    private LocationRequest locationRequest;
     private GoogleApiClient googleApiClient;
     private Location location;
 
@@ -42,27 +43,26 @@ public class FusedLocationService extends Service implements GoogleApiClient.Con
         }
     }
 
-    public FusedLocationService() {
-        this.locationRequest = createLocationRequest();
-    }
-
-    @Nullable
     @Override
     public IBinder onBind(Intent intent) {
         return mBinder;
     }
 
     @Override
+    public void onCreate() {
+        super.onCreate();
+        Log.e(TAG, "onCreate");
+
+        this.locationRequest = createLocationRequest();
+        this.googleApiClient = buildGoogleApiClient();
+    }
+
+    @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
+        Log.e(TAG, "onStartCommand");
 
-        Log.e("Service", "onStartCommand");
-
-        if (googleApiClient == null) {
-            this.googleApiClient = buildGoogleApiClient();
-        }
-
-        if (googleApiClient != null && !googleApiClient.isConnected()) {
+        if (!googleApiClient.isConnected()) {
             googleApiClient.connect();
         }
 
@@ -71,6 +71,9 @@ public class FusedLocationService extends Service implements GoogleApiClient.Con
 
     @Override
     public void onDestroy() {
+        super.onDestroy();
+        Log.e(TAG, "onDestroy");
+
         fusedLocationProviderApi.removeLocationUpdates(googleApiClient, this);
 
         if (googleApiClient.isConnected()) {
@@ -92,14 +95,19 @@ public class FusedLocationService extends Service implements GoogleApiClient.Con
     @Override
     public void onLocationChanged(Location location) {
         this.location = location;
-        Intent intent = new Intent(INTENT_FILTER);
+
+        Intent intent = new Intent(INTENT_LOCATION_CHANGED);
         intent.putExtra(LOCATION, location);
         LocalBroadcastManager.getInstance(this).sendBroadcast(intent);
     }
 
+    public Location getLocation() {
+        return this.location;
+    }
+
     @Override
     public void onConnectionFailed(ConnectionResult connectionResult) {
-
+        Log.e(TAG, "onConnectionFailed");
     }
 
     protected synchronized GoogleApiClient buildGoogleApiClient() {

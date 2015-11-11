@@ -1,8 +1,9 @@
 package com.federicobarocci.wifimanager.model;
 
 import android.net.wifi.ScanResult;
-import android.support.v4.util.SimpleArrayMap;
+import android.support.v4.util.Pair;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -10,32 +11,50 @@ import java.util.List;
  */
 public class WifiKeeper {
     //Avoid duplicate entries by check BSSID
-    private SimpleArrayMap<CharSequence, ScanResult> wifiMap = new SimpleArrayMap<>();
+    private List<Pair<String, WifiElement>> wifiList = new ArrayList<>();
 
     public void clear() {
-        wifiMap.clear();
+        wifiList.clear();
     }
 
     public void populate(List<ScanResult> scanResults) {
+        wifiList.clear();
+
         for (ScanResult scanresult : scanResults) {
-            wifiMap.put(scanresult.BSSID, scanresult);
+//            if (!update(scanresult.BSSID, scanresult)) {
+                wifiList.add(WifiElement.create(scanresult));
+//            }
         }
     }
 
     public int size() {
-        return wifiMap.size();
+        return wifiList.size();
     }
 
-    public ScanResult get(int position) {
-        return wifiMap.valueAt(position);
+    public WifiElement get(int position) {
+        return wifiList.get(position).second;
     }
 
-    public CharSequence getTitle(int position) {
-        ScanResult scanResult = wifiMap.valueAt(position);
-        return String.format("%s (%s)", scanResult.SSID, scanResult.BSSID);
+    /*public String getTitle(int position) {
+        WifiElement wifiElement = wifiList.get(position).second;
+        return String.format("%s (%s)", wifiElement.getSSID(), wifiElement.getBSSID());
     }
 
     public CharSequence getInfo(int position) {
-        return wifiMap.valueAt(position).capabilities;
+        return wifiList.get(position).second.getCapabilities() + "   " + wifiList.get(position).second.getLevel() + " dBm";
+    }*/
+
+    private boolean update(String key, ScanResult scanResult) {
+        for(int i=0; i<wifiList.size(); i++) {
+            Pair<String, WifiElement> pair = wifiList.get(i);
+
+            if(pair.first.equals(key)) {
+                wifiList.set(i, WifiElement.create(scanResult));
+
+                return true;
+            }
+        }
+
+        return false;
     }
 }

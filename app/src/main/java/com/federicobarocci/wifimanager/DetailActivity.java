@@ -16,7 +16,6 @@
 
 package com.federicobarocci.wifimanager;
 
-import android.net.wifi.ScanResult;
 import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -29,6 +28,7 @@ import android.view.Menu;
 import com.federicobarocci.wifimanager.adapter.DetailResultAdapter;
 import com.federicobarocci.wifimanager.component.DaggerWMDetailComponent;
 import com.federicobarocci.wifimanager.model.DetailModule;
+import com.federicobarocci.wifimanager.model.WifiElement;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,29 +71,50 @@ public class DetailActivity extends AppCompatActivity {
     }
 
     private void initializeViewComponents() {
-        ScanResult scanResult = getIntent().getParcelableExtra(EXTRA_NAME);
+        WifiElement wifiElement = getIntent().getParcelableExtra(EXTRA_NAME);
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle(scanResult.SSID);
+        getSupportActionBar().setTitle(wifiElement.getSSID());
 
-        detailResultAdapter.addFragments(buildFragments(scanResult));
+        detailResultAdapter.addFragments(buildFragments(wifiElement));
         viewPager.setAdapter(detailResultAdapter);
         tabLayout.setupWithViewPager(viewPager);
     }
 
-    private List<Pair<String, Fragment>> buildFragments(ScanResult scanResult) {
+    private List<Pair<String, Fragment>> buildFragments(WifiElement wifiElement) {
         List<Pair<String, Fragment>> listFragments = new ArrayList<>();
 
-        listFragments.add(Pair.<String, Fragment>create(DetailFragment.NAME, DetailFragment.newInstance(scanResult)));
-        listFragments.add(Pair.<String, Fragment>create(DetailMapFragment.NAME, DetailMapFragment.newInstance(scanResult)));
+        listFragments.add(Pair.<String, Fragment>create(DetailFragment.NAME, DetailFragment.newInstance(wifiElement)));
+        listFragments.add(Pair.<String, Fragment>create(DetailMapFragment.NAME, DetailMapFragment.newInstance(wifiElement)));
 
         return listFragments;
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.sample_actions, menu);
+        getMenuInflater().inflate(R.menu.toolbar_actions, menu);
         return true;
     }
+
+    /*
+    @Override
+    protected void onStart() {
+        super.onStart();
+        // Bind to LocalService
+        Intent intent = new Intent(this, LocalService.class);
+        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        // Unbind from the service
+        if (mBound) {
+            unbindService(mConnection);
+            mBound = false;
+        }
+    }
+
+     */
 }

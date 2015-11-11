@@ -3,7 +3,9 @@ package com.federicobarocci.wifimanager.model;
 import android.content.Context;
 import android.net.wifi.WifiManager;
 
+import com.federicobarocci.wifimanager.FavouritesActivity;
 import com.federicobarocci.wifimanager.WMApplication;
+import com.federicobarocci.wifimanager.adapter.FavouritesAdapter;
 import com.federicobarocci.wifimanager.adapter.ScanResultAdapter;
 
 import javax.inject.Singleton;
@@ -42,14 +44,32 @@ public class DaggerModule {
 
     @Provides
     @Singleton
+    DataBaseManager provideDataBaseManager(Context context) {
+        return new DataBaseManager(context);
+    }
+
+    @Provides
+    @Singleton
+    DataBaseExecutor provideDataBaseExecutor(DataBaseManager dataBaseManager) {
+        return new DataBaseExecutor(dataBaseManager);
+    }
+
+    @Provides
+    @Singleton
     WifiUtilDelegate provideWifiUtilDelegate(WifiManager wifiManager, WifiKeeper wifiKeeper, ScanResultAdapter adapter) {
         return new WifiUtilDelegate(wifiManager, wifiKeeper, adapter);
     }
 
     @Provides
     @Singleton
-    ScanResultAdapter provideScanResultAdapter(WifiKeeper wifiKeeper) {
-        return new ScanResultAdapter(wifiKeeper);
+    ScanResultAdapter provideScanResultAdapter(WifiKeeper wifiKeeper, DataBaseExecutor dataBaseExecutor) {
+        return new ScanResultAdapter(wifiKeeper, dataBaseExecutor);
+    }
+
+    @Provides
+    @Singleton
+    FavouritesAdapter provideFavouritesAdapter(DataBaseExecutor dataBaseExecutor) {
+        return new FavouritesAdapter(dataBaseExecutor);
     }
 
     @Provides
