@@ -57,4 +57,14 @@ public class WifiKeeper {
 
         return false;
     }
+
+    public boolean contains(String key) {
+        for(int i=0; i<wifiList.size(); i++) {
+            if (wifiList.get(i).first.equals(key)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
 }

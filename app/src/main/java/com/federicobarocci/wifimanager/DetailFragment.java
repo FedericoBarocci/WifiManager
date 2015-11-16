@@ -20,7 +20,6 @@ import butterknife.ButterKnife;
 public class DetailFragment extends Fragment {
     public static final String ARGS = "ScanResult";
     public static final String NAME = "Info";
-    public static final int RSSI_LEVEL = 7;
 
     @Bind(R.id.card1)
     TextView card1;
@@ -30,6 +29,15 @@ public class DetailFragment extends Fragment {
 
     @Bind(R.id.card3)
     TextView card3;
+
+    @Bind(R.id.card4)
+    TextView card4;
+
+    @Bind(R.id.card5)
+    TextView card5;
+
+    @Bind(R.id.card6)
+    TextView card6;
 
     private WifiElement wifiElement;
 
@@ -54,9 +62,12 @@ public class DetailFragment extends Fragment {
         View view = inflater.inflate(R.layout.fragment_detail, container, false);
         ButterKnife.bind(this, view);
 
-        card1.setText(String.format("%s %s %d", wifiElement.getBSSID(), wifiElement.getCapabilities(), wifiElement.getFrequency()));
-        card2.setText(String.format("RSSI: %d dBm", wifiElement.getLevel()));
-        card3.setText(String.format("Signal level: %d", WifiManager.calculateSignalLevel(wifiElement.getLevel(), RSSI_LEVEL)));
+        card1.setText(wifiElement.getSSID());
+        card2.setText(wifiElement.getBSSID());
+        card3.setText(String.format("%d dBm", wifiElement.getLevel()));
+        card4.setText(wifiElement.getCapabilities());
+        card5.setText(String.format("%d Hz", wifiElement.getFrequency()));
+        card6.setText(String.format("%d/%d", wifiElement.getSignalLevel() + 1, wifiElement.RSSI_LEVEL));
 
         return view;
     }

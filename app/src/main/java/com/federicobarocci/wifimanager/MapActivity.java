@@ -4,7 +4,6 @@ import android.os.Bundle;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
-import android.view.Menu;
 
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -53,14 +52,15 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 //        mapFragment.getMapAsync(this);
     }
 
-    @Override
+   /* @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.toolbar_actions, menu);
         return true;
-    }
+    }*/
 
     @Override
     public void onMapReady(GoogleMap map) {
+        map.setMyLocationEnabled(true);
         map.addMarker(new MarkerOptions()
                 .position(new LatLng(0, 0))
                 .title("Marker"));

@@ -2,9 +2,11 @@ package com.federicobarocci.wifimanager;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.location.Location;
+import android.location.LocationManager;
 import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
@@ -12,7 +14,9 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -33,7 +37,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, SwipeRefreshLayout.OnRefreshListener {
 
     private final static int PLAY_SERVICES_RESOLUTION_REQUEST = 1000;
 
@@ -46,11 +50,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Bind(R.id.mainRecyclerView)
     RecyclerView recyclerView;
 
-    @Bind(R.id.fab)
-    FloatingActionButton fab;
+    /*@Bind(R.id.fab)
+    FloatingActionButton fab;*/
 
     @Bind(R.id.toolbar)
     Toolbar toolbar;
+
+    @Bind(R.id.swipe_container)
+    SwipeRefreshLayout swipeRefreshLayout;
 
     @Inject
     TaskExecutor taskExecutor;
@@ -59,6 +66,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         @Override
         public void onReceive(Context c, Intent intent) {
             taskExecutor.onWifiListReceive();
+
+            if(swipeRefreshLayout.isRefreshing()) {
+                swipeRefreshLayout.setRefreshing(false);
+            }
         }
     };
 
@@ -81,6 +92,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         checkPlayServices();
 
+
+        final LocationManager manager = (LocationManager) getSystemService( Context.LOCATION_SERVICE );
+
+        if ( !manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
+            buildAlertMessageNoGps();
+        }
+
         startService(new Intent(this, FusedLocationService.class));
         LocalBroadcastManager.getInstance(this).registerReceiver(fusedLocationReceiver, new IntentFilter(FusedLocationService.INTENT_LOCATION_CHANGED));
 
@@ -100,6 +118,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private void initializeViewComponents() {
         setSupportActionBar(toolbar);
         navigationView.setNavigationItemSelectedListener(this);
+        swipeRefreshLayout.setOnRefreshListener(this);
 
         final ActionBar ab = getSupportActionBar();
         ab.setHomeAsUpIndicator(R.drawable.ic_menu);
@@ -147,10 +166,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         LocalBroadcastManager.getInstance(this).unregisterReceiver(fusedLocationReceiver);
     }
 */
-    @OnClick(R.id.fab)
+   /* @OnClick(R.id.fab)
     public void fabClick(View view) {
         taskExecutor.scanWifi();
-    }
+    }*/
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -202,5 +221,30 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
 
         return true;
+    }
+
+    @Override
+    public void onRefresh() {
+        swipeRefreshLayout.setRefreshing(true);
+        taskExecutor.scanWifi();
+    }
+
+
+    private void buildAlertMessageNoGps() {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("Your GPS seems to be disabled, do you want to enable it?")
+                .setCancelable(false)
+                .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                    public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        startActivity(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS));
+                    }
+                })
+                .setNegativeButton("No", new DialogInterface.OnClickListener() {
+                    public void onClick(final DialogInterface dialog, @SuppressWarnings("unused") final int id) {
+                        dialog.cancel();
+                    }
+                });
+        final AlertDialog alert = builder.create();
+        alert.show();
     }
 }

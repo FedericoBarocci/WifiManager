@@ -1,6 +1,9 @@
 package com.federicobarocci.wifimanager.model;
 
+import android.support.design.widget.Snackbar;
 import android.support.v4.util.Pair;
+import android.support.v7.widget.RecyclerView;
+import android.view.View;
 
 import java.util.List;
 
@@ -22,15 +25,19 @@ public class DataBaseExecutor {
         this.elements = dataBaseManager.select();
     }
 
-    public void toggleSave(WifiElement wifiElement) {
+    public boolean toggleSave(WifiElement wifiElement) {
         if (contains(wifiElement.getBSSID())) {
             //delete
             dataBaseManager.delete(wifiElement);
             remove(wifiElement.getBSSID());
+
+            return true;
         } else {
             //insert
             dataBaseManager.insert(wifiElement);
             elements.add(new Pair<String, WifiElement>(wifiElement.getBSSID(), wifiElement));
+
+            return false;
         }
     }
 
@@ -38,7 +45,7 @@ public class DataBaseExecutor {
         return elements.size();
     }
 
-    private boolean contains(String key) {
+    public boolean contains(String key) {
         for(int i=0; i<elements.size(); i++) {
             if(elements.get(i).first.equals(key)) {
                 return true;

@@ -6,12 +6,22 @@
     <string name="notify.enable_scan">Turning on wifi…</string>
     <string name="notify.scan.success">Found AP</string>
 
-    <string name="detail.card1.title">Info</string>
-    <string name="detail.card2.title">RSSI (dBm)</string>
-    <string name="detail.card3.title">Signal Level</string>
+    <string name="detail.card1.title">SSID</string>
+    <string name="detail.card2.title">BSSID</string>
+    <string name="detail.card3.title">Signal Strength</string>
+    <string name="detail.card4.title">Capabilites</string>
+    <string name="detail.card5.title">Frequency</string>
+    <string name="detail.card6.title">RSSI</string>
 
     <string name="main.show.map">Map</string>
     <string name="main.show.favourites">Favourites</string>
     <string name="activity.favourites.title">Favourites</string>
     <string name="activity.map.title">Wifi Map</string>
+
+    <string name="list_item_save_img">Save</string>
+    <string name="list_item_signal_img">Signal strength and security</string>
+    <string name="new_wifi_element">Access point saved</string>
+    <string name="removed_wifi_element">Removed from favourites</string>
+    <string name="restored_wifi_element">Favourite restored</string>
+    <string name="undo">UNDO</string>
 </resources>

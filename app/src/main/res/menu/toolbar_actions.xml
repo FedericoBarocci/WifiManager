@@ -2,13 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/main_show_map"
-        android:title="@string/main.show.map"
-        android:icon="@drawable/ic_discuss"
-        app:showAsAction="ifRoom" />
-    <item
         android:id="@+id/main_show_favourites"
         android:title="@string/main.show.favourites"
-        android:icon="@drawable/ic_dashboard"
+        android:icon="@drawable/ic_grade_white_24dp"
+        app:showAsAction="ifRoom" />
+    <item
+        android:id="@+id/main_show_map"
+        android:title="@string/main.show.map"
+        android:icon="@drawable/ic_place_white_24dp"
         app:showAsAction="ifRoom" />
 </menu>

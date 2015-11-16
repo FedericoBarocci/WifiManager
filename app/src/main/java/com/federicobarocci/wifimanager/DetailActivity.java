@@ -24,6 +24,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Pair;
 import android.view.Menu;
+import android.view.MenuItem;
 
 import com.federicobarocci.wifimanager.adapter.DetailResultAdapter;
 import com.federicobarocci.wifimanager.component.DaggerWMDetailComponent;
@@ -91,10 +92,21 @@ public class DetailActivity extends AppCompatActivity {
         return listFragments;
     }
 
-    @Override
+    /*@Override
     public boolean onCreateOptionsMenu(Menu menu) {
         getMenuInflater().inflate(R.menu.toolbar_actions, menu);
         return true;
+    }*/
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            // Respond to the action bar's Up/Home button
+            case android.R.id.home:
+                finish();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     /*

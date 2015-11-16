@@ -1,14 +1,18 @@
 package com.federicobarocci.wifimanager.model;
 
 import android.net.wifi.ScanResult;
+import android.net.wifi.WifiManager;
 import android.os.Parcel;
 import android.os.Parcelable;
 import android.support.v4.util.Pair;
+
+import javax.annotation.Resource;
 
 /**
  * Created by federico on 11/11/15.
  */
 public class WifiElement implements Parcelable {
+    public static final int RSSI_LEVEL = 4;
 
     private final String bssid;
 
@@ -17,6 +21,7 @@ public class WifiElement implements Parcelable {
     private int frequency;
     private int level;
 
+    /* Static Constructors */
     public static Pair<String, WifiElement> create(ScanResult scanResult) {
         return new Pair<String, WifiElement> (scanResult.BSSID, new WifiElement(scanResult));
     }
@@ -25,6 +30,7 @@ public class WifiElement implements Parcelable {
         return new Pair<String, WifiElement> (bbsid, new WifiElement(bbsid, ssid, capabilities, frequency, level));
     }
 
+    /* Constructors */
     public WifiElement(String bbsid, String ssid, String capabilities, int frequency, int level) {
         this.bssid = bbsid;
         this.ssid = ssid;
@@ -41,6 +47,7 @@ public class WifiElement implements Parcelable {
         this.level = scanResult.level;
     }
 
+    /* Standard Getters */
     public String getBSSID() {
         return bssid;
     }
@@ -61,6 +68,7 @@ public class WifiElement implements Parcelable {
         return level;
     }
 
+    /* Standard Setters */
     public void setCapabilities(String capabilities) {
         this.capabilities = capabilities;
     }
@@ -77,14 +85,24 @@ public class WifiElement implements Parcelable {
         this.level = level;
     }
 
-    public String getTitle(int position) {
+    /* Convenience Getters */
+    /*public String getTitle(int position) {
         return String.format("%s (%s)", getSSID(), getBSSID());
+    }*/
+
+    public CharSequence getInfo() {
+        return String.format("%s   %d dBm %d/%d", getCapabilities(), getLevel(), getSignalLevel(), RSSI_LEVEL);
     }
 
-    public CharSequence getInfo(int position) {
-        return getCapabilities() + "   " + getLevel() + " dBm";
+    public int getSignalLevel() {
+        return WifiManager.calculateSignalLevel(getLevel(), RSSI_LEVEL);
     }
 
+    public boolean isSecure() {
+        return getCapabilities().contains("WPA");
+    }
+
+    /* Parcel section */
     protected WifiElement(Parcel in) {
         bssid = in.readString();
         ssid = in.readString();

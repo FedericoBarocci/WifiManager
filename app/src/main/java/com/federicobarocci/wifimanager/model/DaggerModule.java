@@ -3,10 +3,11 @@ package com.federicobarocci.wifimanager.model;
 import android.content.Context;
 import android.net.wifi.WifiManager;
 
-import com.federicobarocci.wifimanager.FavouritesActivity;
 import com.federicobarocci.wifimanager.WMApplication;
 import com.federicobarocci.wifimanager.adapter.FavouritesAdapter;
 import com.federicobarocci.wifimanager.adapter.ScanResultAdapter;
+import com.federicobarocci.wifimanager.adapter.SnackBarUndoFavourites;
+import com.federicobarocci.wifimanager.adapter.SnackBarUndoMain;
 
 import javax.inject.Singleton;
 
@@ -56,20 +57,38 @@ public class DaggerModule {
 
     @Provides
     @Singleton
+    SnackBarUndoMain provideSnackBarUndoMain(DataBaseExecutor dataBaseExecutor) {
+        return new SnackBarUndoMain(dataBaseExecutor);
+    }
+
+    @Provides
+    @Singleton
+    SnackBarUndoFavourites provideSnackBarUndoFavourites(DataBaseExecutor dataBaseExecutor) {
+        return new SnackBarUndoFavourites(dataBaseExecutor);
+    }
+
+    @Provides
+    @Singleton
     WifiUtilDelegate provideWifiUtilDelegate(WifiManager wifiManager, WifiKeeper wifiKeeper, ScanResultAdapter adapter) {
         return new WifiUtilDelegate(wifiManager, wifiKeeper, adapter);
     }
 
     @Provides
     @Singleton
-    ScanResultAdapter provideScanResultAdapter(WifiKeeper wifiKeeper, DataBaseExecutor dataBaseExecutor) {
-        return new ScanResultAdapter(wifiKeeper, dataBaseExecutor);
+    ResourceProvider provideResourceProvider(WifiKeeper wifiKeeper, DataBaseExecutor dataBaseExecutor) {
+        return new ResourceProvider(wifiKeeper, dataBaseExecutor);
     }
 
     @Provides
     @Singleton
-    FavouritesAdapter provideFavouritesAdapter(DataBaseExecutor dataBaseExecutor) {
-        return new FavouritesAdapter(dataBaseExecutor);
+    ScanResultAdapter provideScanResultAdapter(WifiKeeper wifiKeeper, SnackBarUndoMain snackBarUndoMain, ResourceProvider resourceProvider) {
+        return new ScanResultAdapter(wifiKeeper, snackBarUndoMain, resourceProvider);
+    }
+
+    @Provides
+    @Singleton
+    FavouritesAdapter provideFavouritesAdapter(DataBaseExecutor dataBaseExecutor, SnackBarUndoFavourites snackBarUndoFavourites, ResourceProvider resourceProvider) {
+        return new FavouritesAdapter(dataBaseExecutor, snackBarUndoFavourites, resourceProvider);
     }
 
     @Provides
