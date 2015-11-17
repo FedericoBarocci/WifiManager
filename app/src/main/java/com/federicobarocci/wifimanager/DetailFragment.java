@@ -39,6 +39,9 @@ public class DetailFragment extends Fragment {
     @Bind(R.id.card6)
     TextView card6;
 
+    @Bind(R.id.card7)
+    TextView card7;
+
     private WifiElement wifiElement;
 
     public static DetailFragment newInstance(WifiElement wifiElement) {
@@ -66,8 +69,9 @@ public class DetailFragment extends Fragment {
         card2.setText(wifiElement.getBSSID());
         card3.setText(String.format("%d dBm", wifiElement.getLevel()));
         card4.setText(wifiElement.getCapabilities());
-        card5.setText(String.format("%d Hz", wifiElement.getFrequency()));
+        card5.setText(String.format("%d MHz", wifiElement.getFrequency()));
         card6.setText(String.format("%d/%d", wifiElement.getSignalLevel() + 1, wifiElement.RSSI_LEVEL));
+        card7.setText(String.format("%f m", wifiElement.calculateDistance()));
 
         return view;
     }

@@ -37,4 +37,5 @@ public class DetailModule {
     DetailResultAdapter provideDetailResultAdapter(FragmentManager fragmentManager) {
         return new DetailResultAdapter(fragmentManager);
     }
+
 }

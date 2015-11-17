@@ -14,7 +14,7 @@ import dagger.Component;
 @Singleton
 @Component(modules = DetailModule.class)
 public interface WMDetailComponent {
-    DetailResultAdapter provideDetailResultAdapter();
+    //DetailResultAdapter provideDetailResultAdapter();
 
-    void inject(DetailActivity detailActivity);
+   // void inject(DetailActivity detailActivity);
 }

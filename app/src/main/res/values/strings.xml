@@ -12,6 +12,7 @@
     <string name="detail.card4.title">Capabilites</string>
     <string name="detail.card5.title">Frequency</string>
     <string name="detail.card6.title">RSSI</string>
+    <string name="detail.card7.title">Distance</string>
 
     <string name="main.show.map">Map</string>
     <string name="main.show.favourites">Favourites</string>

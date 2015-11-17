@@ -1,8 +1,11 @@
 package com.federicobarocci.wifimanager.model;
 
+import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 
 import com.federicobarocci.wifimanager.adapter.ScanResultAdapter;
+
+import java.util.List;
 
 import javax.inject.Inject;
 

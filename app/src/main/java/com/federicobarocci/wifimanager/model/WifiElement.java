@@ -69,7 +69,7 @@ public class WifiElement implements Parcelable {
     }
 
     /* Standard Setters */
-    public void setCapabilities(String capabilities) {
+    /*public void setCapabilities(String capabilities) {
         this.capabilities = capabilities;
     }
 
@@ -83,13 +83,9 @@ public class WifiElement implements Parcelable {
 
     public void setLevel(int level) {
         this.level = level;
-    }
-
-    /* Convenience Getters */
-    /*public String getTitle(int position) {
-        return String.format("%s (%s)", getSSID(), getBSSID());
     }*/
 
+    /* Convenience Getters */
     public CharSequence getInfo() {
         return String.format("%s   %d dBm %d/%d", getCapabilities(), getLevel(), getSignalLevel(), RSSI_LEVEL);
     }
@@ -100,6 +96,15 @@ public class WifiElement implements Parcelable {
 
     public boolean isSecure() {
         return getCapabilities().contains("WPA");
+    }
+
+    public double calculateDistance(double levelInDb, double freqInMHz)    {
+        double exp = (27.55 - (20 * Math.log10(freqInMHz)) + Math.abs(levelInDb)) / 20.0;
+        return Math.pow(10.0, exp);
+    }
+
+    public double calculateDistance() {
+        return calculateDistance(getLevel(), getFrequency());
     }
 
     /* Parcel section */

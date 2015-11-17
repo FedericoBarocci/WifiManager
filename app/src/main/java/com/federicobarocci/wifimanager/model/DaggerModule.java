@@ -39,8 +39,14 @@ public class DaggerModule {
 
     @Provides
     @Singleton
-    WifiKeeper provideWifiKeeper() {
-        return new WifiKeeper();
+    LocationExecutor provideLocationExecutor(Context context) {
+        return new LocationExecutor(context);
+    }
+
+    @Provides
+    @Singleton
+    WifiKeeper provideWifiKeeper(LocationExecutor locationExecutor) {
+        return new WifiKeeper(locationExecutor);
     }
 
     @Provides

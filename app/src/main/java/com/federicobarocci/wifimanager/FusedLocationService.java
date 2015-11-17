@@ -38,7 +38,7 @@ public class FusedLocationService extends Service implements GoogleApiClient.Con
     private Location location;
 
     public class LocalBinder extends Binder {
-        FusedLocationService getService() {
+        public FusedLocationService getService() {
             return FusedLocationService.this;
         }
     }

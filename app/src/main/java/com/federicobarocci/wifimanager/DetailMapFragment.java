@@ -7,10 +7,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.federicobarocci.wifimanager.model.LocationElement;
+import com.federicobarocci.wifimanager.model.LocationKeeper;
 import com.federicobarocci.wifimanager.model.WifiElement;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
@@ -68,8 +71,19 @@ public class DetailMapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap map) {
         map.setMyLocationEnabled(true);
+        LocationKeeper locationKeeper = ((DetailActivity) getActivity()).locationExecutor.get(wifiElement);
+        LatLng center = locationKeeper.getCenter().getLocation();
         map.addMarker(new MarkerOptions()
-                .position(new LatLng(0, 0))
+                .position(center)
                 .title("Marker"));
+
+        CircleOptions options = new CircleOptions();
+        options.center( center );
+        //Radius in meters
+        options.radius( locationKeeper.getCenter().getRadius() );
+        options.fillColor( R.color.common_action_bar_splitter );
+        options.strokeColor( R.color.common_plus_signin_btn_text_light_default );
+        options.strokeWidth( 10 );
+        map.addCircle(options);
     }
 }

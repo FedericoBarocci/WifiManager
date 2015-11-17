@@ -29,6 +29,7 @@ import android.view.MenuItem;
 import com.federicobarocci.wifimanager.adapter.DetailResultAdapter;
 import com.federicobarocci.wifimanager.component.DaggerWMDetailComponent;
 import com.federicobarocci.wifimanager.model.DetailModule;
+import com.federicobarocci.wifimanager.model.LocationExecutor;
 import com.federicobarocci.wifimanager.model.WifiElement;
 
 import java.util.ArrayList;
@@ -52,8 +53,11 @@ public class DetailActivity extends AppCompatActivity {
     @Bind(R.id.tabs)
     TabLayout tabLayout;
 
+    /*@Inject
+    DetailResultAdapter detailResultAdapter;*/
+
     @Inject
-    DetailResultAdapter detailResultAdapter;
+    public LocationExecutor locationExecutor;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -66,9 +70,10 @@ public class DetailActivity extends AppCompatActivity {
 
     private void initializeInjectors() {
         ButterKnife.bind(this);
-        DaggerWMDetailComponent.builder()
+        ((WMApplication) getApplication()).getComponent().inject(this);
+        /*DaggerWMDetailComponent.builder()
                 .detailModule(new DetailModule(this))
-                .build().inject(this);
+                .build().inject(this);*/
     }
 
     private void initializeViewComponents() {
@@ -78,6 +83,7 @@ public class DetailActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(wifiElement.getSSID());
 
+        DetailResultAdapter detailResultAdapter = new DetailResultAdapter(getSupportFragmentManager());
         detailResultAdapter.addFragments(buildFragments(wifiElement));
         viewPager.setAdapter(detailResultAdapter);
         tabLayout.setupWithViewPager(viewPager);

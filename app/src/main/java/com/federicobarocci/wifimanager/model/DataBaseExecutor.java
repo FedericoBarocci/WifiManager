@@ -31,13 +31,13 @@ public class DataBaseExecutor {
             dataBaseManager.delete(wifiElement);
             remove(wifiElement.getBSSID());
 
-            return true;
+            return false;
         } else {
             //insert
             dataBaseManager.insert(wifiElement);
             elements.add(new Pair<String, WifiElement>(wifiElement.getBSSID(), wifiElement));
 
-            return false;
+            return true;
         }
     }
 
