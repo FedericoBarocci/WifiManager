@@ -5,11 +5,18 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
+import com.federicobarocci.wifimanager.model.LocationExecutor;
+import com.federicobarocci.wifimanager.model.LocationKeeper;
+import com.federicobarocci.wifimanager.model.WifiElement;
+import com.federicobarocci.wifimanager.model.WifiKeeper;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
@@ -23,6 +30,12 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
 
     /*Bind(R.id.nav_view)
     NavigationView navigationView;*/
+
+    @Inject
+    LocationExecutor locationExecutor;
+
+    @Inject
+    WifiKeeper wifiKeeper;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -61,8 +74,25 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap map) {
         map.setMyLocationEnabled(true);
-        map.addMarker(new MarkerOptions()
-                .position(new LatLng(0, 0))
-                .title("Marker"));
+
+        for(WifiElement wifiElement : wifiKeeper.getAll()) {
+            LocationKeeper locationKeeper = locationExecutor.get(wifiElement);
+
+            if (locationKeeper != null) {
+                LatLng center = locationKeeper.getCenter().getLocation();
+                map.addMarker(new MarkerOptions()
+                        .position(center)
+                        .title(wifiElement.getSSID()));
+
+                CircleOptions options = new CircleOptions();
+                options.center(center);
+                //Radius in meters
+                options.radius(locationKeeper.getCenter().getRadius());
+                options.fillColor(R.color.common_action_bar_splitter);
+                options.strokeColor(R.color.common_plus_signin_btn_text_light_default);
+                options.strokeWidth(10);
+                map.addCircle(options);
+            }
+        }
     }
 }

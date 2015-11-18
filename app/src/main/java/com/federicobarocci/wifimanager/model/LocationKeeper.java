@@ -100,4 +100,22 @@ public class LocationKeeper {
 
         nearList.remove(maxRadiusElement);
     }
+
+    @Override
+    public String toString() {
+        StringBuilder s = new StringBuilder();
+
+        s.append("[ Near locations ]\n\n");
+        for (LocationElement element : nearList) {
+            s.append(element.toString() + "\n\n");
+        }
+
+        s.append("\n[ Far location ]\n\n");
+        s.append(far.toString() + "\n");
+
+        s.append("\n\n[ Center location ]\n\n");
+        s.append(center.toString());
+
+        return s.toString();
+    }
 }

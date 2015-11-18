@@ -46,6 +46,16 @@ public class WifiKeeper {
         return wifiList.get(position).second;
     }
 
+    public List<WifiElement> getAll() {
+        List<WifiElement> list = new ArrayList<>();
+
+        for (int i = 0; i< wifiList.size(); i++) {
+            list.add(wifiList.get(i).second);
+        }
+
+        return list;
+    }
+
     private boolean update(String key, ScanResult scanResult) {
         for(int i=0; i<wifiList.size(); i++) {
             Pair<String, WifiElement> pair = wifiList.get(i);

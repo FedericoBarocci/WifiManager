@@ -72,18 +72,21 @@ public class DetailMapFragment extends Fragment implements OnMapReadyCallback {
     public void onMapReady(GoogleMap map) {
         map.setMyLocationEnabled(true);
         LocationKeeper locationKeeper = ((DetailActivity) getActivity()).locationExecutor.get(wifiElement);
-        LatLng center = locationKeeper.getCenter().getLocation();
-        map.addMarker(new MarkerOptions()
-                .position(center)
-                .title("Marker"));
 
-        CircleOptions options = new CircleOptions();
-        options.center( center );
-        //Radius in meters
-        options.radius( locationKeeper.getCenter().getRadius() );
-        options.fillColor( R.color.common_action_bar_splitter );
-        options.strokeColor( R.color.common_plus_signin_btn_text_light_default );
-        options.strokeWidth( 10 );
-        map.addCircle(options);
+        if (locationKeeper != null) {
+            LatLng center = locationKeeper.getCenter().getLocation();
+            map.addMarker(new MarkerOptions()
+                    .position(center)
+                    .title(wifiElement.getSSID()));
+
+            CircleOptions options = new CircleOptions();
+            options.center(center);
+            //Radius in meters
+            options.radius(locationKeeper.getCenter().getRadius());
+            options.fillColor(R.color.common_action_bar_splitter);
+            options.strokeColor(R.color.common_plus_signin_btn_text_light_default);
+            options.strokeWidth(10);
+            map.addCircle(options);
+        }
     }
 }

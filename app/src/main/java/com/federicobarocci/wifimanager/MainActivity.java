@@ -92,7 +92,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         checkPlayServices();
 
-
         final LocationManager manager = (LocationManager) getSystemService( Context.LOCATION_SERVICE );
 
         if ( !manager.isProviderEnabled( LocationManager.GPS_PROVIDER ) ) {
@@ -127,6 +126,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(((WMApplication) getApplication()).getComponent().provideScanResultAdapter());
         recyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        swipeRefreshLayout.setRefreshing(true);
     }
 
     @Override
@@ -229,10 +230,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         taskExecutor.scanWifi();
     }
 
-
     private void buildAlertMessageNoGps() {
         final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setMessage("Your GPS seems to be disabled, do you want to enable it?")
+        builder.setMessage("GPS is required for this application but seems to be disabled, do you want to enable it?")
                 .setCancelable(false)
                 .setPositiveButton("Yes", new DialogInterface.OnClickListener() {
                     public void onClick(@SuppressWarnings("unused") final DialogInterface dialog, @SuppressWarnings("unused") final int id) {

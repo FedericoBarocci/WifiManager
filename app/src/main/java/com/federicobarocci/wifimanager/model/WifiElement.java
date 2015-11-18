@@ -98,8 +98,9 @@ public class WifiElement implements Parcelable {
         return getCapabilities().contains("WPA");
     }
 
-    public double calculateDistance(double levelInDb, double freqInMHz)    {
-        double exp = (27.55 - (20 * Math.log10(freqInMHz)) + Math.abs(levelInDb)) / 20.0;
+    public double calculateDistance(double levelInDb, double freqInMHz) {
+        /*27.55*/
+        double exp = (10 - (20 * Math.log10(freqInMHz)) + Math.abs(levelInDb)) / 20.0;
         return Math.pow(10.0, exp);
     }
 

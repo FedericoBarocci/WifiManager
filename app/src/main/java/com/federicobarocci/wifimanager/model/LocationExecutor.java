@@ -51,15 +51,16 @@ public class LocationExecutor {
     }
     
     public void store(WifiElement wifiElement) {
-        Location location = fusedLocationService.getLocation();
-        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-        LocationElement locationElement = new LocationElement(latLng, wifiElement.calculateDistance());
+        if(fusedLocationService.isLocationAvailable()) {
+            Location location = fusedLocationService.getLocation();
+            LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+            LocationElement locationElement = new LocationElement(latLng, wifiElement.calculateDistance());
 
-        if(elements.containsKey(wifiElement.getBSSID())) {
-            elements.get(wifiElement.getBSSID()).addNear(locationElement);
-        }
-        else {
-            elements.put(wifiElement.getBSSID(), new LocationKeeper(locationElement));
+            if (elements.containsKey(wifiElement.getBSSID())) {
+                elements.get(wifiElement.getBSSID()).addNear(locationElement);
+            } else {
+                elements.put(wifiElement.getBSSID(), new LocationKeeper(locationElement));
+            }
         }
     }
 
