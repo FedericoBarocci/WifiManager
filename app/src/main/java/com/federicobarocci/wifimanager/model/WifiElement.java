@@ -4,15 +4,15 @@ import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Parcel;
 import android.os.Parcelable;
-import android.support.v4.util.Pair;
 
-import javax.annotation.Resource;
+import com.federicobarocci.wifimanager.R;
 
 /**
  * Created by federico on 11/11/15.
  */
 public class WifiElement implements Parcelable {
     public static final int RSSI_LEVEL = 4;
+    private static final String UNKNOW = "Unknow";
 
     private final String bssid;
 
@@ -21,13 +21,13 @@ public class WifiElement implements Parcelable {
     private int frequency;
     private int level;
 
-    /* Static Constructors */
-    public static Pair<String, WifiElement> create(ScanResult scanResult) {
-        return new Pair<String, WifiElement> (scanResult.BSSID, new WifiElement(scanResult));
-    }
+    private boolean lineOfSight;
 
-    public static Pair<String, WifiElement> create(String bbsid, String ssid, String capabilities, int frequency, int level) {
-        return new Pair<String, WifiElement> (bbsid, new WifiElement(bbsid, ssid, capabilities, frequency, level));
+    public WifiElement(String bssid, String ssid, String capabilities) {
+        this.bssid = bssid;
+        this.ssid = ssid;
+        this.capabilities = capabilities;
+        this.lineOfSight = false;
     }
 
     /* Constructors */
@@ -37,6 +37,7 @@ public class WifiElement implements Parcelable {
         this.capabilities = capabilities;
         this.frequency = frequency;
         this.level = level;
+        this.lineOfSight = true;
     }
 
     public WifiElement(ScanResult scanResult) {
@@ -45,6 +46,7 @@ public class WifiElement implements Parcelable {
         this.capabilities = scanResult.capabilities;
         this.frequency = scanResult.frequency;
         this.level = scanResult.level;
+        this.lineOfSight = true;
     }
 
     /* Standard Getters */
@@ -64,8 +66,28 @@ public class WifiElement implements Parcelable {
         return frequency;
     }
 
+    public boolean isLineOfSight() {
+        return lineOfSight;
+    }
+
     public int getLevel() {
         return level;
+    }
+
+    public String getFrequencyString() {
+        return isLineOfSight() ? String.format("%d MHz", frequency) : UNKNOW;
+    }
+
+    public String getLevelString() {
+        return isLineOfSight() ? String.format("%d dBm", level) : UNKNOW;
+    }
+
+    public String getSignalLevelString() {
+        return isLineOfSight() ? String.format("%d/%d", getSignalLevel() + 1, RSSI_LEVEL) : UNKNOW;
+    }
+
+    public String getDistanceString() {
+        return isLineOfSight() ? String.format("%f m", calculateDistance()) : UNKNOW;
     }
 
     /* Standard Setters */
@@ -115,6 +137,7 @@ public class WifiElement implements Parcelable {
         capabilities = in.readString();
         frequency = in.readInt();
         level = in.readInt();
+        lineOfSight = in.readByte() != 0;
     }
 
     @Override
@@ -129,6 +152,7 @@ public class WifiElement implements Parcelable {
         dest.writeString(capabilities);
         dest.writeInt(frequency);
         dest.writeInt(level);
+        dest.writeByte((byte) (lineOfSight ? 1 : 0));
     }
 
     @SuppressWarnings("unused")

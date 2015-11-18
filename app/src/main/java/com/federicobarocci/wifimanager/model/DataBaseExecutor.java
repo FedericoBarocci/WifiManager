@@ -1,10 +1,5 @@
 package com.federicobarocci.wifimanager.model;
 
-import android.support.design.widget.Snackbar;
-import android.support.v4.util.Pair;
-import android.support.v7.widget.RecyclerView;
-import android.view.View;
-
 import java.util.List;
 
 import javax.inject.Inject;
@@ -15,29 +10,42 @@ import javax.inject.Inject;
 public class DataBaseExecutor {
 
     private final DataBaseManager dataBaseManager;
-    private final List<Pair<String, WifiElement>> elements;
-//    private final Context context;
+    private final LocationExecutor locationExecutor;
+    private final List<WifiDBElement> elements;
 
     @Inject
-    public DataBaseExecutor(/*Context context, */DataBaseManager dataBaseManager) {
-//        this.context = context;
+    public DataBaseExecutor(DataBaseManager dataBaseManager, LocationExecutor locationExecutor) {
         this.dataBaseManager = dataBaseManager;
+        this.locationExecutor = locationExecutor;
         this.elements = dataBaseManager.select();
     }
 
     public boolean toggleSave(WifiElement wifiElement) {
         if (contains(wifiElement.getBSSID())) {
-            //delete
-            dataBaseManager.delete(wifiElement);
-            remove(wifiElement.getBSSID());
-
+            delete(wifiElement.getBSSID());
             return false;
-        } else {
-            //insert
-            dataBaseManager.insert(wifiElement);
-            elements.add(new Pair<String, WifiElement>(wifiElement.getBSSID(), wifiElement));
-
+        }
+        else {
+            save(wifiElement);
             return true;
+        }
+    }
+
+    private void delete(String key) {
+        dataBaseManager.delete(key);
+        remove(key);
+    }
+
+    private void save(WifiElement wifiElement) {
+        if (locationExecutor.contain(wifiElement.getBSSID())) {
+            LocationElement locationElement = locationExecutor.get(wifiElement.getBSSID()).getCenter();
+
+            dataBaseManager.insert(wifiElement, locationElement);
+            elements.add(new WifiDBElement(wifiElement, locationElement));
+        }
+        else {
+            dataBaseManager.insert(wifiElement);
+            elements.add(new WifiDBElement(wifiElement));
         }
     }
 
@@ -46,8 +54,8 @@ public class DataBaseExecutor {
     }
 
     public boolean contains(String key) {
-        for(int i=0; i<elements.size(); i++) {
-            if(elements.get(i).first.equals(key)) {
+        for (int i = 0; i < elements.size(); i++) {
+            if (elements.get(i).getBSSID().equals(key)) {
                 return true;
             }
         }
@@ -55,15 +63,15 @@ public class DataBaseExecutor {
     }
 
     private void remove(String key) {
-        for(int i=0; i<elements.size(); i++) {
-            if(elements.get(i).first.equals(key)) {
+        for (int i = 0; i < elements.size(); i++) {
+            if (elements.get(i).getBSSID().equals(key)) {
                 elements.remove(i);
                 return;
             }
         }
     }
 
-    public WifiElement get(int position) {
-        return elements.get(position).second;
+    public WifiDBElement get(int position) {
+        return elements.get(position);
     }
 }

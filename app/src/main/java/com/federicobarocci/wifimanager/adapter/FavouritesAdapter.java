@@ -13,7 +13,9 @@ import com.federicobarocci.wifimanager.DetailActivity;
 import com.federicobarocci.wifimanager.R;
 import com.federicobarocci.wifimanager.model.DataBaseExecutor;
 import com.federicobarocci.wifimanager.model.ResourceProvider;
+import com.federicobarocci.wifimanager.model.WifiDBElement;
 import com.federicobarocci.wifimanager.model.WifiElement;
+import com.federicobarocci.wifimanager.model.WifiKeeper;
 
 import javax.inject.Inject;
 
@@ -27,12 +29,14 @@ import butterknife.OnClick;
 public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.ViewHolder> {
 
     private final DataBaseExecutor dataBaseExecutor;
+    private final WifiKeeper wifiKeeper;
     private final SnackBarUndoFavourites snackBarUndoFavourites;
     private final ResourceProvider resourceProvider;
 
     @Inject
-    public FavouritesAdapter(DataBaseExecutor dataBaseExecutor, SnackBarUndoFavourites snackBarUndoFavourites, ResourceProvider resourceProvider) {
+    public FavouritesAdapter(DataBaseExecutor dataBaseExecutor, WifiKeeper wifiKeeper, SnackBarUndoFavourites snackBarUndoFavourites, ResourceProvider resourceProvider) {
         this.dataBaseExecutor = dataBaseExecutor;
+        this.wifiKeeper = wifiKeeper;
         this.snackBarUndoFavourites = snackBarUndoFavourites;
         this.resourceProvider = resourceProvider;
     }
@@ -45,7 +49,11 @@ public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.Vi
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int position) {
-        WifiElement wifiElement = dataBaseExecutor.get(position);
+        WifiDBElement wifiDBElement = dataBaseExecutor.get(position);//.toWifiElement();
+
+        WifiElement wifiElement = wifiKeeper.contains(wifiDBElement.getBSSID()) ?
+                wifiKeeper.getElement(wifiDBElement.getBSSID()) :
+                wifiDBElement.toWifiElement();
 
         viewHolder.wifiElement = wifiElement;
         viewHolder.textViewTitle.setText(wifiElement.getSSID());

@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.federicobarocci.wifimanager.DetailActivity;
 import com.federicobarocci.wifimanager.R;
-import com.federicobarocci.wifimanager.model.DataBaseExecutor;
 import com.federicobarocci.wifimanager.model.ResourceProvider;
 import com.federicobarocci.wifimanager.model.WifiElement;
 import com.federicobarocci.wifimanager.model.WifiKeeper;

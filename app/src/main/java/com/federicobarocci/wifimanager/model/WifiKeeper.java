@@ -3,8 +3,6 @@ package com.federicobarocci.wifimanager.model;
 import android.net.wifi.ScanResult;
 import android.support.v4.util.Pair;
 
-import com.google.android.gms.maps.model.LatLng;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -31,8 +29,8 @@ public class WifiKeeper {
     public void populate(List<ScanResult> scanResults) {
         wifiList.clear();
 
-        for (ScanResult scanresult : scanResults) {
-            Pair<String, WifiElement> wifiElement = WifiElement.create(scanresult);
+        for (ScanResult scanResult : scanResults) {
+            Pair<String, WifiElement> wifiElement = new Pair<>(scanResult.BSSID, new WifiElement(scanResult));
             wifiList.add(wifiElement);
             locationExecutor.store(wifiElement.second);
         }
@@ -57,11 +55,11 @@ public class WifiKeeper {
     }
 
     private boolean update(String key, ScanResult scanResult) {
-        for(int i=0; i<wifiList.size(); i++) {
+        for(int i = 0; i < wifiList.size(); i++) {
             Pair<String, WifiElement> pair = wifiList.get(i);
 
             if(pair.first.equals(key)) {
-                wifiList.set(i, WifiElement.create(scanResult));
+                wifiList.set(i, new Pair<>(scanResult.BSSID, new WifiElement(scanResult)));
 
                 return true;
             }
@@ -70,13 +68,23 @@ public class WifiKeeper {
         return false;
     }
 
-    public boolean contains(String key) {
-        for(int i=0; i<wifiList.size(); i++) {
-            if (wifiList.get(i).first.equals(key)) {
+    public boolean contains(String bssid) {
+        for(int i = 0; i < wifiList.size(); i++) {
+            if (wifiList.get(i).first.equals(bssid)) {
                 return true;
             }
         }
 
         return false;
+    }
+
+    public WifiElement getElement(String bssid) {
+        for(int i=0; i<wifiList.size(); i++) {
+            if (wifiList.get(i).first.equals(bssid)) {
+                return wifiList.get(i).second;
+            }
+        }
+
+        return null;
     }
 }

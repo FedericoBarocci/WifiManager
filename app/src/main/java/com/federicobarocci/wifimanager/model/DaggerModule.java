@@ -57,8 +57,8 @@ public class DaggerModule {
 
     @Provides
     @Singleton
-    DataBaseExecutor provideDataBaseExecutor(DataBaseManager dataBaseManager) {
-        return new DataBaseExecutor(dataBaseManager);
+    DataBaseExecutor provideDataBaseExecutor(DataBaseManager dataBaseManager, LocationExecutor locationExecutor) {
+        return new DataBaseExecutor(dataBaseManager, locationExecutor);
     }
 
     @Provides
@@ -93,8 +93,8 @@ public class DaggerModule {
 
     @Provides
     @Singleton
-    FavouritesAdapter provideFavouritesAdapter(DataBaseExecutor dataBaseExecutor, SnackBarUndoFavourites snackBarUndoFavourites, ResourceProvider resourceProvider) {
-        return new FavouritesAdapter(dataBaseExecutor, snackBarUndoFavourites, resourceProvider);
+    FavouritesAdapter provideFavouritesAdapter(DataBaseExecutor dataBaseExecutor, WifiKeeper wifiKeeper, SnackBarUndoFavourites snackBarUndoFavourites, ResourceProvider resourceProvider) {
+        return new FavouritesAdapter(dataBaseExecutor, wifiKeeper, snackBarUndoFavourites, resourceProvider);
     }
 
     @Provides

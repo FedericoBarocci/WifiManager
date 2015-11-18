@@ -22,7 +22,6 @@ import javax.inject.Inject;
 public class LocationExecutor {
     private static final String TAG = "LocationExecutor";
 
-   // private final WifiKeeper wifiKeeper;
     private final Context context;
 
     private FusedLocationService fusedLocationService;
@@ -30,46 +29,45 @@ public class LocationExecutor {
     private ServiceConnection serviceConnection = new ServiceConnection() {
         @Override
         public void onServiceConnected(ComponentName name, IBinder service) {
-            Log.v(TAG, "Service: " + name + " connected");
+            Log.e(TAG, "Service: " + name + " connected");
             fusedLocationService = ((FusedLocationService.LocalBinder) service).getService();
         }
 
         @Override
         public void onServiceDisconnected(ComponentName name) {
-            Log.v(TAG, "Service: " + name + " disconnected");
+            Log.e(TAG, "Service: " + name + " disconnected");
         }
     };
 
     private Map<String, LocationKeeper> elements = new HashMap<>();
 
     @Inject
-    public LocationExecutor (Context context/*, WifiKeeper wifiKeeper*/) {
-       // this.wifiKeeper = wifiKeeper;
+    public LocationExecutor (Context context) {
         this.context = context;
         Intent intent = new Intent(context, FusedLocationService.class);
         context.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
     }
     
     public void store(WifiElement wifiElement) {
-        if(fusedLocationService.isLocationAvailable()) {
+        if (fusedLocationService.isLocationAvailable()) {
             Location location = fusedLocationService.getLocation();
             LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
             LocationElement locationElement = new LocationElement(latLng, wifiElement.calculateDistance());
 
             if (elements.containsKey(wifiElement.getBSSID())) {
                 elements.get(wifiElement.getBSSID()).addNear(locationElement);
-            } else {
+            }
+            else {
                 elements.put(wifiElement.getBSSID(), new LocationKeeper(locationElement));
             }
         }
     }
 
-    public LocationKeeper get(WifiElement wifiElement) {
-        if(elements.containsKey(wifiElement.getBSSID())) {
-            return elements.get(wifiElement.getBSSID());
-        }
-        else {
-            return null;
-        }
+    public LocationKeeper get(String bssid) {
+        return elements.get(bssid);
+    }
+
+    public boolean contain(String bssid) {
+        return elements.containsKey(bssid);
     }
 }

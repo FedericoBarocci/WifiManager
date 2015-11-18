@@ -5,7 +5,6 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.support.v4.util.Pair;
 import android.util.Log;
 
 import java.util.ArrayList;
@@ -18,19 +17,22 @@ import javax.inject.Inject;
  */
 public class DataBaseManager extends SQLiteOpenHelper {
 
-    private static final String DATABASE_NAME = "WifiManager.db";
+    private static final String DATABASE_NAME = "WifiExplorer.db";
     private static final int DATABASE_VERSION = 1;
 
     public static final String TABLE_WIFI = "wifi";
     public static final String FIELD_BSSID = "bssid";
     public static final String FIELD_SSID = "ssid";
     public static final String FIELD_CAPABILITIES = "capabilities";
-    public static final String FIELD_FREQUENCY = "frequency";
-    public static final String FIELD_LEVEL = "level";
+    //public static final String FIELD_FREQUENCY = "frequency";
+    //public static final String FIELD_LEVEL = "level";
+    public static final String FIELD_LAT = "latitude";
+    public static final String FIELD_LONG = "longitude";
+    public static final String FIELD_RADIUS = "radius";
 
     private static final String TABLE_WIFI_CREATE =
-            String.format("create table %s (%s text primary key, %s text, %s text, %s integer, %s integer)",
-                    TABLE_WIFI, FIELD_BSSID, FIELD_SSID, FIELD_CAPABILITIES, FIELD_FREQUENCY, FIELD_LEVEL);
+            String.format("create table %s (%s text primary key, %s text, %s text, %s real, %s real, %s real)",
+                    TABLE_WIFI, FIELD_BSSID, FIELD_SSID, FIELD_CAPABILITIES, FIELD_LAT, FIELD_LONG, FIELD_RADIUS);
 
     @Inject
     public DataBaseManager(Context context) {
@@ -50,25 +52,40 @@ public class DataBaseManager extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public List<Pair<String, WifiElement>> select() {
+    public List<WifiDBElement> select() {
         SQLiteDatabase db = this.getReadableDatabase();
         final String query = "select * from " + TABLE_WIFI;
 
         Cursor c = db.rawQuery(query, null);
-        List<Pair<String, WifiElement>> list = new ArrayList<>();
+        List<WifiDBElement> list = new ArrayList<>();
 
         if (c != null && c.moveToFirst()) {
             do {
-                list.add(WifiElement.create(
+                list.add(new WifiDBElement(
                         c.getString(c.getColumnIndex(FIELD_BSSID)),
                         c.getString(c.getColumnIndex(FIELD_SSID)),
                         c.getString(c.getColumnIndex(FIELD_CAPABILITIES)),
-                        c.getInt(c.getColumnIndex(FIELD_FREQUENCY)),
-                        c.getInt(c.getColumnIndex(FIELD_LEVEL))));
+                        c.getDouble(c.getColumnIndex(FIELD_LAT)),
+                        c.getDouble(c.getColumnIndex(FIELD_LONG)),
+                        c.getDouble(c.getColumnIndex(FIELD_RADIUS))));
             } while (c.moveToNext());
         }
 
         return list;
+    }
+
+    public long insert(WifiElement wifiElement, LocationElement locationElement) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put(FIELD_BSSID, wifiElement.getBSSID());
+        contentValues.put(FIELD_SSID, wifiElement.getSSID());
+        contentValues.put(FIELD_CAPABILITIES, wifiElement.getCapabilities());
+        contentValues.put(FIELD_LAT, locationElement.getLocation().latitude);
+        contentValues.put(FIELD_LONG, locationElement.getLocation().longitude);
+        contentValues.put(FIELD_RADIUS, locationElement.getRadius());
+
+        return db.insert(TABLE_WIFI, null, contentValues);
     }
 
     public long insert(WifiElement wifiElement) {
@@ -78,15 +95,26 @@ public class DataBaseManager extends SQLiteOpenHelper {
         contentValues.put(FIELD_BSSID, wifiElement.getBSSID());
         contentValues.put(FIELD_SSID, wifiElement.getSSID());
         contentValues.put(FIELD_CAPABILITIES, wifiElement.getCapabilities());
-        contentValues.put(FIELD_FREQUENCY, wifiElement.getFrequency());
-        contentValues.put(FIELD_LEVEL, wifiElement.getLevel());
 
         return db.insert(TABLE_WIFI, null, contentValues);
     }
 
-    public void delete(WifiElement wifiElement) {
+    public void delete(String bssid) {
         SQLiteDatabase db = this.getWritableDatabase();
-        db.delete(TABLE_WIFI, FIELD_BSSID + " = ?", new String[]{wifiElement.getBSSID()});
+        db.delete(TABLE_WIFI, FIELD_BSSID + " = ?", new String[]{bssid});
+    }
+
+    public int update(WifiElement wifiElement, LocationElement locationElement) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put(FIELD_SSID, wifiElement.getSSID());
+        contentValues.put(FIELD_CAPABILITIES, wifiElement.getCapabilities());
+        contentValues.put(FIELD_LAT, locationElement.getLocation().latitude);
+        contentValues.put(FIELD_LONG, locationElement.getLocation().longitude);
+        contentValues.put(FIELD_RADIUS, locationElement.getRadius());
+
+        return db.update(TABLE_WIFI, contentValues, FIELD_BSSID + " = ?", new String[]{wifiElement.getBSSID()});
     }
 
     public int update(WifiElement wifiElement) {
@@ -95,8 +123,6 @@ public class DataBaseManager extends SQLiteOpenHelper {
 
         contentValues.put(FIELD_SSID, wifiElement.getSSID());
         contentValues.put(FIELD_CAPABILITIES, wifiElement.getCapabilities());
-        contentValues.put(FIELD_FREQUENCY, wifiElement.getFrequency());
-        contentValues.put(FIELD_LEVEL, wifiElement.getLevel());
 
         return db.update(TABLE_WIFI, contentValues, FIELD_BSSID + " = ?", new String[]{wifiElement.getBSSID()});
     }

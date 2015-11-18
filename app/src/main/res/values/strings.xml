@@ -8,8 +8,8 @@
 
     <string name="detail.card1.title">SSID</string>
     <string name="detail.card2.title">BSSID</string>
-    <string name="detail.card3.title">Signal Strength</string>
-    <string name="detail.card4.title">Capabilites</string>
+    <string name="detail.card3.title">Capabilites</string>
+    <string name="detail.card4.title">Signal Strength</string>
     <string name="detail.card5.title">Frequency</string>
     <string name="detail.card6.title">RSSI</string>
     <string name="detail.card7.title">Distance</string>
@@ -26,4 +26,5 @@
     <string name="restored_wifi_element">Favourite restored</string>
     <string name="undo">UNDO</string>
     <string name="detail.card8.title">Discovered locations</string>
+    <string name="unknow">Unknow</string>
 </resources>

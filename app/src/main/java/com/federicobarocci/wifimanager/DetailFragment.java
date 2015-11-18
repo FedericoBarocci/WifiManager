@@ -69,13 +69,13 @@ public class DetailFragment extends Fragment {
 
         card1.setText(wifiElement.getSSID());
         card2.setText(wifiElement.getBSSID());
-        card3.setText(String.format("%d dBm", wifiElement.getLevel()));
-        card4.setText(wifiElement.getCapabilities());
-        card5.setText(String.format("%d MHz", wifiElement.getFrequency()));
-        card6.setText(String.format("%d/%d", wifiElement.getSignalLevel() + 1, wifiElement.RSSI_LEVEL));
-        card7.setText(String.format("%f m", wifiElement.calculateDistance()));
+        card3.setText(wifiElement.getCapabilities());
+        card4.setText(wifiElement.getLevelString());
+        card5.setText(wifiElement.getFrequencyString());
+        card6.setText(wifiElement.getSignalLevelString());
+        card7.setText(wifiElement.getDistanceString());
 
-        LocationKeeper locationKeeper = ((DetailActivity) getActivity()).locationExecutor.get(wifiElement);
+        LocationKeeper locationKeeper = ((DetailActivity) getActivity()).locationExecutor.get(wifiElement.getBSSID());
 
         if (locationKeeper != null) {
             card8.setText(locationKeeper.toString());

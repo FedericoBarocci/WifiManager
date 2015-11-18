@@ -76,7 +76,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
         map.setMyLocationEnabled(true);
 
         for(WifiElement wifiElement : wifiKeeper.getAll()) {
-            LocationKeeper locationKeeper = locationExecutor.get(wifiElement);
+            LocationKeeper locationKeeper = locationExecutor.get(wifiElement.getBSSID());
 
             if (locationKeeper != null) {
                 LatLng center = locationKeeper.getCenter().getLocation();

@@ -23,12 +23,9 @@ import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Pair;
-import android.view.Menu;
 import android.view.MenuItem;
 
 import com.federicobarocci.wifimanager.adapter.DetailResultAdapter;
-import com.federicobarocci.wifimanager.component.DaggerWMDetailComponent;
-import com.federicobarocci.wifimanager.model.DetailModule;
 import com.federicobarocci.wifimanager.model.LocationExecutor;
 import com.federicobarocci.wifimanager.model.WifiElement;
 

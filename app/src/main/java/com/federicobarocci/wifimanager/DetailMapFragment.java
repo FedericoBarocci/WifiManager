@@ -1,13 +1,11 @@
 package com.federicobarocci.wifimanager;
 
-import android.net.wifi.ScanResult;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.federicobarocci.wifimanager.model.LocationElement;
 import com.federicobarocci.wifimanager.model.LocationKeeper;
 import com.federicobarocci.wifimanager.model.WifiElement;
 import com.google.android.gms.maps.GoogleMap;
@@ -71,7 +69,7 @@ public class DetailMapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap map) {
         map.setMyLocationEnabled(true);
-        LocationKeeper locationKeeper = ((DetailActivity) getActivity()).locationExecutor.get(wifiElement);
+        LocationKeeper locationKeeper = ((DetailActivity) getActivity()).locationExecutor.get(wifiElement.getBSSID());
 
         if (locationKeeper != null) {
             LatLng center = locationKeeper.getCenter().getLocation();
