@@ -17,7 +17,8 @@ import butterknife.ButterKnife;
  * Created by federico on 07/11/15.
  */
 public class DetailFragment extends Fragment {
-    public static final String ARGS = "ScanResult";
+    public static final String ARGS_WIFI = "WifiElement";
+    public static final String ARGS_LOCATION = "LocationKeeper";
     public static final String NAME = "Info";
 
     @Bind(R.id.card1)
@@ -45,11 +46,13 @@ public class DetailFragment extends Fragment {
     TextView card8;
 
     private WifiElement wifiElement;
+    private LocationKeeper locationKeeper;
 
-    public static DetailFragment newInstance(WifiElement wifiElement) {
+    public static DetailFragment newInstance(WifiElement wifiElement, LocationKeeper locationKeeper) {
         Bundle args = new Bundle();
 
-        args.putParcelable(ARGS, wifiElement);
+        args.putParcelable(ARGS_WIFI, wifiElement);
+        args.putParcelable(ARGS_LOCATION, locationKeeper);
         DetailFragment fragment = new DetailFragment();
         fragment.setArguments(args);
 
@@ -59,7 +62,8 @@ public class DetailFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        wifiElement = getArguments().getParcelable(ARGS);
+        wifiElement = getArguments().getParcelable(ARGS_WIFI);
+        locationKeeper = getArguments().getParcelable(ARGS_LOCATION);
     }
 
     @Override
@@ -75,13 +79,13 @@ public class DetailFragment extends Fragment {
         card6.setText(wifiElement.getSignalLevelString());
         card7.setText(wifiElement.getDistanceString());
 
-        LocationKeeper locationKeeper = ((DetailActivity) getActivity()).locationExecutor.get(wifiElement.getBSSID());
+        //LocationKeeper locationKeeper = ((DetailActivity) getActivity()).locationExecutor.get(wifiElement.getBSSID());
 
         if (locationKeeper != null) {
             card8.setText(locationKeeper.toString());
         }
         else {
-            card8.setText("No information available");
+            card8.setText(R.string.no_information);
         }
 
         return view;

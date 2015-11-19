@@ -5,6 +5,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 
+import com.federicobarocci.wifimanager.model.DataBaseExecutor;
 import com.federicobarocci.wifimanager.model.LocationExecutor;
 import com.federicobarocci.wifimanager.model.LocationKeeper;
 import com.federicobarocci.wifimanager.model.WifiElement;
@@ -32,10 +33,13 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     NavigationView navigationView;*/
 
     @Inject
+    WifiKeeper wifiKeeper;
+
+    @Inject
     LocationExecutor locationExecutor;
 
     @Inject
-    WifiKeeper wifiKeeper;
+    DataBaseExecutor dataBaseExecutor;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -75,7 +79,36 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap map) {
         map.setMyLocationEnabled(true);
 
-        for(WifiElement wifiElement : wifiKeeper.getAll()) {
+        for (String bssid : locationExecutor.getAllKeys()) {
+            LocationKeeper locationKeeper = locationExecutor.get(bssid);
+            String ssid;
+
+            if (wifiKeeper.contains(bssid)) {
+                ssid = wifiKeeper.getElement(bssid).getSSID();
+            }
+            else if (dataBaseExecutor.contains(bssid)) {
+                ssid = dataBaseExecutor.getElement(bssid).getSSID();
+            }
+            else {
+                ssid = bssid;
+            }
+
+            LatLng center = locationKeeper.getCenter().getLocation();
+            map.addMarker(new MarkerOptions()
+                    .position(center)
+                    .title(ssid));
+
+            CircleOptions options = new CircleOptions();
+            options.center(center);
+            //Radius in meters
+            options.radius(locationKeeper.getCenter().getRadius());
+            options.fillColor(R.color.common_action_bar_splitter);
+            options.strokeColor(R.color.common_plus_signin_btn_text_light_default);
+            options.strokeWidth(10);
+            map.addCircle(options);
+        }
+
+        /*for(WifiElement wifiElement : wifiKeeper.getAll()) {
             LocationKeeper locationKeeper = locationExecutor.get(wifiElement.getBSSID());
 
             if (locationKeeper != null) {
@@ -93,6 +126,6 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 options.strokeWidth(10);
                 map.addCircle(options);
             }
-        }
+        }*/
     }
 }

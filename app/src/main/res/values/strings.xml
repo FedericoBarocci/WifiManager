@@ -27,4 +27,5 @@
     <string name="undo">UNDO</string>
     <string name="detail.card8.title">Discovered locations</string>
     <string name="unknow">Unknow</string>
+    <string name="no_information">No information available</string>
 </resources>

@@ -12,7 +12,9 @@ import com.federicobarocci.wifimanager.FusedLocationService;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -69,5 +71,21 @@ public class LocationExecutor {
 
     public boolean contain(String bssid) {
         return elements.containsKey(bssid);
+    }
+
+    public void populate(List<WifiDBElement> dbElements) {
+        for (WifiDBElement wifiDBElement : dbElements) {
+            if (wifiDBElement.hasLocation()) {
+                if (elements.containsKey(wifiDBElement.getBSSID())) {
+                    elements.get(wifiDBElement.getBSSID()).setCenter(wifiDBElement.toLocationElement());
+                } else {
+                    elements.put(wifiDBElement.getBSSID(), new LocationKeeper(wifiDBElement.toLocationElement()));
+                }
+            }
+        }
+    }
+
+    public Set<String> getAllKeys() {
+        return elements.keySet();
     }
 }

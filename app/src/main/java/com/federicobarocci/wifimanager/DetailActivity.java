@@ -27,6 +27,7 @@ import android.view.MenuItem;
 
 import com.federicobarocci.wifimanager.adapter.DetailResultAdapter;
 import com.federicobarocci.wifimanager.model.LocationExecutor;
+import com.federicobarocci.wifimanager.model.LocationKeeper;
 import com.federicobarocci.wifimanager.model.WifiElement;
 
 import java.util.ArrayList;
@@ -54,7 +55,7 @@ public class DetailActivity extends AppCompatActivity {
     DetailResultAdapter detailResultAdapter;*/
 
     @Inject
-    public LocationExecutor locationExecutor;
+    LocationExecutor locationExecutor;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -75,22 +76,23 @@ public class DetailActivity extends AppCompatActivity {
 
     private void initializeViewComponents() {
         WifiElement wifiElement = getIntent().getParcelableExtra(EXTRA_NAME);
+        LocationKeeper locationKeeper = locationExecutor.get(wifiElement.getBSSID());
 
         setSupportActionBar(toolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(wifiElement.getSSID());
 
         DetailResultAdapter detailResultAdapter = new DetailResultAdapter(getSupportFragmentManager());
-        detailResultAdapter.addFragments(buildFragments(wifiElement));
+        detailResultAdapter.addFragments(buildFragments(wifiElement, locationKeeper));
         viewPager.setAdapter(detailResultAdapter);
         tabLayout.setupWithViewPager(viewPager);
     }
 
-    private List<Pair<String, Fragment>> buildFragments(WifiElement wifiElement) {
+    private List<Pair<String, Fragment>> buildFragments(WifiElement wifiElement, LocationKeeper locationKeeper) {
         List<Pair<String, Fragment>> listFragments = new ArrayList<>();
 
-        listFragments.add(Pair.<String, Fragment>create(DetailFragment.NAME, DetailFragment.newInstance(wifiElement)));
-        listFragments.add(Pair.<String, Fragment>create(DetailMapFragment.NAME, DetailMapFragment.newInstance(wifiElement)));
+        listFragments.add(Pair.<String, Fragment>create(DetailFragment.NAME, DetailFragment.newInstance(wifiElement, locationKeeper)));
+        listFragments.add(Pair.<String, Fragment>create(DetailMapFragment.NAME, DetailMapFragment.newInstance(wifiElement, locationKeeper)));
 
         return listFragments;
     }

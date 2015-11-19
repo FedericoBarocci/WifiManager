@@ -1,5 +1,7 @@
 package com.federicobarocci.wifimanager.model;
 
+import com.google.android.gms.maps.model.LatLng;
+
 /**
  * Created by federico on 18/11/15.
  */
@@ -7,6 +9,7 @@ public class WifiDBElement {
     private final String bssid;
     private final String ssid;
     private final String capabilities;
+    private final boolean hasLocationInfo;
     
     private double latitude;
     private double longitude;
@@ -19,6 +22,7 @@ public class WifiDBElement {
         this.latitude = latitude;
         this.longitude = longitude;
         this.radius = radius;
+        this.hasLocationInfo = true;
     }
 
     public WifiDBElement(WifiElement wifiElement, LocationElement locationElement) {
@@ -28,12 +32,14 @@ public class WifiDBElement {
         this.latitude = locationElement.getLocation().latitude;
         this.longitude = locationElement.getLocation().longitude;
         this.radius = locationElement.getRadius();
+        this.hasLocationInfo = true;
     }
 
     public WifiDBElement(WifiElement wifiElement) {
         this.bssid = wifiElement.getBSSID();
         this.ssid = wifiElement.getSSID();
         this.capabilities = wifiElement.getCapabilities();
+        this.hasLocationInfo = false;
     }
 
     public String getBSSID() {
@@ -44,7 +50,7 @@ public class WifiDBElement {
         return ssid;
     }
 
-    public String getCapabilities() {
+    /*public String getCapabilities() {
         return capabilities;
     }
 
@@ -58,9 +64,17 @@ public class WifiDBElement {
 
     public double getRadius() {
         return radius;
+    }*/
+
+    public boolean hasLocation() {
+        return hasLocationInfo;
     }
 
     public WifiElement toWifiElement() {
         return new WifiElement(bssid, ssid, capabilities);
+    }
+
+    public LocationElement toLocationElement() {
+        return new LocationElement(new LatLng(latitude, longitude), radius);
     }
 }

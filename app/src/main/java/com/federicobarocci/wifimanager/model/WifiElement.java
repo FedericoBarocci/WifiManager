@@ -20,7 +20,6 @@ public class WifiElement implements Parcelable {
     private String capabilities;
     private int frequency;
     private int level;
-
     private boolean lineOfSight;
 
     public WifiElement(String bssid, String ssid, String capabilities) {

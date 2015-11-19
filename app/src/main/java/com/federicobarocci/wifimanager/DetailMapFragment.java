@@ -21,16 +21,19 @@ import butterknife.ButterKnife;
  * Created by federico on 07/11/15.
  */
 public class DetailMapFragment extends Fragment implements OnMapReadyCallback {
-    public static final String ARGS = "ScanResult";
+    public static final String ARGS_WIFI = "WifiElement";
+    public static final String ARGS_LOCATION = "LocationKeeper";
     public static final String NAME = "Map";
 
     private WifiElement wifiElement;
+    private LocationKeeper locationKeeper;
     //private SupportMapFragment mapFragment;
 
-    public static DetailMapFragment newInstance(WifiElement wifiElement) {
+    public static DetailMapFragment newInstance(WifiElement wifiElement, LocationKeeper locationKeeper) {
         Bundle args = new Bundle();
 
-        args.putParcelable(ARGS, wifiElement);
+        args.putParcelable(ARGS_WIFI, wifiElement);
+        args.putParcelable(ARGS_LOCATION, locationKeeper);
         DetailMapFragment fragment = new DetailMapFragment();
         fragment.setArguments(args);
 
@@ -40,7 +43,8 @@ public class DetailMapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        wifiElement = getArguments().getParcelable(ARGS);
+        wifiElement = getArguments().getParcelable(ARGS_WIFI);
+        locationKeeper = getArguments().getParcelable(ARGS_LOCATION);
     }
 
     @Override
@@ -69,7 +73,7 @@ public class DetailMapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap map) {
         map.setMyLocationEnabled(true);
-        LocationKeeper locationKeeper = ((DetailActivity) getActivity()).locationExecutor.get(wifiElement.getBSSID());
+        //LocationKeeper locationKeeper = ((DetailActivity) getActivity()).locationExecutor.get(wifiElement.getBSSID());
 
         if (locationKeeper != null) {
             LatLng center = locationKeeper.getCenter().getLocation();

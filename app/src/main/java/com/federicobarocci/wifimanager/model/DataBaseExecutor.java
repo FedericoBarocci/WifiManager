@@ -18,6 +18,8 @@ public class DataBaseExecutor {
         this.dataBaseManager = dataBaseManager;
         this.locationExecutor = locationExecutor;
         this.elements = dataBaseManager.select();
+
+        locationExecutor.populate(elements);
     }
 
     public boolean toggleSave(WifiElement wifiElement) {
@@ -53,22 +55,31 @@ public class DataBaseExecutor {
         return elements.size();
     }
 
-    public boolean contains(String key) {
+    public boolean contains(String bssid) {
         for (int i = 0; i < elements.size(); i++) {
-            if (elements.get(i).getBSSID().equals(key)) {
+            if (elements.get(i).getBSSID().equals(bssid)) {
                 return true;
             }
         }
         return false;
     }
 
-    private void remove(String key) {
+    private void remove(String bssid) {
         for (int i = 0; i < elements.size(); i++) {
-            if (elements.get(i).getBSSID().equals(key)) {
+            if (elements.get(i).getBSSID().equals(bssid)) {
                 elements.remove(i);
                 return;
             }
         }
+    }
+
+    public WifiDBElement getElement(String bssid) {
+        for (int i = 0; i < elements.size(); i++) {
+            if (elements.get(i).getBSSID().equals(bssid)) {
+                return elements.get(i);
+            }
+        }
+        return null;
     }
 
     public WifiDBElement get(int position) {
