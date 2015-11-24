@@ -2,7 +2,6 @@ package com.federicobarocci.wifiexplorer.ui.activity;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.location.Location;
@@ -15,7 +14,6 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBar;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -99,8 +97,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         taskExecutor.checkToInitialize();
         registerReceiver(scanResultAvailableReceiver, new IntentFilter(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION));
-
-        //this.onRefresh();
     }
 
     private void initializeInjectors() {
@@ -124,8 +120,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(((WifiExplorerApplication) getApplication()).getComponent().provideScanResultAdapter());
         recyclerView.setItemAnimator(new DefaultItemAnimator());
-
-        //swipeRefreshLayout.setRefreshing(true);
     }
 
     @Override
@@ -219,26 +213,39 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
-        item.setChecked(true);
-
         switch (item.getItemId()) {
             case R.id.navigation_refresh:
+                item.setChecked(false);
                 this.onRefresh();
                 break;
 
             case R.id.navigation_favourites:
+                item.setChecked(false);
                 startActivity(new Intent(this, FavouritesActivity.class));
                 break;
 
             case R.id.navigation_map:
+                item.setChecked(false);
                 startActivity(new Intent(this, MapActivity.class));
+                break;
+
+            case R.id.navigation_filter_open_network:
+                item.setChecked(!item.isChecked());
+                navigationView.getMenu().findItem(R.id.navigation_filter_closed_network).setChecked(false);
+                taskExecutor.showOnlyOpenNetwork(item.isChecked());
+                break;
+
+            case R.id.navigation_filter_closed_network:
+                item.setChecked(!item.isChecked());
+                navigationView.getMenu().findItem(R.id.navigation_filter_open_network).setChecked(false);
+                taskExecutor.showOnlyClosedNetwork(item.isChecked());
                 break;
         }
 
         if (mDrawerLayout != null)
             mDrawerLayout.closeDrawers();
 
-        return true;
+        return false;
     }
 
     @Override
@@ -246,6 +253,4 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         swipeRefreshLayout.setRefreshing(true);
         taskExecutor.scanWifi();
     }
-
-
 }

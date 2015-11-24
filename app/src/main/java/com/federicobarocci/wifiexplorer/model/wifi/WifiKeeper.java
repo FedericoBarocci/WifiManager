@@ -19,6 +19,8 @@ public class WifiKeeper {
     //Avoid duplicate entries by check BSSID
     private List<Pair<String, WifiElement>> wifiList = new ArrayList<>();
 
+    private WifiShowStrategy wifiShowStrategy = WifiShowStrategy.ALL_NETWORK;
+
     @Inject
     public WifiKeeper(LocationHandler locationHandler) {
         this.locationHandler = locationHandler;
@@ -38,12 +40,20 @@ public class WifiKeeper {
         }
     }
 
-    public int size() {
+    /*public int size() {
         return wifiList.size();
     }
 
     public WifiElement get(int position) {
         return wifiList.get(position).second;
+    }*/
+
+    public int size() {
+        return wifiShowStrategy.size(wifiList);
+    }
+
+    public WifiElement get(int position) {
+        return wifiShowStrategy.get(wifiList, position);
     }
 
     public List<WifiElement> getAll() {
@@ -88,5 +98,9 @@ public class WifiKeeper {
         }
 
         return null;
+    }
+
+    public void setWifiShowStrategy(WifiShowStrategy wifiShowStrategy) {
+        this.wifiShowStrategy = wifiShowStrategy;
     }
 }

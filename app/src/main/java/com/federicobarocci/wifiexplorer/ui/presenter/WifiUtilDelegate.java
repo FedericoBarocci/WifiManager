@@ -3,6 +3,7 @@ package com.federicobarocci.wifiexplorer.ui.presenter;
 import android.net.wifi.WifiManager;
 
 import com.federicobarocci.wifiexplorer.model.wifi.WifiKeeper;
+import com.federicobarocci.wifiexplorer.model.wifi.WifiShowStrategy;
 import com.federicobarocci.wifiexplorer.ui.adapter.ScanResultAdapter;
 
 import javax.inject.Inject;
@@ -47,5 +48,10 @@ public class WifiUtilDelegate {
 
     public boolean empty() {
         return wifiKeeper.size() == 0;
+    }
+
+    public void setWifiShowEnum(WifiShowStrategy wifiShowStrategy) {
+        wifiKeeper.setWifiShowStrategy(wifiShowStrategy);
+        scanResultAdapter.notifyDataSetChanged();
     }
 }

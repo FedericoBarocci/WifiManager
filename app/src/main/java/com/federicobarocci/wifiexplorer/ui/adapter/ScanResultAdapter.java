@@ -49,7 +49,6 @@ public class ScanResultAdapter extends RecyclerView.Adapter<ScanResultAdapter.Vi
         WifiElement wifiElement = wifiKeeper.get(position);
 
         viewHolder.wifiElement = wifiElement;
-//        viewHolder.txtViewTitle.setText(wifiElement.getTitle(position));
         viewHolder.textViewTitle.setText(wifiElement.getSSID());
         viewHolder.textViewBSSID.setText(wifiElement.getBSSID());
         viewHolder.textViewDetail.setText(wifiElement.getCapabilities());
@@ -105,9 +104,6 @@ public class ScanResultAdapter extends RecyclerView.Adapter<ScanResultAdapter.Vi
         @OnClick(R.id.saveicon)
         public void onClickSave(View view) {
             snackBarShowUndo.showUndo(adapter, (RecyclerView) view.getParent().getParent(), wifiElement);
-            //Toast.makeText(v.getContext(), "Cliccato " + txtViewTitle.getText(), Toast.LENGTH_SHORT).show();
-//            dataBaseExecutor.toggleSave(adapter, (RecyclerView)view.getParent().getParent(), wifiElement).showUndo();
-//            adapter.notifyDataSetChanged();
         }
     }
 }

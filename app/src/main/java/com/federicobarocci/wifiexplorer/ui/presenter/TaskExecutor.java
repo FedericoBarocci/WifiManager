@@ -1,6 +1,5 @@
 package com.federicobarocci.wifiexplorer.ui.presenter;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -8,10 +7,7 @@ import android.support.v7.app.AlertDialog;
 import android.widget.Toast;
 
 import com.federicobarocci.wifiexplorer.R;
-import com.federicobarocci.wifiexplorer.ui.activity.MainActivity;
-import com.federicobarocci.wifiexplorer.ui.presenter.WifiUtilDelegate;
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.GooglePlayServicesUtil;
+import com.federicobarocci.wifiexplorer.model.wifi.WifiShowStrategy;
 
 import javax.inject.Inject;
 
@@ -46,6 +42,24 @@ public class TaskExecutor {
     public void onWifiListReceive() {
         Toast.makeText(context, R.string.notify_scan_success, Toast.LENGTH_SHORT).show();
         wifiUtilDelegate.onWifiListReceive();
+    }
+
+    public void showOnlyOpenNetwork(boolean checked) {
+        if (checked) {
+            wifiUtilDelegate.setWifiShowEnum(WifiShowStrategy.OPEN_NETWORK);
+        }
+        else {
+            wifiUtilDelegate.setWifiShowEnum(WifiShowStrategy.ALL_NETWORK);
+        }
+    }
+
+    public void showOnlyClosedNetwork(boolean checked) {
+        if (checked) {
+            wifiUtilDelegate.setWifiShowEnum(WifiShowStrategy.CLOSED_NETWORK);
+        }
+        else {
+            wifiUtilDelegate.setWifiShowEnum(WifiShowStrategy.ALL_NETWORK);
+        }
     }
 
     public void buildAlertMessageNoGps(Context activityContext) {
