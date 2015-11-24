@@ -3,31 +3,27 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/nav_home"
+            android:id="@+id/navigation_refresh"
             android:icon="@drawable/ic_dashboard"
-            android:title="Home" />
+            android:title="@string/navigation_refresh" />
         <item
-            android:id="@+id/nav_messages"
+            android:id="@+id/navigation_favourites"
             android:icon="@drawable/ic_event"
-            android:title="Messages" />
+            android:title="@string/navigation_favourites" />
         <item
-            android:id="@+id/nav_friends"
+            android:id="@+id/navigation_map"
             android:icon="@drawable/ic_headset"
-            android:title="Friends" />
-        <item
-            android:id="@+id/nav_discussion"
-            android:icon="@drawable/ic_forum"
-            android:title="Discussion" />
+            android:title="@string/navigation_map" />
     </group>
 
-    <item android:title="Sub items">
+    <item android:title="@string/navigation_filters">
         <menu>
             <item
                 android:icon="@drawable/ic_dashboard"
-                android:title="Sub item 1" />
+                android:title="@string/navigation_filter_open_network" />
             <item
                 android:icon="@drawable/ic_forum"
-                android:title="Sub item 2" />
+                android:title="@string/navigation_filter_closed_network" />
         </menu>
     </item>
 

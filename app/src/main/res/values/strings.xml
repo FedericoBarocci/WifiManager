@@ -12,7 +12,7 @@
     <string name="detail.card4.title">Signal Strength</string>
     <string name="detail.card5.title">Frequency</string>
     <string name="detail.card6.title">RSSI</string>
-    <string name="detail.card7.title">Distance</string>
+    <string name="detail.card7.title">Actual distance</string>
 
     <string name="main.show.map">Map</string>
     <string name="main.show.favourites">Favourites</string>
@@ -28,4 +28,11 @@
     <string name="detail.card8.title">Discovered locations</string>
     <string name="unknow">Unknow</string>
     <string name="no_information">No information available</string>
+    <string name="navigation_refresh">Refresh</string>
+    <string name="navigation_favourites">Show Favourites</string>
+    <string name="navigation_map">Open Wifi Map</string>
+    <string name="navigation_filters">Filter results</string>
+    <string name="navigation_filter_open_network">Show only open network</string>
+    <string name="navigation_filter_closed_network">Show only closed network</string>
+    <string name="gps_auth_message">GPS is required for this application but seems to be disabled, do you want to enable it?</string>
 </resources>

@@ -1,4 +1,4 @@
-package com.federicobarocci.wifimanager;
+package com.federicobarocci.wifiexplorer;
 
 import org.junit.Test;
 
