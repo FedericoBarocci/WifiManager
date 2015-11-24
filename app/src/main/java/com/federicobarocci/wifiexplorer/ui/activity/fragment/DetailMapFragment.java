@@ -86,9 +86,9 @@ public class DetailMapFragment extends Fragment implements OnMapReadyCallback {
             options.center(center);
             //Radius in meters
             options.radius(locationKeeper.getCenter().getRadius());
-            options.fillColor(R.color.common_action_bar_splitter);
-            options.strokeColor(R.color.common_plus_signin_btn_text_light_default);
-            options.strokeWidth(10);
+            options.fillColor(wifiElement.getLightColor());
+            options.strokeColor(wifiElement.getBoldColor());
+            options.strokeWidth(5);
             map.addCircle(options);
         }
     }

@@ -1,9 +1,13 @@
 package com.federicobarocci.wifiexplorer.model.wifi;
 
+import android.graphics.Color;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Parcel;
 import android.os.Parcelable;
+
+import com.federicobarocci.wifiexplorer.R;
+import com.federicobarocci.wifiexplorer.ui.util.WifiColorGMap;
 
 /**
  * Created by federico on 11/11/15.
@@ -126,6 +130,14 @@ public class WifiElement implements Parcelable {
 
     public double calculateDistance() {
         return calculateDistance(getLevel(), getFrequency());
+    }
+
+    public int getBoldColor() {
+        return isSecure() ? WifiColorGMap.getRedBold() : WifiColorGMap.getGreenBold();
+    }
+
+    public int getLightColor() {
+        return isSecure() ? WifiColorGMap.getRedLight() : WifiColorGMap.getGreenLight();
     }
 
     /* Parcel section */

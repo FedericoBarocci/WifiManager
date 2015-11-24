@@ -4,6 +4,11 @@
     <color name="brand_primary_dark">#3646A8</color>
     <color name="brand_accent">#FE3E80</color>
 
+    <color name="wifi_green_bold">#ff4caf50</color>
+    <color name="wifi_green_light">#ffa5d6a7</color>
+    <color name="wifi_red_bold">#fff44336</color>
+    <color name="wifi_red_light">#ffef9a9a</color>
+
     <color name="window_background">#FFF5F5F5</color>
     <color name="transparent">#00000000</color>
 </resources>

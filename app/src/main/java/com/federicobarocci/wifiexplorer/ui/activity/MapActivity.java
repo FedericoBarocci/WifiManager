@@ -10,6 +10,7 @@ import com.federicobarocci.wifiexplorer.WifiExplorerApplication;
 import com.federicobarocci.wifiexplorer.model.db.DataBaseHandler;
 import com.federicobarocci.wifiexplorer.model.location.LocationHandler;
 import com.federicobarocci.wifiexplorer.model.location.LocationKeeper;
+import com.federicobarocci.wifiexplorer.model.wifi.WifiElement;
 import com.federicobarocci.wifiexplorer.model.wifi.WifiKeeper;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -80,7 +81,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap map) {
         map.setMyLocationEnabled(true);
 
-        for (String bssid : locationHandler.getAllKeys()) {
+        /*for (String bssid : locationHandler.getAllKeys()) {
             LocationKeeper locationKeeper = locationHandler.get(bssid);
             String ssid;
 
@@ -107,13 +108,13 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             options.strokeColor(R.color.common_plus_signin_btn_text_light_default);
             options.strokeWidth(10);
             map.addCircle(options);
-        }
+        }*/
 
-        /*for(WifiElement wifiElement : wifiKeeper.getAll()) {
-            LocationKeeper locationHandler = locationHandler.get(wifiElement.getBSSID());
+        for(WifiElement wifiElement : wifiKeeper.getAll()) {
+            LocationKeeper locationKeeper = locationHandler.get(wifiElement.getBSSID());
 
-            if (locationHandler != null) {
-                LatLng center = locationHandler.getCenter().getLocation();
+            if (locationKeeper != null) {
+                LatLng center = locationKeeper.getCenter().getLocation();
                 map.addMarker(new MarkerOptions()
                         .position(center)
                         .title(wifiElement.getSSID()));
@@ -121,12 +122,14 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
                 CircleOptions options = new CircleOptions();
                 options.center(center);
                 //Radius in meters
-                options.radius(locationHandler.getCenter().getRadius());
-                options.fillColor(R.color.common_action_bar_splitter);
-                options.strokeColor(R.color.common_plus_signin_btn_text_light_default);
-                options.strokeWidth(10);
+                options.radius(locationKeeper.getCenter().getRadius());
+                options.fillColor(wifiElement.getLightColor());
+                options.strokeColor(wifiElement.getBoldColor());
+//                options.fillColor(R.color.common_action_bar_splitter);
+//                options.strokeColor(R.color.common_plus_signin_btn_text_light_default);
+                options.strokeWidth(5);
                 map.addCircle(options);
             }
-        }*/
+        }
     }
 }
