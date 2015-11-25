@@ -26,7 +26,7 @@ import android.util.Pair;
 import android.view.MenuItem;
 
 import com.federicobarocci.wifiexplorer.model.location.LocationKeeper;
-import com.federicobarocci.wifiexplorer.ui.activity.fragment.DetailFragment;
+import com.federicobarocci.wifiexplorer.ui.activity.fragment.DetailInfoFragment;
 import com.federicobarocci.wifiexplorer.ui.activity.fragment.DetailMapFragment;
 import com.federicobarocci.wifiexplorer.R;
 import com.federicobarocci.wifiexplorer.WifiExplorerApplication;
@@ -95,7 +95,7 @@ public class DetailActivity extends AppCompatActivity {
     private List<Pair<String, Fragment>> buildFragments(WifiElement wifiElement, LocationKeeper locationKeeper) {
         List<Pair<String, Fragment>> listFragments = new ArrayList<>();
 
-        listFragments.add(Pair.<String, Fragment>create(DetailFragment.NAME, DetailFragment.newInstance(wifiElement, locationKeeper)));
+        listFragments.add(Pair.<String, Fragment>create(DetailInfoFragment.NAME, DetailInfoFragment.newInstance(wifiElement, locationKeeper)));
         listFragments.add(Pair.<String, Fragment>create(DetailMapFragment.NAME, DetailMapFragment.newInstance(wifiElement, locationKeeper)));
 
         return listFragments;

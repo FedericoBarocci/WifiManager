@@ -5,16 +5,17 @@ import android.net.wifi.WifiManager;
 
 import com.federicobarocci.wifiexplorer.WifiExplorerApplication;
 import com.federicobarocci.wifiexplorer.model.db.DataBaseHandler;
-import com.federicobarocci.wifiexplorer.model.location.LocationHandler;
 import com.federicobarocci.wifiexplorer.model.db.sqlite.DataBaseManager;
+import com.federicobarocci.wifiexplorer.model.location.LocationHandler;
 import com.federicobarocci.wifiexplorer.model.wifi.WifiKeeper;
+import com.federicobarocci.wifiexplorer.model.wifi.container.WifiList;
 import com.federicobarocci.wifiexplorer.ui.adapter.FavouritesAdapter;
 import com.federicobarocci.wifiexplorer.ui.adapter.ScanResultAdapter;
 import com.federicobarocci.wifiexplorer.ui.adapter.controller.SnackBarUndoFavourites;
 import com.federicobarocci.wifiexplorer.ui.adapter.controller.SnackBarUndoMain;
+import com.federicobarocci.wifiexplorer.ui.presenter.TaskExecutor;
 import com.federicobarocci.wifiexplorer.ui.presenter.WifiUtilDelegate;
 import com.federicobarocci.wifiexplorer.ui.util.ResourceProvider;
-import com.federicobarocci.wifiexplorer.ui.presenter.TaskExecutor;
 
 import javax.inject.Singleton;
 
@@ -46,14 +47,20 @@ public class DaggerModule {
 
     @Provides
     @Singleton
+    WifiList provideWifiList() {
+        return new WifiList();
+    }
+
+    @Provides
+    @Singleton
     LocationHandler provideLocationHandler(Context context) {
         return new LocationHandler(context);
     }
 
     @Provides
     @Singleton
-    WifiKeeper provideWifiKeeper(LocationHandler locationHandler) {
-        return new WifiKeeper(locationHandler);
+    WifiKeeper provideWifiKeeper(WifiList wifiList, LocationHandler locationHandler) {
+        return new WifiKeeper(wifiList, locationHandler);
     }
 
     @Provides

@@ -4,6 +4,7 @@ import android.net.wifi.ScanResult;
 import android.support.v4.util.Pair;
 
 import com.federicobarocci.wifiexplorer.model.location.LocationHandler;
+import com.federicobarocci.wifiexplorer.model.wifi.container.WifiList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -14,15 +15,14 @@ import javax.inject.Inject;
  * Created by federico on 03/11/15.
  */
 public class WifiKeeper {
+    private final WifiList wifiList;
     private final LocationHandler locationHandler;
-
-    //Avoid duplicate entries by check BSSID
-    private List<Pair<String, WifiElement>> wifiList = new ArrayList<>();
 
     private WifiShowStrategy wifiShowStrategy = WifiShowStrategy.ALL_NETWORK;
 
     @Inject
-    public WifiKeeper(LocationHandler locationHandler) {
+    public WifiKeeper(WifiList wifiList, LocationHandler locationHandler) {
+        this.wifiList = wifiList;
         this.locationHandler = locationHandler;
     }
 
@@ -34,19 +34,11 @@ public class WifiKeeper {
         wifiList.clear();
 
         for (ScanResult scanResult : scanResults) {
-            Pair<String, WifiElement> wifiElement = new Pair<>(scanResult.BSSID, new WifiElement(scanResult));
+            WifiElement wifiElement = new WifiElement(scanResult);
             wifiList.add(wifiElement);
-            locationHandler.store(wifiElement.second);
+            locationHandler.store(wifiElement);
         }
     }
-
-    /*public int size() {
-        return wifiList.size();
-    }
-
-    public WifiElement get(int position) {
-        return wifiList.get(position).second;
-    }*/
 
     public int size() {
         return wifiShowStrategy.size(wifiList);
@@ -56,17 +48,23 @@ public class WifiKeeper {
         return wifiShowStrategy.get(wifiList, position);
     }
 
-    public List<WifiElement> getAll() {
-        List<WifiElement> list = new ArrayList<>();
-
-        for (int i = 0; i< wifiList.size(); i++) {
-            list.add(wifiList.get(i).second);
-        }
-
-        return list;
+    public WifiList getFilteredList() {
+        return wifiList.filter(wifiShowStrategy);
     }
 
-    private boolean update(String key, ScanResult scanResult) {
+    public boolean contains(String bssid) {
+        return wifiList.getKey(bssid) != null;
+    }
+
+    public WifiElement getElement(String bssid) {
+        return wifiList.getKey(bssid);
+    }
+
+    public void setWifiShowStrategy(WifiShowStrategy wifiShowStrategy) {
+        this.wifiShowStrategy = wifiShowStrategy;
+    }
+
+    /*private boolean update(String key, ScanResult scanResult) {
         for(int i = 0; i < wifiList.size(); i++) {
             Pair<String, WifiElement> pair = wifiList.get(i);
 
@@ -78,29 +76,5 @@ public class WifiKeeper {
         }
 
         return false;
-    }
-
-    public boolean contains(String bssid) {
-        for(int i = 0; i < wifiList.size(); i++) {
-            if (wifiList.get(i).first.equals(bssid)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public WifiElement getElement(String bssid) {
-        for(int i=0; i<wifiList.size(); i++) {
-            if (wifiList.get(i).first.equals(bssid)) {
-                return wifiList.get(i).second;
-            }
-        }
-
-        return null;
-    }
-
-    public void setWifiShowStrategy(WifiShowStrategy wifiShowStrategy) {
-        this.wifiShowStrategy = wifiShowStrategy;
-    }
+    }*/
 }

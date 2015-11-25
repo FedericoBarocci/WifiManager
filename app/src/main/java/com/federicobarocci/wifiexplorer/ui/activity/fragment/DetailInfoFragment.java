@@ -17,7 +17,7 @@ import butterknife.ButterKnife;
 /**
  * Created by federico on 07/11/15.
  */
-public class DetailFragment extends Fragment {
+public class DetailInfoFragment extends Fragment {
     public static final String ARGS_WIFI = "WifiElement";
     public static final String ARGS_LOCATION = "LocationKeeper";
     public static final String NAME = "Info";
@@ -49,12 +49,12 @@ public class DetailFragment extends Fragment {
     private WifiElement wifiElement;
     private LocationKeeper locationKeeper;
 
-    public static DetailFragment newInstance(WifiElement wifiElement, LocationKeeper locationKeeper) {
+    public static DetailInfoFragment newInstance(WifiElement wifiElement, LocationKeeper locationKeeper) {
         Bundle args = new Bundle();
 
         args.putParcelable(ARGS_WIFI, wifiElement);
         args.putParcelable(ARGS_LOCATION, locationKeeper);
-        DetailFragment fragment = new DetailFragment();
+        DetailInfoFragment fragment = new DetailInfoFragment();
         fragment.setArguments(args);
 
         return fragment;

@@ -26,8 +26,6 @@ import javax.inject.Inject;
 public class LocationHandler {
     private static final String TAG = "LocationHandler";
 
-    private final Context context;
-
     private FusedLocationService fusedLocationService;
 
     private ServiceConnection serviceConnection = new ServiceConnection() {
@@ -47,7 +45,6 @@ public class LocationHandler {
 
     @Inject
     public LocationHandler(Context context) {
-        this.context = context;
         Intent intent = new Intent(context, FusedLocationService.class);
         context.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
     }

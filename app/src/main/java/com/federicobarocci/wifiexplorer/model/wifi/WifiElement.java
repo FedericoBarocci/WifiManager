@@ -1,12 +1,10 @@
 package com.federicobarocci.wifiexplorer.model.wifi;
 
-import android.graphics.Color;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.federicobarocci.wifiexplorer.R;
 import com.federicobarocci.wifiexplorer.ui.util.WifiColorGMap;
 
 /**
@@ -14,7 +12,7 @@ import com.federicobarocci.wifiexplorer.ui.util.WifiColorGMap;
  */
 public class WifiElement implements Parcelable {
     public static final int RSSI_LEVEL = 4;
-    private static final String UNKNOW = "Unknow";
+    private static final String UNKNOWN = "Unknown";
 
     private final String bssid;
 
@@ -76,11 +74,11 @@ public class WifiElement implements Parcelable {
     }
 
     public String getFrequencyString() {
-        return isLineOfSight() ? String.format("%d MHz", frequency) : UNKNOW;
+        return isLineOfSight() ? String.format("%d MHz", frequency) : UNKNOWN;
     }
 
     public String getLevelString() {
-        return isLineOfSight() ? String.format("%d dBm", level) : UNKNOW;
+        return isLineOfSight() ? String.format("%d dBm", level) : UNKNOWN;
     }
 
     public String getSignalLevelString() {
@@ -90,7 +88,7 @@ public class WifiElement implements Parcelable {
     }
 
     public String getDistanceString() {
-        return isLineOfSight() ? String.format("%f m", calculateDistance()) : UNKNOW;
+        return isLineOfSight() ? String.format("%f m", calculateDistance()) : UNKNOWN;
     }
 
     /* Standard Setters */

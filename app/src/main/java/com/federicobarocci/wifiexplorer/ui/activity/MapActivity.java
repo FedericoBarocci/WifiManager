@@ -110,7 +110,7 @@ public class MapActivity extends AppCompatActivity implements OnMapReadyCallback
             map.addCircle(options);
         }*/
 
-        for(WifiElement wifiElement : wifiKeeper.getAll()) {
+        for(WifiElement wifiElement : wifiKeeper.getFilteredList()) {
             LocationKeeper locationKeeper = locationHandler.get(wifiElement.getBSSID());
 
             if (locationKeeper != null) {
