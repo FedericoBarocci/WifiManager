@@ -1,10 +1,10 @@
 package com.federicobarocci.wifiexplorer.model.db;
 
 import com.federicobarocci.wifiexplorer.model.db.sqlite.DataBaseManager;
-import com.federicobarocci.wifiexplorer.model.db.sqlite.DataBaseElement;
 import com.federicobarocci.wifiexplorer.model.location.LocationElement;
 import com.federicobarocci.wifiexplorer.model.location.LocationHandler;
 import com.federicobarocci.wifiexplorer.model.wifi.WifiElement;
+import com.federicobarocci.wifiexplorer.model.wifi.container.strategy.sortedlist.WifiList;
 
 import java.util.List;
 
@@ -17,15 +17,15 @@ public class DataBaseHandler {
 
     private final DataBaseManager dataBaseManager;
     private final LocationHandler locationHandler;
-    private final List<DataBaseElement> elements;
+    private final WifiList wifiList;
 
     @Inject
     public DataBaseHandler(DataBaseManager dataBaseManager, LocationHandler locationHandler) {
         this.dataBaseManager = dataBaseManager;
         this.locationHandler = locationHandler;
-        this.elements = dataBaseManager.select();
+        this.wifiList = dataBaseManager.selectWifiElements();
 
-        locationHandler.populate(elements);
+        //locationHandler.populate(elements);
     }
 
     public boolean toggleSave(WifiElement wifiElement) {
@@ -49,21 +49,23 @@ public class DataBaseHandler {
             LocationElement locationElement = locationHandler.get(wifiElement.getBSSID()).getCenter();
 
             dataBaseManager.insert(wifiElement, locationElement);
-            elements.add(new DataBaseElement(wifiElement, locationElement));
+            //elements.add(new DataBaseElement(wifiElement, locationElement));
         }
         else {
             dataBaseManager.insert(wifiElement);
-            elements.add(new DataBaseElement(wifiElement));
+            //elements.add(new DataBaseElement(wifiElement));
         }
+
+        wifiList.add(wifiElement);
     }
 
     public int size() {
-        return elements.size();
+        return wifiList.size();
     }
 
     public boolean contains(String bssid) {
-        for (int i = 0; i < elements.size(); i++) {
-            if (elements.get(i).getBSSID().equals(bssid)) {
+        for (int i = 0; i < wifiList.size(); i++) {
+            if (wifiList.get(i).getBSSID().equals(bssid)) {
                 return true;
             }
         }
@@ -71,9 +73,9 @@ public class DataBaseHandler {
     }
 
     private void remove(String bssid) {
-        for (int i = 0; i < elements.size(); i++) {
-            if (elements.get(i).getBSSID().equals(bssid)) {
-                elements.remove(i);
+        for (int i = 0; i < wifiList.size(); i++) {
+            if (wifiList.get(i).getBSSID().equals(bssid)) {
+                wifiList.removeItemAt(i);
                 return;
             }
         }
@@ -88,7 +90,13 @@ public class DataBaseHandler {
         return null;
     }*/
 
-    public DataBaseElement get(int position) {
-        return elements.get(position);
+    public WifiElement get(int position) {
+        return wifiList.get(position);
+    }
+
+    public void updateScanResults(List<WifiElement> wifiElementList) {
+        for(WifiElement wifiElement : wifiElementList) {
+            wifiList.addUpdate(wifiElement, false);
+        }
     }
 }

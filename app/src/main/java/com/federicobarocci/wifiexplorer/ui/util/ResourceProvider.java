@@ -21,13 +21,14 @@ public class ResourceProvider {
     }
 
     public int getWifiResource(WifiElement wifiElement) {
-        if (!wifiKeeper.contains(wifiElement.getBSSID())) {
+        if (wifiKeeper.contains(wifiElement.getBSSID()) && wifiElement.isLineOfSight()) {
+            return wifiElement.isSecure() ?
+                    WifiSecureImageEnum.values()[wifiElement.getSignalLevel()].getResource() :
+                    WifiImageEnum.values()[wifiElement.getSignalLevel()].getResource();
+        }
+        else {
             return R.drawable.ic_signal_wifi_0_bar_black_24dp;
         }
-
-        return wifiElement.isSecure() ?
-                WifiSecureImageEnum.values()[wifiElement.getSignalLevel()].getResource() :
-                WifiImageEnum.values()[wifiElement.getSignalLevel()].getResource();
     }
 
     public int getSavedResource() {

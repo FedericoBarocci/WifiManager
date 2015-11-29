@@ -10,12 +10,12 @@ import com.federicobarocci.wifiexplorer.model.location.LocationHandler;
 import com.federicobarocci.wifiexplorer.model.wifi.WifiKeeper;
 import com.federicobarocci.wifiexplorer.model.wifi.container.strategy.CurrentWifiList;
 import com.federicobarocci.wifiexplorer.model.wifi.container.strategy.SessionWifiList;
-import com.federicobarocci.wifiexplorer.model.wifi.container.strategy.common.WifiList;
 import com.federicobarocci.wifiexplorer.model.wifi.container.WifiListContainer;
 import com.federicobarocci.wifiexplorer.ui.adapter.FavouritesAdapter;
 import com.federicobarocci.wifiexplorer.ui.adapter.ScanResultAdapter;
 import com.federicobarocci.wifiexplorer.ui.adapter.controller.SnackBarUndoFavourites;
 import com.federicobarocci.wifiexplorer.ui.adapter.controller.SnackBarUndoMain;
+import com.federicobarocci.wifiexplorer.ui.presenter.ScanResultReceiver;
 import com.federicobarocci.wifiexplorer.ui.presenter.TaskExecutor;
 import com.federicobarocci.wifiexplorer.ui.presenter.WifiUtilDelegate;
 import com.federicobarocci.wifiexplorer.ui.util.ResourceProvider;
@@ -62,8 +62,8 @@ public class DaggerModule {
 
     @Provides
     @Singleton
-    LocationHandler provideLocationHandler(Context context) {
-        return new LocationHandler(context);
+    LocationHandler provideLocationHandler(Context context, DataBaseManager dataBaseManager) {
+        return new LocationHandler(context, dataBaseManager);
     }
 
     @Provides
@@ -74,8 +74,8 @@ public class DaggerModule {
 
     @Provides
     @Singleton
-    WifiKeeper provideWifiKeeper(WifiListContainer wifiListContainer, LocationHandler locationHandler) {
-        return new WifiKeeper(wifiListContainer, locationHandler);
+    WifiKeeper provideWifiKeeper(WifiListContainer wifiListContainer) {
+        return new WifiKeeper(wifiListContainer);
     }
 
     @Provides
@@ -122,13 +122,19 @@ public class DaggerModule {
 
     @Provides
     @Singleton
-    FavouritesAdapter provideFavouritesAdapter(DataBaseHandler dataBaseHandler, WifiKeeper wifiKeeper, SnackBarUndoFavourites snackBarUndoFavourites, ResourceProvider resourceProvider) {
-        return new FavouritesAdapter(dataBaseHandler, wifiKeeper, snackBarUndoFavourites, resourceProvider);
+    FavouritesAdapter provideFavouritesAdapter(DataBaseHandler dataBaseHandler, SnackBarUndoFavourites snackBarUndoFavourites, ResourceProvider resourceProvider) {
+        return new FavouritesAdapter(dataBaseHandler, snackBarUndoFavourites, resourceProvider);
     }
 
     @Provides
     @Singleton
-    TaskExecutor provideTaskExecutor(Context context, WifiUtilDelegate wifiUtilDelegate) {
-        return new TaskExecutor(context, wifiUtilDelegate);
+    ScanResultReceiver provideScanResultReceiver(WifiKeeper wifiKeeper, DataBaseHandler dataBaseHandler, LocationHandler locationHandler, WifiManager wifiManager, ScanResultAdapter scanResultAdapter, FavouritesAdapter favouritesAdapter) {
+        return new ScanResultReceiver(wifiKeeper, dataBaseHandler, locationHandler, wifiManager, scanResultAdapter, favouritesAdapter);
+    }
+
+    @Provides
+    @Singleton
+    TaskExecutor provideTaskExecutor(Context context, WifiUtilDelegate wifiUtilDelegate, ScanResultReceiver scanResultReceiver) {
+        return new TaskExecutor(context, wifiUtilDelegate, scanResultReceiver);
     }
 }

@@ -4,6 +4,8 @@ import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 
 import com.federicobarocci.wifiexplorer.model.db.DataBaseHandler;
+import com.federicobarocci.wifiexplorer.model.location.LocationHandler;
+import com.federicobarocci.wifiexplorer.model.location.LocationKeeper;
 import com.federicobarocci.wifiexplorer.model.wifi.WifiElement;
 import com.federicobarocci.wifiexplorer.model.wifi.WifiKeeper;
 import com.federicobarocci.wifiexplorer.ui.adapter.FavouritesAdapter;
@@ -20,14 +22,16 @@ import javax.inject.Inject;
 public class ScanResultReceiver {
     private final WifiKeeper wifiKeeper;
     private final DataBaseHandler dataBaseHandler;
+    private final LocationHandler locationHandler;
     private final WifiManager wifiManager;
     private final ScanResultAdapter scanResultAdapter;
     private final FavouritesAdapter favouritesAdapter;
 
     @Inject
-    public ScanResultReceiver(WifiKeeper wifiKeeper, DataBaseHandler dataBaseHandler, WifiManager wifiManager, ScanResultAdapter scanResultAdapter, FavouritesAdapter favouritesAdapter) {
+    public ScanResultReceiver(WifiKeeper wifiKeeper, DataBaseHandler dataBaseHandler, LocationHandler locationHandler, WifiManager wifiManager, ScanResultAdapter scanResultAdapter, FavouritesAdapter favouritesAdapter) {
         this.wifiKeeper = wifiKeeper;
         this.dataBaseHandler = dataBaseHandler;
+        this.locationHandler = locationHandler;
         this.wifiManager = wifiManager;
         this.scanResultAdapter = scanResultAdapter;
         this.favouritesAdapter = favouritesAdapter;
@@ -42,7 +46,8 @@ public class ScanResultReceiver {
         }
 
         wifiKeeper.populate(wifiElementList);
-        dataBaseHandler.update(wifiElementList);
+        dataBaseHandler.updateScanResults(wifiElementList);
+        locationHandler.populate(wifiElementList);
 
         scanResultAdapter.notifyDataSetChanged();
         favouritesAdapter.notifyDataSetChanged();

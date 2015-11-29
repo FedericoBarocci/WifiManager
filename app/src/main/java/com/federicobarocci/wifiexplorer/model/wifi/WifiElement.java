@@ -48,6 +48,10 @@ public class WifiElement implements Parcelable {
         this.lineOfSight = true;
     }
 
+    public void invalidate() {
+        lineOfSight = false;
+    }
+
     /* Standard Getters */
     public String getBSSID() {
         return bssid;
@@ -61,34 +65,34 @@ public class WifiElement implements Parcelable {
         return capabilities;
     }
 
-    public int getFrequency() {
-        return frequency;
-    }
+//    public int getFrequency() {
+//        return frequency;
+//    }
 
     public boolean isLineOfSight() {
         return lineOfSight;
     }
 
-    public int getLevel() {
-        return level;
+    public int getdBm() {
+        return lineOfSight ? level : Integer.MIN_VALUE;
     }
 
     public String getFrequencyString() {
-        return isLineOfSight() ? String.format("%d MHz", frequency) : UNKNOWN;
+        return lineOfSight ? String.format("%d MHz", frequency) : UNKNOWN;
     }
 
     public String getLevelString() {
-        return isLineOfSight() ? String.format("%d dBm", level) : UNKNOWN;
+        return lineOfSight ? String.format("%d dBm", level) : UNKNOWN;
     }
 
     public String getSignalLevelString() {
-        return isLineOfSight() ?
+        return lineOfSight ?
                 String.format("%d/%d", getSignalLevel() + 1, RSSI_LEVEL) :
                 String.format("0/%d", RSSI_LEVEL);
     }
 
     public String getDistanceString() {
-        return isLineOfSight() ? String.format("%f m", calculateDistance()) : UNKNOWN;
+        return lineOfSight ? String.format("%f m", calculateDistance()) : UNKNOWN;
     }
 
     /* Standard Setters */
@@ -108,26 +112,26 @@ public class WifiElement implements Parcelable {
         this.level = level;
     }
     public CharSequence getInfo() {
-        return String.format("%s   %d dBm %d/%d", getCapabilities(), getLevel(), getSignalLevel(), RSSI_LEVEL);
+        return String.format("%s   %d dBm %d/%d", getCapabilities(), getdBm(), getSignalLevel(), RSSI_LEVEL);
     }*/
 
     /* Convenience Getters */
     public int getSignalLevel() {
-        return WifiManager.calculateSignalLevel(getLevel(), RSSI_LEVEL);
+        return WifiManager.calculateSignalLevel(level, RSSI_LEVEL);
     }
 
     public boolean isSecure() {
-        return getCapabilities().contains("WPA");
+        return capabilities.contains("WPA");
     }
 
-    public double calculateDistance(double levelInDb, double freqInMHz) {
+    private double calculateDistance(double levelInDb, double freqInMHz) {
         /*27.55*/
         double exp = (10 - (20 * Math.log10(freqInMHz)) + Math.abs(levelInDb)) / 20.0;
         return Math.pow(10.0, exp);
     }
 
     public double calculateDistance() {
-        return calculateDistance(getLevel(), getFrequency());
+        return calculateDistance(level, frequency);
     }
 
     public int getBoldColor() {

@@ -1,6 +1,6 @@
 package com.federicobarocci.wifiexplorer.model.wifi;
 
-import com.federicobarocci.wifiexplorer.model.wifi.container.strategy.common.WifiList;
+import com.federicobarocci.wifiexplorer.model.wifi.container.strategy.sortedlist.WifiList;
 
 /**
  * Created by federico on 24/11/15.

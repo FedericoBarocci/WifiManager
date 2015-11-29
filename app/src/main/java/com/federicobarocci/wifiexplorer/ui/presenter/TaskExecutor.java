@@ -9,7 +9,6 @@ import android.widget.Toast;
 import com.federicobarocci.wifiexplorer.R;
 import com.federicobarocci.wifiexplorer.model.wifi.container.WifiListEnum;
 import com.federicobarocci.wifiexplorer.model.wifi.WifiShowMethods;
-import com.federicobarocci.wifiexplorer.model.wifi.container.strategy.common.WifiList;
 
 import javax.inject.Inject;
 
@@ -19,11 +18,13 @@ import javax.inject.Inject;
 public class TaskExecutor {
     private final Context context;
     private final WifiUtilDelegate wifiUtilDelegate;
+    private final ScanResultReceiver scanResultReceiver;
 
     @Inject
-    public TaskExecutor(Context context, WifiUtilDelegate wifiUtilDelegate) {
+    public TaskExecutor(Context context, WifiUtilDelegate wifiUtilDelegate, ScanResultReceiver scanResultReceiver) {
         this.context = context;
         this.wifiUtilDelegate = wifiUtilDelegate;
+        this.scanResultReceiver = scanResultReceiver;
     }
 
     public void checkToInitialize() {
@@ -43,7 +44,8 @@ public class TaskExecutor {
 
     public void onWifiListReceive() {
         Toast.makeText(context, R.string.notify_scan_success, Toast.LENGTH_SHORT).show();
-        wifiUtilDelegate.onWifiListReceive();
+        //wifiUtilDelegate.onWifiListReceive();
+        scanResultReceiver.onWifiListReceive();
     }
 
     public void showAllNetwork() {

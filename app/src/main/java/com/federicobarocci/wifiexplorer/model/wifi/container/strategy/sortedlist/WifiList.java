@@ -1,4 +1,4 @@
-package com.federicobarocci.wifiexplorer.model.wifi.container.strategy.common;
+package com.federicobarocci.wifiexplorer.model.wifi.container.strategy.sortedlist;
 
 import android.support.v7.util.SortedList;
 
@@ -28,11 +28,13 @@ public class WifiList extends SortedList<WifiElement> implements Iterable<WifiEl
         return list;
     }
 
-    public void addUpdate(WifiElement wifiElement) {
+    public void addUpdate(WifiElement wifiElement, boolean insertIfMissing) {
         int position = indexOfKey(wifiElement);
 
         if (position == INVALID_POSITION) {
-            add(wifiElement);
+            if (insertIfMissing) {
+                add(wifiElement);
+            }
         }
         else {
             updateItemAt(position, wifiElement);

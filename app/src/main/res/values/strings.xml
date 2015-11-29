@@ -33,7 +33,7 @@
     <string name="navigation_near_wifi_list">Nearby networks</string>
     <string name="navigation_session_wifi_list">All discovered networks</string>
     <string name="navigation_favourites">Favourites</string>
-    <string name="navigation_map">Map of discovered locations</string>
+    <string name="navigation_map">Map locations</string>
     <string name="navigation_filters">Filter results</string>
     <string name="navigation_filter_all_networks">All networks</string>
     <string name="navigation_filter_open_networks">Only open networks</string>

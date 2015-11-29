@@ -1,4 +1,4 @@
-package com.federicobarocci.wifiexplorer.model.wifi.container.strategy.common;
+package com.federicobarocci.wifiexplorer.model.wifi.container.strategy.sortedlist;
 
 import android.support.v7.util.SortedList;
 
@@ -10,11 +10,11 @@ import com.federicobarocci.wifiexplorer.model.wifi.WifiElement;
 public class WifiListCallback extends SortedList.Callback<WifiElement> {
     @Override
     public int compare(WifiElement o1, WifiElement o2) {
-        if (o1.getSignalLevel() < o2.getSignalLevel()) {
+        if (o1.getdBm() < o2.getdBm()) {
             return 1;
         }
 
-        if (o1.getSignalLevel() > o2.getSignalLevel()) {
+        if (o1.getdBm() > o2.getdBm()) {
             return -1;
         }
 

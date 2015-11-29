@@ -4,7 +4,7 @@ import com.federicobarocci.wifiexplorer.model.wifi.WifiElement;
 import com.federicobarocci.wifiexplorer.model.wifi.container.strategy.CurrentWifiList;
 import com.federicobarocci.wifiexplorer.model.wifi.container.strategy.SessionWifiList;
 import com.federicobarocci.wifiexplorer.model.wifi.container.strategy.WifiListPopulate;
-import com.federicobarocci.wifiexplorer.model.wifi.container.strategy.common.WifiList;
+import com.federicobarocci.wifiexplorer.model.wifi.container.strategy.sortedlist.WifiList;
 
 import java.util.HashMap;
 import java.util.List;

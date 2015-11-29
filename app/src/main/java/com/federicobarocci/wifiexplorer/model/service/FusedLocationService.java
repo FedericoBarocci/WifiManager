@@ -105,8 +105,8 @@ public class FusedLocationService extends Service implements GoogleApiClient.Con
         return this.location;
     }
 
-    public boolean isLocationAvailable() {
-        return location != null;
+    public boolean isLocationUnavailable() {
+        return location == null;
     }
 
     @Override

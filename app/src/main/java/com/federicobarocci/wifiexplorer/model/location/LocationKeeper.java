@@ -25,36 +25,32 @@ public class LocationKeeper implements Parcelable {
         this.center = locationElement;
     }
 
-    public void computeFar() {
-        for (LocationElement element : nearList) {
-            this.far = maxDistanceFromCenter(far, element);
-        }
-    }
-
-    public void setCenter(LocationElement center) {
-        this.center = center;
-    }
-
     public LocationElement getCenter() {
         return center;
     }
 
-    public boolean addNear(LocationElement near) {
+    public void addNear(LocationElement near) {
         nearList.add(near);
 
         if (nearList.size() > NUM_NEAR) {
             removeMaxRadius();
-            return true;
         }
 
-        return false;
+        computeCenter();
     }
 
-    private LocationElement maxDistanceFromCenter(LocationElement a, LocationElement b) {
-        double maxA = SphericalUtil.computeDistanceBetween(center.getLocation(), a.getLocation());
-        double maxB = SphericalUtil.computeDistanceBetween(center.getLocation(), b.getLocation());
+    private void removeMaxRadius() {
+        double maxRadius = 0;
+        int indexMaxRadius = 0;
 
-        return maxA > maxB ? a : b;
+        for (int i = 0; i < nearList.size(); i++) {
+            if (nearList.get(i).getRadius() > maxRadius) {
+                maxRadius = nearList.get(i).getRadius();
+                indexMaxRadius = i;
+            }
+        }
+
+        nearList.remove(indexMaxRadius);
     }
 
     private void computeCenter() {
@@ -81,27 +77,38 @@ public class LocationKeeper implements Parcelable {
     private void computeCenter(LocationElement a, LocationElement b) {
         center.setLocation(SphericalUtil.interpolate(a.getLocation(), b.getLocation(), 0.5));
         computeFar();
-        center.setRadius(SphericalUtil.computeDistanceBetween(center.getLocation(), far.getLocation()));
+        center.setRadius(getMaxRadius()); /*SphericalUtil.computeDistanceBetween(center.getLocation(), far.getLocation()));*/
     }
 
     private void computeCenter(LocationElement a, LocationElement b, LocationElement c) {
         center.setLocation(TrilaterationUtil.compute(a, b, c));
         computeFar();
-        center.setRadius(SphericalUtil.computeDistanceBetween(center.getLocation(), far.getLocation()));
+        center.setRadius(getMaxRadius()); /*SphericalUtil.computeDistanceBetween(center.getLocation(), far.getLocation()));*/
     }
 
-    private void removeMaxRadius() {
-        double maxRadius = nearList.get(0).getRadius();
-        int maxRadiusElement = 0;
+    private double getMaxRadius() {
+        double maxRadius = Math.max(center.getRadius(), far.getRadius());
 
-        for (int i = 1; i < nearList.size(); i++) {
-            if (nearList.get(1).getRadius() > maxRadius) {
-                maxRadius = nearList.get(1).getRadius();
-                maxRadiusElement = i;
+        for (LocationElement locationElement : nearList) {
+            if (locationElement.getRadius() > maxRadius) {
+                maxRadius = locationElement.getRadius();
             }
         }
 
-        nearList.remove(maxRadiusElement);
+        return maxRadius;
+    }
+
+    private void computeFar() {
+        for (LocationElement element : nearList) {
+            this.far = maxDistanceFromCenter(far, element);
+        }
+    }
+
+    private LocationElement maxDistanceFromCenter(LocationElement a, LocationElement b) {
+        double maxA = SphericalUtil.computeDistanceBetween(center.getLocation(), a.getLocation());
+        double maxB = SphericalUtil.computeDistanceBetween(center.getLocation(), b.getLocation());
+
+        return maxA > maxB ? a : b;
     }
 
     @Override

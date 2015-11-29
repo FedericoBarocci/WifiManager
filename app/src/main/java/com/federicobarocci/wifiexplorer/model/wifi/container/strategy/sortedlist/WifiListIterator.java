@@ -1,4 +1,4 @@
-package com.federicobarocci.wifiexplorer.model.wifi.container.strategy.common;
+package com.federicobarocci.wifiexplorer.model.wifi.container.strategy.sortedlist;
 
 import com.federicobarocci.wifiexplorer.model.wifi.WifiElement;
 

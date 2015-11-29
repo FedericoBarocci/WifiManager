@@ -25,10 +25,10 @@ public class WifiUtilDelegate {
         this.scanResultAdapter = adapter;
     }
 
-    public void onWifiListReceive() {
+    /*public void onWifiListReceive() {
         wifiKeeper.populate(wifiManager.getScanResults());
         scanResultAdapter.notifyDataSetChanged();
-    }
+    }*/
 
     public boolean wifiTestEnable() {
         if (!wifiManager.isWifiEnabled()) {

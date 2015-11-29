@@ -9,15 +9,13 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.federicobarocci.wifiexplorer.model.wifi.WifiKeeper;
-import com.federicobarocci.wifiexplorer.ui.adapter.controller.SnackBarShowUndo;
-import com.federicobarocci.wifiexplorer.ui.adapter.controller.SnackBarUndoFavourites;
-import com.federicobarocci.wifiexplorer.ui.activity.DetailActivity;
 import com.federicobarocci.wifiexplorer.R;
 import com.federicobarocci.wifiexplorer.model.db.DataBaseHandler;
-import com.federicobarocci.wifiexplorer.ui.util.ResourceProvider;
-import com.federicobarocci.wifiexplorer.model.db.sqlite.DataBaseElement;
 import com.federicobarocci.wifiexplorer.model.wifi.WifiElement;
+import com.federicobarocci.wifiexplorer.ui.activity.DetailActivity;
+import com.federicobarocci.wifiexplorer.ui.adapter.controller.SnackBarShowUndo;
+import com.federicobarocci.wifiexplorer.ui.adapter.controller.SnackBarUndoFavourites;
+import com.federicobarocci.wifiexplorer.ui.util.ResourceProvider;
 
 import javax.inject.Inject;
 
@@ -31,14 +29,14 @@ import butterknife.OnClick;
 public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.ViewHolder> {
 
     private final DataBaseHandler dataBaseHandler;
-    private final WifiKeeper wifiKeeper;
+    //private final WifiKeeper wifiKeeper;
     private final SnackBarUndoFavourites snackBarUndoFavourites;
     private final ResourceProvider resourceProvider;
 
     @Inject
-    public FavouritesAdapter(DataBaseHandler dataBaseHandler, WifiKeeper wifiKeeper, SnackBarUndoFavourites snackBarUndoFavourites, ResourceProvider resourceProvider) {
+    public FavouritesAdapter(DataBaseHandler dataBaseHandler, /*WifiKeeper wifiKeeper,*/ SnackBarUndoFavourites snackBarUndoFavourites, ResourceProvider resourceProvider) {
         this.dataBaseHandler = dataBaseHandler;
-        this.wifiKeeper = wifiKeeper;
+        //this.wifiKeeper = wifiKeeper;
         this.snackBarUndoFavourites = snackBarUndoFavourites;
         this.resourceProvider = resourceProvider;
     }
@@ -51,11 +49,13 @@ public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.Vi
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int position) {
-        DataBaseElement dataBaseElement = dataBaseHandler.get(position);//.toWifiElement();
+/*        DataBaseElement dataBaseElement = dataBaseHandler.get(position);//.toWifiElement();
 
         WifiElement wifiElement = wifiKeeper.contains(dataBaseElement.getBSSID()) ?
                 wifiKeeper.getElement(dataBaseElement.getBSSID()) :
                 dataBaseElement.toWifiElement();
+*/
+        WifiElement wifiElement = dataBaseHandler.get(position);
 
         viewHolder.wifiElement = wifiElement;
         viewHolder.textViewTitle.setText(wifiElement.getSSID());

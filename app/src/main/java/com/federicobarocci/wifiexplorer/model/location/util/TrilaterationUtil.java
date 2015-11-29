@@ -2,6 +2,7 @@ package com.federicobarocci.wifiexplorer.model.location.util;
 
 import com.federicobarocci.wifiexplorer.model.location.LocationElement;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.maps.android.projection.SphericalMercatorProjection;
 
 /**
  * Created by federico on 17/11/15.
@@ -10,6 +11,12 @@ public class TrilaterationUtil {
     private static final double EARTH_R = 63710000;
 
     public static LatLng compute(LocationElement a, LocationElement b, LocationElement c) {
+
+        double lat = (a.getLocation().latitude + b.getLocation().latitude + c.getLocation().latitude) / 3;
+        double lon = (a.getLocation().longitude + b.getLocation().longitude + c.getLocation().longitude) / 3;
+
+        return new LatLng(lat, lon);
+        /*
         double latA = a.getLocation().latitude;
         double latB = b.getLocation().latitude;
         double latC = c.getLocation().latitude;
@@ -55,6 +62,6 @@ public class TrilaterationUtil {
         double latitude = Math.toDegrees(Math.asin(triPt.getZ() / EARTH_R));
         double longitude = Math.toDegrees(Math.atan2(triPt.getY(), triPt.getX()));
 
-        return new LatLng(latitude, longitude);
+        return new LatLng(latitude, longitude);*/
     }
 }

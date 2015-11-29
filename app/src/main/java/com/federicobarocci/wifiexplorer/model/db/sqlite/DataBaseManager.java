@@ -8,10 +8,9 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import com.federicobarocci.wifiexplorer.model.location.LocationElement;
+import com.federicobarocci.wifiexplorer.model.location.hashmap.LocationMap;
 import com.federicobarocci.wifiexplorer.model.wifi.WifiElement;
-
-import java.util.ArrayList;
-import java.util.List;
+import com.federicobarocci.wifiexplorer.model.wifi.container.strategy.sortedlist.WifiList;
 
 import javax.inject.Inject;
 
@@ -55,7 +54,7 @@ public class DataBaseManager extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public List<DataBaseElement> select() {
+    /*public List<DataBaseElement> select() {
         SQLiteDatabase db = this.getReadableDatabase();
         final String query = "select * from " + TABLE_WIFI;
 
@@ -75,6 +74,48 @@ public class DataBaseManager extends SQLiteOpenHelper {
         }
 
         return list;
+    }*/
+
+    public WifiList selectWifiElements() {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        final String query = String.format("select %s, %s, %s from %s",
+                FIELD_BSSID, FIELD_SSID, FIELD_CAPABILITIES, TABLE_WIFI);
+
+        Cursor c = db.rawQuery(query, null);
+        WifiList list = new WifiList();
+
+        if (c != null && c.moveToFirst()) {
+            do {
+                list.add(new WifiElement(
+                        c.getString(c.getColumnIndex(FIELD_BSSID)),
+                        c.getString(c.getColumnIndex(FIELD_SSID)),
+                        c.getString(c.getColumnIndex(FIELD_CAPABILITIES))));
+            } while (c.moveToNext());
+        }
+
+        return list;
+    }
+
+    public LocationMap selectLocationElements() {
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        final String query = String.format("select %s, %s, %s, %s from %s",
+                FIELD_BSSID, FIELD_LAT, FIELD_LONG, FIELD_RADIUS, TABLE_WIFI);
+
+        Cursor c = db.rawQuery(query, null);
+        LocationMap map = new LocationMap();
+
+        if (c != null && c.moveToFirst()) {
+            do {
+                map.put(c.getString(c.getColumnIndex(FIELD_BSSID)),
+                        c.getDouble(c.getColumnIndex(FIELD_LAT)),
+                        c.getDouble(c.getColumnIndex(FIELD_LONG)),
+                        c.getDouble(c.getColumnIndex(FIELD_RADIUS)));
+            } while (c.moveToNext());
+        }
+
+        return map;
     }
 
     public long insert(WifiElement wifiElement, LocationElement locationElement) {

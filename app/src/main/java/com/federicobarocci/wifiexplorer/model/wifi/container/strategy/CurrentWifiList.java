@@ -1,7 +1,7 @@
 package com.federicobarocci.wifiexplorer.model.wifi.container.strategy;
 
 import com.federicobarocci.wifiexplorer.model.wifi.WifiElement;
-import com.federicobarocci.wifiexplorer.model.wifi.container.strategy.common.WifiList;
+import com.federicobarocci.wifiexplorer.model.wifi.container.strategy.sortedlist.WifiList;
 
 import java.util.List;
 

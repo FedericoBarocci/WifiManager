@@ -1,13 +1,10 @@
 package com.federicobarocci.wifiexplorer.model.wifi;
 
-import android.net.wifi.ScanResult;
-
 import com.federicobarocci.wifiexplorer.model.location.LocationHandler;
 import com.federicobarocci.wifiexplorer.model.wifi.container.WifiListEnum;
-import com.federicobarocci.wifiexplorer.model.wifi.container.strategy.common.WifiList;
+import com.federicobarocci.wifiexplorer.model.wifi.container.strategy.sortedlist.WifiList;
 import com.federicobarocci.wifiexplorer.model.wifi.container.WifiListContainer;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -17,31 +14,31 @@ import javax.inject.Inject;
  */
 public class WifiKeeper {
     private final WifiListContainer wifiListContainer;
-    private final LocationHandler locationHandler;
+//    private final LocationHandler locationHandler;
 
     private WifiShowMethods wifiShowMethods = WifiShowMethods.ALL_NETWORK;
     private WifiListEnum currentWifiList = WifiListEnum.NEAR;
 
     @Inject
-    public WifiKeeper(WifiListContainer wifiListContainer, LocationHandler locationHandler) {
+    public WifiKeeper(WifiListContainer wifiListContainer/*, LocationHandler locationHandler*/) {
         this.wifiListContainer = wifiListContainer;
-        this.locationHandler = locationHandler;
+//        this.locationHandler = locationHandler;
     }
 
     public void clear() {
         wifiListContainer.getList(WifiListEnum.NEAR).clear();
     }
 
-    public void populate(List<ScanResult> scanResults) {
-        List<WifiElement> list = new ArrayList<>(scanResults.size());
+    public void populate(List<WifiElement> wifiElementList) {
+//        //List<WifiElement> list = new ArrayList<>(scanResults.size());
+//
+//        for (WifiElement wifiElement : wifiElementList) {
+//            //WifiElement wifiElement = new WifiElement(scanResult);
+//            //list.add(wifiElement);
+//            locationHandler.store(wifiElement);
+//        }
 
-        for (ScanResult scanResult : scanResults) {
-            WifiElement wifiElement = new WifiElement(scanResult);
-            list.add(wifiElement);
-            locationHandler.store(wifiElement);
-        }
-
-        wifiListContainer.populate(list);
+        wifiListContainer.populate(wifiElementList);
     }
 
     public int size() {

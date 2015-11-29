@@ -8,15 +8,13 @@ import android.location.Location;
 import android.os.IBinder;
 import android.util.Log;
 
-import com.federicobarocci.wifiexplorer.model.db.sqlite.DataBaseElement;
+import com.federicobarocci.wifiexplorer.model.db.sqlite.DataBaseManager;
+import com.federicobarocci.wifiexplorer.model.location.hashmap.LocationMap;
 import com.federicobarocci.wifiexplorer.model.service.FusedLocationService;
 import com.federicobarocci.wifiexplorer.model.wifi.WifiElement;
 import com.google.android.gms.maps.model.LatLng;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 import javax.inject.Inject;
 
@@ -41,51 +39,51 @@ public class LocationHandler {
         }
     };
 
-    private Map<String, LocationKeeper> elements = new HashMap<>();
+    private final LocationMap locationMap = new LocationMap();
 
     @Inject
-    public LocationHandler(Context context) {
+    public LocationHandler(Context context, DataBaseManager dataBaseManager) {
         Intent intent = new Intent(context, FusedLocationService.class);
         context.bindService(intent, serviceConnection, Context.BIND_AUTO_CREATE);
+        locationMap.putAll(dataBaseManager.selectLocationElements());
     }
-    
-    public void store(WifiElement wifiElement) {
-        //NB. fusedLocationService may be not yet available...
-        if (fusedLocationService != null && fusedLocationService.isLocationAvailable()) {
-            Location location = fusedLocationService.getLocation();
-            LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-            LocationElement locationElement = new LocationElement(latLng, wifiElement.calculateDistance());
 
-            if (elements.containsKey(wifiElement.getBSSID())) {
-                elements.get(wifiElement.getBSSID()).addNear(locationElement);
-            }
-            else {
-                elements.put(wifiElement.getBSSID(), new LocationKeeper(locationElement));
-            }
+    public void populate(List<WifiElement> wifiElementList) {
+        //NB. fusedLocationService may be not yet available...
+        if (fusedLocationService == null || fusedLocationService.isLocationUnavailable()) {
+            return;
+        }
+
+        final Location location = fusedLocationService.getLocation();
+        final LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+
+        for (WifiElement wifiElement : wifiElementList) {
+            locationMap.insert(wifiElement.getBSSID(), new LocationElement(latLng, wifiElement.calculateDistance()));
         }
     }
 
     public LocationKeeper get(String bssid) {
-        return elements.get(bssid);
+        return locationMap.get(bssid);
     }
 
     public boolean contain(String bssid) {
-        return elements.containsKey(bssid);
+        return locationMap.containsKey(bssid);
     }
 
-    public void populate(List<DataBaseElement> dbElements) {
-        for (DataBaseElement dataBaseElement : dbElements) {
-            if (dataBaseElement.hasLocation()) {
-                if (elements.containsKey(dataBaseElement.getBSSID())) {
-                    elements.get(dataBaseElement.getBSSID()).setCenter(dataBaseElement.toLocationElement());
-                } else {
-                    elements.put(dataBaseElement.getBSSID(), new LocationKeeper(dataBaseElement.toLocationElement()));
-                }
-            }
-        }
-    }
 
-    public Set<String> getAllKeys() {
-        return elements.keySet();
-    }
+//    public void populate(List<DataBaseElement> dbElements) {
+//        for (DataBaseElement dataBaseElement : dbElements) {
+//            if (dataBaseElement.hasLocation()) {
+//                if (locationMap.containsKey(dataBaseElement.getBSSID())) {
+//                    locationMap.get(dataBaseElement.getBSSID()).setCenter(dataBaseElement.toLocationElement());
+//                } else {
+//                    locationMap.put(dataBaseElement.getBSSID(), new LocationKeeper(dataBaseElement.toLocationElement()));
+//                }
+//            }
+//        }
+//    }
+
+//    public Set<String> getAllKeys() {
+//        return locationMap.keySet();
+//    }
 }
