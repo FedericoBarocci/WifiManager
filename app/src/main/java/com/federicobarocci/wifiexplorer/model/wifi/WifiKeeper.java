@@ -1,10 +1,11 @@
 package com.federicobarocci.wifiexplorer.model.wifi;
 
 import android.net.wifi.ScanResult;
-import android.support.v4.util.Pair;
 
 import com.federicobarocci.wifiexplorer.model.location.LocationHandler;
-import com.federicobarocci.wifiexplorer.model.wifi.container.WifiList;
+import com.federicobarocci.wifiexplorer.model.wifi.container.WifiListEnum;
+import com.federicobarocci.wifiexplorer.model.wifi.container.strategy.common.WifiList;
+import com.federicobarocci.wifiexplorer.model.wifi.container.WifiListContainer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,56 +16,71 @@ import javax.inject.Inject;
  * Created by federico on 03/11/15.
  */
 public class WifiKeeper {
-    private final WifiList wifiList;
+    private final WifiListContainer wifiListContainer;
     private final LocationHandler locationHandler;
 
-    private WifiShowStrategy wifiShowStrategy = WifiShowStrategy.ALL_NETWORK;
+    private WifiShowMethods wifiShowMethods = WifiShowMethods.ALL_NETWORK;
+    private WifiListEnum currentWifiList = WifiListEnum.NEAR;
 
     @Inject
-    public WifiKeeper(WifiList wifiList, LocationHandler locationHandler) {
-        this.wifiList = wifiList;
+    public WifiKeeper(WifiListContainer wifiListContainer, LocationHandler locationHandler) {
+        this.wifiListContainer = wifiListContainer;
         this.locationHandler = locationHandler;
     }
 
     public void clear() {
-        wifiList.clear();
+        wifiListContainer.getList(WifiListEnum.NEAR).clear();
     }
 
     public void populate(List<ScanResult> scanResults) {
-        wifiList.clear();
+        List<WifiElement> list = new ArrayList<>(scanResults.size());
 
         for (ScanResult scanResult : scanResults) {
             WifiElement wifiElement = new WifiElement(scanResult);
-            wifiList.add(wifiElement);
+            list.add(wifiElement);
             locationHandler.store(wifiElement);
         }
+
+        wifiListContainer.populate(list);
     }
 
     public int size() {
-        return wifiShowStrategy.size(wifiList);
+        return wifiShowMethods.size(wifiListContainer.getList(currentWifiList));
     }
 
     public WifiElement get(int position) {
-        return wifiShowStrategy.get(wifiList, position);
+        return wifiShowMethods.get(wifiListContainer.getList(currentWifiList), position);
     }
 
     public WifiList getFilteredList() {
-        return wifiList.filter(wifiShowStrategy);
+        return wifiListContainer.getList(currentWifiList).filter(wifiShowMethods);
     }
 
     public boolean contains(String bssid) {
-        return wifiList.getKey(bssid) != null;
+        return wifiListContainer.getList(currentWifiList).getKey(bssid) != null;
     }
 
     public WifiElement getElement(String bssid) {
-        return wifiList.getKey(bssid);
+        return wifiListContainer.getList(currentWifiList).getKey(bssid);
     }
 
-    public void setWifiShowStrategy(WifiShowStrategy wifiShowStrategy) {
-        this.wifiShowStrategy = wifiShowStrategy;
+    public void setWifiShowMethods(WifiShowMethods wifiShowMethods) {
+        this.wifiShowMethods = wifiShowMethods;
     }
 
-    /*private boolean update(String key, ScanResult scanResult) {
+    public void setWifiListEnum(WifiListEnum wifiListEnum) {
+        this.currentWifiList = wifiListEnum;
+    }
+
+    public WifiListEnum getWifiListEnum() {
+        return currentWifiList;
+    }
+
+    public WifiShowMethods getWifiShowMethodsEnum() {
+        return wifiShowMethods;
+    }
+
+    /*private boolean addUpdate(String key, ScanResult scanResult) {
         for(int i = 0; i < wifiList.size(); i++) {
             Pair<String, WifiElement> pair = wifiList.get(i);
 

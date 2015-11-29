@@ -1,11 +1,11 @@
 package com.federicobarocci.wifiexplorer.model.wifi;
 
-import com.federicobarocci.wifiexplorer.model.wifi.container.WifiList;
+import com.federicobarocci.wifiexplorer.model.wifi.container.strategy.common.WifiList;
 
 /**
  * Created by federico on 24/11/15.
  */
-public enum WifiShowStrategy {
+public enum WifiShowMethods {
     OPEN_NETWORK {
         @Override
         public int size(WifiList wifiList) {

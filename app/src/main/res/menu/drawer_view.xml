@@ -7,6 +7,14 @@
             android:icon="@drawable/ic_dashboard"
             android:title="@string/navigation_refresh" />
         <item
+            android:id="@+id/navigation_near_wifi_list"
+            android:icon="@drawable/ic_event"
+            android:title="@string/navigation_near_wifi_list" />
+        <item
+            android:id="@+id/navigation_session_wifi_list"
+            android:icon="@drawable/ic_event"
+            android:title="@string/navigation_session_wifi_list" />
+        <item
             android:id="@+id/navigation_favourites"
             android:icon="@drawable/ic_event"
             android:title="@string/navigation_favourites" />
@@ -19,13 +27,17 @@
     <item android:title="@string/navigation_filters">
         <menu>
             <item
-                android:id="@+id/navigation_filter_open_network"
-                android:icon="@drawable/ic_dashboard"
-                android:title="@string/navigation_filter_open_network" />
-            <item
-                android:id="@+id/navigation_filter_closed_network"
+                android:id="@+id/navigation_filter_all_networks"
                 android:icon="@drawable/ic_forum"
-                android:title="@string/navigation_filter_closed_network" />
+                android:title="@string/navigation_filter_all_networks" />
+            <item
+                android:id="@+id/navigation_filter_open_networks"
+                android:icon="@drawable/ic_dashboard"
+                android:title="@string/navigation_filter_open_networks" />
+            <item
+                android:id="@+id/navigation_filter_closed_networks"
+                android:icon="@drawable/ic_forum"
+                android:title="@string/navigation_filter_closed_networks" />
         </menu>
     </item>
 

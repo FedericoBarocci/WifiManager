@@ -8,7 +8,10 @@ import com.federicobarocci.wifiexplorer.model.db.DataBaseHandler;
 import com.federicobarocci.wifiexplorer.model.db.sqlite.DataBaseManager;
 import com.federicobarocci.wifiexplorer.model.location.LocationHandler;
 import com.federicobarocci.wifiexplorer.model.wifi.WifiKeeper;
-import com.federicobarocci.wifiexplorer.model.wifi.container.WifiList;
+import com.federicobarocci.wifiexplorer.model.wifi.container.strategy.CurrentWifiList;
+import com.federicobarocci.wifiexplorer.model.wifi.container.strategy.SessionWifiList;
+import com.federicobarocci.wifiexplorer.model.wifi.container.strategy.common.WifiList;
+import com.federicobarocci.wifiexplorer.model.wifi.container.WifiListContainer;
 import com.federicobarocci.wifiexplorer.ui.adapter.FavouritesAdapter;
 import com.federicobarocci.wifiexplorer.ui.adapter.ScanResultAdapter;
 import com.federicobarocci.wifiexplorer.ui.adapter.controller.SnackBarUndoFavourites;
@@ -47,8 +50,14 @@ public class DaggerModule {
 
     @Provides
     @Singleton
-    WifiList provideWifiList() {
-        return new WifiList();
+    CurrentWifiList provideCurrentWifiList() {
+        return new CurrentWifiList();
+    }
+
+    @Provides
+    @Singleton
+    SessionWifiList provideSessionWifiList() {
+        return new SessionWifiList();
     }
 
     @Provides
@@ -59,8 +68,14 @@ public class DaggerModule {
 
     @Provides
     @Singleton
-    WifiKeeper provideWifiKeeper(WifiList wifiList, LocationHandler locationHandler) {
-        return new WifiKeeper(wifiList, locationHandler);
+    WifiListContainer provideWifiListContainer(CurrentWifiList currentWifiList, SessionWifiList sessionWifiList) {
+        return new WifiListContainer(currentWifiList, sessionWifiList);
+    }
+
+    @Provides
+    @Singleton
+    WifiKeeper provideWifiKeeper(WifiListContainer wifiListContainer, LocationHandler locationHandler) {
+        return new WifiKeeper(wifiListContainer, locationHandler);
     }
 
     @Provides

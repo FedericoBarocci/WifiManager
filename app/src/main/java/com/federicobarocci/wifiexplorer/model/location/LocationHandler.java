@@ -50,7 +50,8 @@ public class LocationHandler {
     }
     
     public void store(WifiElement wifiElement) {
-        if (fusedLocationService.isLocationAvailable()) {
+        //NB. fusedLocationService may be not yet available...
+        if (fusedLocationService != null && fusedLocationService.isLocationAvailable()) {
             Location location = fusedLocationService.getLocation();
             LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
             LocationElement locationElement = new LocationElement(latLng, wifiElement.calculateDistance());

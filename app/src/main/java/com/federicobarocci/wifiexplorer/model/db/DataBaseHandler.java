@@ -79,14 +79,14 @@ public class DataBaseHandler {
         }
     }
 
-    public DataBaseElement getElement(String bssid) {
+    /*public DataBaseElement getElement(String bssid) {
         for (int i = 0; i < elements.size(); i++) {
             if (elements.get(i).getBSSID().equals(bssid)) {
                 return elements.get(i);
             }
         }
         return null;
-    }
+    }*/
 
     public DataBaseElement get(int position) {
         return elements.get(position);

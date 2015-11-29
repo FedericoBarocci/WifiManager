@@ -48,11 +48,11 @@ public class DataBaseElement {
         return bssid;
     }
 
-    public String getSSID() {
+    /*public String getSSID() {
         return ssid;
     }
 
-    /*public String getCapabilities() {
+    public String getCapabilities() {
         return capabilities;
     }
 

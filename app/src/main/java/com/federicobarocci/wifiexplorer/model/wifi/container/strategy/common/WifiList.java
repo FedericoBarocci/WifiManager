@@ -1,9 +1,9 @@
-package com.federicobarocci.wifiexplorer.model.wifi.container;
+package com.federicobarocci.wifiexplorer.model.wifi.container.strategy.common;
 
 import android.support.v7.util.SortedList;
 
 import com.federicobarocci.wifiexplorer.model.wifi.WifiElement;
-import com.federicobarocci.wifiexplorer.model.wifi.WifiShowStrategy;
+import com.federicobarocci.wifiexplorer.model.wifi.WifiShowMethods;
 
 import java.util.Iterator;
 
@@ -16,16 +16,37 @@ public class WifiList extends SortedList<WifiElement> implements Iterable<WifiEl
         super(WifiElement.class, new WifiListCallback());
     }
 
-    public WifiList filter(WifiShowStrategy wifiShowStrategy) {
+    public WifiList filter(WifiShowMethods wifiShowMethods) {
         WifiList list = new WifiList();
 
         for(WifiElement wifiElement : this) {
-            if (wifiShowStrategy.condition(wifiElement)) {
+            if (wifiShowMethods.condition(wifiElement)) {
                 list.add(wifiElement);
             }
         }
 
         return list;
+    }
+
+    public void addUpdate(WifiElement wifiElement) {
+        int position = indexOfKey(wifiElement);
+
+        if (position == INVALID_POSITION) {
+            add(wifiElement);
+        }
+        else {
+            updateItemAt(position, wifiElement);
+        }
+    }
+
+    private int indexOfKey(WifiElement wifiElement) {
+        for(int i = 0; i < size(); i++) {
+            if (wifiElement.getBSSID().equals(get(i).getBSSID())) {
+                return i;
+            }
+        }
+
+        return INVALID_POSITION;
     }
 
     public WifiElement getKey(String bssid) {

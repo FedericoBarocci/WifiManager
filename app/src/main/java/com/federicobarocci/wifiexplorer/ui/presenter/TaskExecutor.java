@@ -7,7 +7,9 @@ import android.support.v7.app.AlertDialog;
 import android.widget.Toast;
 
 import com.federicobarocci.wifiexplorer.R;
-import com.federicobarocci.wifiexplorer.model.wifi.WifiShowStrategy;
+import com.federicobarocci.wifiexplorer.model.wifi.container.WifiListEnum;
+import com.federicobarocci.wifiexplorer.model.wifi.WifiShowMethods;
+import com.federicobarocci.wifiexplorer.model.wifi.container.strategy.common.WifiList;
 
 import javax.inject.Inject;
 
@@ -44,22 +46,16 @@ public class TaskExecutor {
         wifiUtilDelegate.onWifiListReceive();
     }
 
-    public void showOnlyOpenNetwork(boolean checked) {
-        if (checked) {
-            wifiUtilDelegate.setWifiShowEnum(WifiShowStrategy.OPEN_NETWORK);
-        }
-        else {
-            wifiUtilDelegate.setWifiShowEnum(WifiShowStrategy.ALL_NETWORK);
-        }
+    public void showAllNetwork() {
+        wifiUtilDelegate.setWifiShowEnum(WifiShowMethods.ALL_NETWORK);
     }
 
-    public void showOnlyClosedNetwork(boolean checked) {
-        if (checked) {
-            wifiUtilDelegate.setWifiShowEnum(WifiShowStrategy.CLOSED_NETWORK);
-        }
-        else {
-            wifiUtilDelegate.setWifiShowEnum(WifiShowStrategy.ALL_NETWORK);
-        }
+    public void showOnlyOpenNetwork() {
+        wifiUtilDelegate.setWifiShowEnum(WifiShowMethods.OPEN_NETWORK);
+    }
+
+    public void showOnlyClosedNetwork() {
+        wifiUtilDelegate.setWifiShowEnum(WifiShowMethods.CLOSED_NETWORK);
     }
 
     public void buildAlertMessageNoGps(Context activityContext) {
@@ -84,5 +80,33 @@ public class TaskExecutor {
 
         final AlertDialog alert = builder.create();
         alert.show();
+    }
+
+    public void showCurrentWifiList() {
+        wifiUtilDelegate.setWifiListEnum(WifiListEnum.NEAR);
+    }
+
+    public void showSessionWifiList() {
+        wifiUtilDelegate.setWifiListEnum(WifiListEnum.SESSION);
+    }
+
+    public boolean isNearSelected() {
+        return wifiUtilDelegate.getShowSelectionEnum() == WifiListEnum.NEAR;
+    }
+
+    public boolean isSessionSelected() {
+        return wifiUtilDelegate.getShowSelectionEnum() == WifiListEnum.SESSION;
+    }
+
+    public boolean isFilterAllSelected() {
+        return wifiUtilDelegate.getFilterSelection() == WifiShowMethods.ALL_NETWORK;
+    }
+
+    public boolean isFilterOpenSelected() {
+        return wifiUtilDelegate.getFilterSelection() == WifiShowMethods.OPEN_NETWORK;
+    }
+
+    public boolean isFilterClosedSelected() {
+        return wifiUtilDelegate.getFilterSelection() == WifiShowMethods.CLOSED_NETWORK;
     }
 }

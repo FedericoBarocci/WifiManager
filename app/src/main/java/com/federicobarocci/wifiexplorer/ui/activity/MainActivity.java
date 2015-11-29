@@ -92,6 +92,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             taskExecutor.buildAlertMessageNoGps(this);
         }
 
+//        taskExecutor.showAllNetwork();
+
         startService(new Intent(this, FusedLocationService.class));
         LocalBroadcastManager.getInstance(this).registerReceiver(fusedLocationReceiver, new IntentFilter(FusedLocationService.INTENT_LOCATION_CHANGED));
 
@@ -120,6 +122,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
         recyclerView.setAdapter(((WifiExplorerApplication) getApplication()).getComponent().provideScanResultAdapter());
         recyclerView.setItemAnimator(new DefaultItemAnimator());
+
+        navigationView.getMenu().findItem(R.id.navigation_near_wifi_list).setChecked(taskExecutor.isNearSelected());
+        navigationView.getMenu().findItem(R.id.navigation_session_wifi_list).setChecked(taskExecutor.isSessionSelected());
+        navigationView.getMenu().findItem(R.id.navigation_filter_all_networks).setChecked(taskExecutor.isFilterAllSelected());
+        navigationView.getMenu().findItem(R.id.navigation_filter_open_networks).setChecked(taskExecutor.isFilterOpenSelected());
+        navigationView.getMenu().findItem(R.id.navigation_filter_closed_networks).setChecked(taskExecutor.isFilterClosedSelected());
     }
 
     @Override
@@ -213,10 +221,26 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public boolean onNavigationItemSelected(MenuItem item) {
+        boolean keepSelection = false;
+
         switch (item.getItemId()) {
             case R.id.navigation_refresh:
                 item.setChecked(false);
                 this.onRefresh();
+                break;
+
+            case R.id.navigation_near_wifi_list:
+                keepSelection = !item.isChecked();
+                item.setChecked(true);
+                navigationView.getMenu().findItem(R.id.navigation_session_wifi_list).setChecked(false);
+                taskExecutor.showCurrentWifiList();
+                break;
+
+            case R.id.navigation_session_wifi_list:
+                keepSelection = !item.isChecked();
+                item.setChecked(true);
+                navigationView.getMenu().findItem(R.id.navigation_near_wifi_list).setChecked(false);
+                taskExecutor.showSessionWifiList();
                 break;
 
             case R.id.navigation_favourites:
@@ -229,23 +253,32 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 startActivity(new Intent(this, MapActivity.class));
                 break;
 
-            case R.id.navigation_filter_open_network:
-                item.setChecked(!item.isChecked());
-                navigationView.getMenu().findItem(R.id.navigation_filter_closed_network).setChecked(false);
-                taskExecutor.showOnlyOpenNetwork(item.isChecked());
+            case R.id.navigation_filter_all_networks:
+                item.setChecked(true);
+                navigationView.getMenu().findItem(R.id.navigation_filter_open_networks).setChecked(false);
+                navigationView.getMenu().findItem(R.id.navigation_filter_closed_networks).setChecked(false);
+                taskExecutor.showAllNetwork();
                 break;
 
-            case R.id.navigation_filter_closed_network:
-                item.setChecked(!item.isChecked());
-                navigationView.getMenu().findItem(R.id.navigation_filter_open_network).setChecked(false);
-                taskExecutor.showOnlyClosedNetwork(item.isChecked());
+            case R.id.navigation_filter_open_networks:
+                item.setChecked(true);
+                navigationView.getMenu().findItem(R.id.navigation_filter_closed_networks).setChecked(false);
+                navigationView.getMenu().findItem(R.id.navigation_filter_all_networks).setChecked(false);
+                taskExecutor.showOnlyOpenNetwork();
+                break;
+
+            case R.id.navigation_filter_closed_networks:
+                item.setChecked(true);
+                navigationView.getMenu().findItem(R.id.navigation_filter_open_networks).setChecked(false);
+                navigationView.getMenu().findItem(R.id.navigation_filter_all_networks).setChecked(false);
+                taskExecutor.showOnlyClosedNetwork();
                 break;
         }
 
         if (mDrawerLayout != null)
             mDrawerLayout.closeDrawers();
 
-        return false;
+        return keepSelection;
     }
 
     @Override

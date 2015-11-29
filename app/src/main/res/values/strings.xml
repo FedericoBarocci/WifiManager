@@ -29,12 +29,15 @@
     <string name="unknown">Unknown</string>
     <string name="no_information">No information available</string>
 
-    <string name="navigation_refresh">Refresh</string>
-    <string name="navigation_favourites">Show Favourites</string>
-    <string name="navigation_map">Open Wifi Map</string>
+    <string name="navigation_refresh">Refresh scan results</string>
+    <string name="navigation_near_wifi_list">Nearby networks</string>
+    <string name="navigation_session_wifi_list">All discovered networks</string>
+    <string name="navigation_favourites">Favourites</string>
+    <string name="navigation_map">Map of discovered locations</string>
     <string name="navigation_filters">Filter results</string>
-    <string name="navigation_filter_open_network">Show only open network</string>
-    <string name="navigation_filter_closed_network">Show only closed network</string>
+    <string name="navigation_filter_all_networks">All networks</string>
+    <string name="navigation_filter_open_networks">Only open networks</string>
+    <string name="navigation_filter_closed_networks">Only closed networks</string>
 
     <string name="gps_auth_message">GPS is required for this application but seems to be disabled, do you want to enable it?</string>
 </resources>
