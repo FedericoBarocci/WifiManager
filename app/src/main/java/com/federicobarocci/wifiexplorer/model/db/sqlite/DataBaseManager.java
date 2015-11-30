@@ -132,6 +132,20 @@ public class DataBaseManager extends SQLiteOpenHelper {
         return db.insert(TABLE_WIFI, null, contentValues);
     }
 
+    public long insert(DataBaseElement dataBaseElement) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+
+        contentValues.put(FIELD_BSSID, dataBaseElement.bssid);
+        contentValues.put(FIELD_SSID, dataBaseElement.ssid);
+        contentValues.put(FIELD_CAPABILITIES, dataBaseElement.capabilities);
+        contentValues.put(FIELD_LAT, dataBaseElement.latitude);
+        contentValues.put(FIELD_LONG, dataBaseElement.longitude);
+        contentValues.put(FIELD_RADIUS, dataBaseElement.radius);
+
+        return db.insert(TABLE_WIFI, null, contentValues);
+    }
+
     public long insert(WifiElement wifiElement) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
@@ -143,9 +157,33 @@ public class DataBaseManager extends SQLiteOpenHelper {
         return db.insert(TABLE_WIFI, null, contentValues);
     }
 
-    public void delete(String bssid) {
+    public DataBaseElement delete(String bssid) {
+        final DataBaseElement dataBaseElement = select(bssid);
+
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_WIFI, FIELD_BSSID + " = ?", new String[]{bssid});
+
+        return dataBaseElement;
+    }
+
+    private DataBaseElement select(String bssid) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        final String query = String.format("select * from %s where %s = '%s'", TABLE_WIFI, FIELD_BSSID, bssid);
+
+        Cursor c = db.rawQuery(query, null);
+        DataBaseElement dataBaseElement = null;
+
+        if (c != null && c.moveToFirst()) {
+            dataBaseElement = new DataBaseElement(
+                    c.getString(c.getColumnIndex(FIELD_BSSID)),
+                    c.getString(c.getColumnIndex(FIELD_SSID)),
+                    c.getString(c.getColumnIndex(FIELD_CAPABILITIES)),
+                    c.getDouble(c.getColumnIndex(FIELD_LAT)),
+                    c.getDouble(c.getColumnIndex(FIELD_LONG)),
+                    c.getDouble(c.getColumnIndex(FIELD_RADIUS)));
+        }
+
+        return dataBaseElement;
     }
 
     public int update(WifiElement wifiElement, LocationElement locationElement) {

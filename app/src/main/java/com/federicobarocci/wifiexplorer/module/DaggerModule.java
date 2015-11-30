@@ -86,8 +86,8 @@ public class DaggerModule {
 
     @Provides
     @Singleton
-    DataBaseHandler provideDataBaseHandler(DataBaseManager dataBaseManager, LocationHandler locationHandler) {
-        return new DataBaseHandler(dataBaseManager, locationHandler);
+    DataBaseHandler provideDataBaseHandler(DataBaseManager dataBaseManager, LocationHandler locationHandler, WifiKeeper wifiKeeper) {
+        return new DataBaseHandler(dataBaseManager, locationHandler, wifiKeeper);
     }
 
     @Provides

@@ -1,9 +1,13 @@
 package com.federicobarocci.wifiexplorer.model.db;
 
+import android.support.v7.util.SortedList;
+
+import com.federicobarocci.wifiexplorer.model.db.sqlite.DataBaseElement;
 import com.federicobarocci.wifiexplorer.model.db.sqlite.DataBaseManager;
 import com.federicobarocci.wifiexplorer.model.location.LocationElement;
 import com.federicobarocci.wifiexplorer.model.location.LocationHandler;
 import com.federicobarocci.wifiexplorer.model.wifi.WifiElement;
+import com.federicobarocci.wifiexplorer.model.wifi.WifiKeeper;
 import com.federicobarocci.wifiexplorer.model.wifi.container.strategy.sortedlist.WifiList;
 
 import java.util.List;
@@ -17,31 +21,33 @@ public class DataBaseHandler {
 
     private final DataBaseManager dataBaseManager;
     private final LocationHandler locationHandler;
+    private final WifiKeeper wifiKeeper;
     private final WifiList wifiList;
 
     @Inject
-    public DataBaseHandler(DataBaseManager dataBaseManager, LocationHandler locationHandler) {
+    public DataBaseHandler(DataBaseManager dataBaseManager, LocationHandler locationHandler, WifiKeeper wifiKeeper) {
         this.dataBaseManager = dataBaseManager;
         this.locationHandler = locationHandler;
+        this.wifiKeeper = wifiKeeper;
+
         this.wifiList = dataBaseManager.selectWifiElements();
 
         //locationHandler.populate(elements);
     }
 
-    public boolean toggleSave(WifiElement wifiElement) {
-        if (contains(wifiElement.getBSSID())) {
-            delete(wifiElement.getBSSID());
-            return false;
+    public DataBaseElement toggleSave(WifiElement wifiElement) {
+        if (wifiList.contains(wifiElement)) {
+            return delete(wifiElement);
         }
         else {
             save(wifiElement);
-            return true;
+            return null;
         }
     }
 
-    private void delete(String key) {
-        dataBaseManager.delete(key);
-        remove(key);
+    private DataBaseElement delete(WifiElement wifiElement) {
+        wifiList.remove(wifiElement);
+        return dataBaseManager.delete(wifiElement.getBSSID());
     }
 
     private void save(WifiElement wifiElement) {
@@ -63,16 +69,17 @@ public class DataBaseHandler {
         return wifiList.size();
     }
 
-    public boolean contains(String bssid) {
-        for (int i = 0; i < wifiList.size(); i++) {
+    public boolean contains(WifiElement wifiElement) {
+        return wifiList.contains(wifiElement);
+/*        for (int i = 0; i < wifiList.size(); i++) {
             if (wifiList.get(i).getBSSID().equals(bssid)) {
                 return true;
             }
         }
-        return false;
+        return false;*/
     }
 
-    private void remove(String bssid) {
+    /*private void remove(String bssid) {
         for (int i = 0; i < wifiList.size(); i++) {
             if (wifiList.get(i).getBSSID().equals(bssid)) {
                 wifiList.removeItemAt(i);
@@ -81,7 +88,7 @@ public class DataBaseHandler {
         }
     }
 
-    /*public DataBaseElement getElement(String bssid) {
+    public DataBaseElement getElement(String bssid) {
         for (int i = 0; i < elements.size(); i++) {
             if (elements.get(i).getBSSID().equals(bssid)) {
                 return elements.get(i);
@@ -98,5 +105,16 @@ public class DataBaseHandler {
         for(WifiElement wifiElement : wifiElementList) {
             wifiList.addUpdate(wifiElement, false);
         }
+    }
+
+    public void restore(DataBaseElement dataBaseElement) {
+        WifiElement wifiElement = wifiKeeper.getUnfilteredElement(dataBaseElement.bssid);
+
+        if (wifiElement == null) {
+            wifiElement = dataBaseElement.toWifiElement();
+        }
+
+        wifiList.add(wifiElement);
+        dataBaseManager.insert(dataBaseElement);
     }
 }

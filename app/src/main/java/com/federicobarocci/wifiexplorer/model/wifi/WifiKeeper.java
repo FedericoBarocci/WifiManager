@@ -77,6 +77,10 @@ public class WifiKeeper {
         return wifiShowMethods;
     }
 
+    public WifiElement getUnfilteredElement(String bssid) {
+        return wifiListContainer.getList(WifiListEnum.SESSION).getKey(bssid);
+    }
+
     /*private boolean addUpdate(String key, ScanResult scanResult) {
         for(int i = 0; i < wifiList.size(); i++) {
             Pair<String, WifiElement> pair = wifiList.get(i);

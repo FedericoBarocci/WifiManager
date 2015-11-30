@@ -8,14 +8,12 @@ import com.google.android.gms.maps.model.LatLng;
  * Created by federico on 18/11/15.
  */
 public class DataBaseElement {
-    private final String bssid;
-    private final String ssid;
-    private final String capabilities;
-    private final boolean hasLocationInfo;
-    
-    private double latitude;
-    private double longitude;
-    private double radius;
+    public final String bssid;
+    public final String ssid;
+    public final String capabilities;
+    public final double latitude;
+    public final double longitude;
+    public final double radius;
 
     public DataBaseElement(String bssid, String ssid, String capabilities, double latitude, double longitude, double radius) {
         this.bssid = bssid;
@@ -24,52 +22,6 @@ public class DataBaseElement {
         this.latitude = latitude;
         this.longitude = longitude;
         this.radius = radius;
-        this.hasLocationInfo = true;
-    }
-
-    public DataBaseElement(WifiElement wifiElement, LocationElement locationElement) {
-        this.bssid = wifiElement.getBSSID();
-        this.ssid = wifiElement.getSSID();
-        this.capabilities = wifiElement.getCapabilities();
-        this.latitude = locationElement.getLocation().latitude;
-        this.longitude = locationElement.getLocation().longitude;
-        this.radius = locationElement.getRadius();
-        this.hasLocationInfo = true;
-    }
-
-    public DataBaseElement(WifiElement wifiElement) {
-        this.bssid = wifiElement.getBSSID();
-        this.ssid = wifiElement.getSSID();
-        this.capabilities = wifiElement.getCapabilities();
-        this.hasLocationInfo = false;
-    }
-
-    public String getBSSID() {
-        return bssid;
-    }
-
-    /*public String getSSID() {
-        return ssid;
-    }
-
-    public String getCapabilities() {
-        return capabilities;
-    }
-
-    public double getLatitude() {
-        return latitude;
-    }
-
-    public double getLongitude() {
-        return longitude;
-    }
-
-    public double getRadius() {
-        return radius;
-    }*/
-
-    public boolean hasLocation() {
-        return hasLocationInfo;
     }
 
     public WifiElement toWifiElement() {

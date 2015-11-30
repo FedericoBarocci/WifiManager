@@ -6,6 +6,7 @@ import android.view.View;
 
 import com.federicobarocci.wifiexplorer.R;
 import com.federicobarocci.wifiexplorer.model.db.DataBaseHandler;
+import com.federicobarocci.wifiexplorer.model.db.sqlite.DataBaseElement;
 import com.federicobarocci.wifiexplorer.model.wifi.WifiElement;
 
 import javax.inject.Inject;
@@ -18,7 +19,7 @@ public class SnackBarUndoFavourites implements View.OnClickListener, SnackBarSho
 
     private RecyclerView.Adapter adapter;
     private View view;
-    private WifiElement wifiElement;
+    private DataBaseElement dataBaseElement;
 
     @Inject
     public SnackBarUndoFavourites(DataBaseHandler dataBaseHandler) {
@@ -29,16 +30,16 @@ public class SnackBarUndoFavourites implements View.OnClickListener, SnackBarSho
     public void showUndo(RecyclerView.Adapter adapter, View view, WifiElement wifiElement) {
         this.adapter = adapter;
         this.view = view;
-        this.wifiElement = wifiElement;
+        //this.wifiElement = wifiElement;
 
-        dataBaseHandler.toggleSave(wifiElement);
+        dataBaseElement = dataBaseHandler.toggleSave(wifiElement);
         adapter.notifyDataSetChanged();
         Snackbar.make(view, R.string.removed_wifi_element, Snackbar.LENGTH_INDEFINITE).setAction(R.string.undo, this).show();
     }
 
     @Override
     public void onClick(View v) {
-        dataBaseHandler.toggleSave(wifiElement);
+        dataBaseHandler.restore(dataBaseElement);
         adapter.notifyDataSetChanged();
         Snackbar.make(view, R.string.restored_wifi_element, Snackbar.LENGTH_SHORT).show();
     }

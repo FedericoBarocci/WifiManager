@@ -28,6 +28,10 @@ public class WifiList extends SortedList<WifiElement> implements Iterable<WifiEl
         return list;
     }
 
+    public boolean contains(WifiElement wifiElement) {
+        return indexOf(wifiElement) != INVALID_POSITION;
+    }
+
     public void addUpdate(WifiElement wifiElement, boolean insertIfMissing) {
         int position = indexOfKey(wifiElement);
 

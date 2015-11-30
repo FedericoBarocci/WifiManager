@@ -36,7 +36,7 @@ public class ResourceProvider {
     }
 
     public int getSavedResource(WifiElement wifiElement) {
-        return dataBaseHandler.contains(wifiElement.getBSSID()) ?
+        return dataBaseHandler.contains(wifiElement) ?
                 R.drawable.ic_action_favourite :
                 R.drawable.ic_action_not_favourite;
     }

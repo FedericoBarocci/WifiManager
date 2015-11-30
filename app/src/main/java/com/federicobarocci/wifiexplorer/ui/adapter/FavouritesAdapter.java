@@ -105,9 +105,6 @@ public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.Vi
         @OnClick(R.id.saveicon)
         public void onClickSave(View view) {
             snackBarShowUndo.showUndo(adapter, (RecyclerView) view.getParent().getParent(), wifiElement);
-            //Toast.makeText(view.getContext(), "Cliccato " + ((View)view.getParent()).getId(), Toast.LENGTH_SHORT).show();
-//            dataBaseHandler.toggleSave(adapter, (RecyclerView)view.getParent().getParent(), wifiElement).showUndo();
-//            adapter.notifyDataSetChanged();
         }
 
         @Override

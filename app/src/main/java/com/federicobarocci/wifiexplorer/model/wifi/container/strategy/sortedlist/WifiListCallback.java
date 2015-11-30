@@ -48,6 +48,6 @@ public class WifiListCallback extends SortedList.Callback<WifiElement> {
 
     @Override
     public boolean areItemsTheSame(WifiElement item1, WifiElement item2) {
-        return false;
+        return item1.getBSSID().equals(item2.getBSSID());
     }
 }
