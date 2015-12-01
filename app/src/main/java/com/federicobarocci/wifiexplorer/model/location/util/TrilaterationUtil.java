@@ -17,13 +17,13 @@ public class TrilaterationUtil {
 
         return new LatLng(lat, lon);
         /*
-        double latA = a.getLocation().latitude;
-        double latB = b.getLocation().latitude;
-        double latC = c.getLocation().latitude;
+        double latA = a.getCurrentLatLng().latitude;
+        double latB = b.getCurrentLatLng().latitude;
+        double latC = c.getCurrentLatLng().latitude;
 
-        double longA = a.getLocation().longitude;
-        double longB = b.getLocation().longitude;
-        double longC = c.getLocation().longitude;
+        double longA = a.getCurrentLatLng().longitude;
+        double longB = b.getCurrentLatLng().longitude;
+        double longC = c.getCurrentLatLng().longitude;
 
         double rA = a.getRadius();
         double rB = b.getRadius();

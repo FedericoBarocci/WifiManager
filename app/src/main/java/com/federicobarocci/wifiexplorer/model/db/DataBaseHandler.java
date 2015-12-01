@@ -71,31 +71,7 @@ public class DataBaseHandler {
 
     public boolean contains(WifiElement wifiElement) {
         return wifiList.contains(wifiElement);
-/*        for (int i = 0; i < wifiList.size(); i++) {
-            if (wifiList.get(i).getBSSID().equals(bssid)) {
-                return true;
-            }
-        }
-        return false;*/
     }
-
-    /*private void remove(String bssid) {
-        for (int i = 0; i < wifiList.size(); i++) {
-            if (wifiList.get(i).getBSSID().equals(bssid)) {
-                wifiList.removeItemAt(i);
-                return;
-            }
-        }
-    }
-
-    public DataBaseElement getElement(String bssid) {
-        for (int i = 0; i < elements.size(); i++) {
-            if (elements.get(i).getBSSID().equals(bssid)) {
-                return elements.get(i);
-            }
-        }
-        return null;
-    }*/
 
     public WifiElement get(int position) {
         return wifiList.get(position);
@@ -116,5 +92,9 @@ public class DataBaseHandler {
 
         wifiList.add(wifiElement);
         dataBaseManager.insert(dataBaseElement);
+    }
+
+    public WifiList getList() {
+        return wifiList;
     }
 }

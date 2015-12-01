@@ -15,6 +15,7 @@ import com.federicobarocci.wifiexplorer.ui.adapter.FavouritesAdapter;
 import com.federicobarocci.wifiexplorer.ui.adapter.ScanResultAdapter;
 import com.federicobarocci.wifiexplorer.ui.adapter.controller.SnackBarUndoFavourites;
 import com.federicobarocci.wifiexplorer.ui.adapter.controller.SnackBarUndoMain;
+import com.federicobarocci.wifiexplorer.ui.presenter.FilterDelegate;
 import com.federicobarocci.wifiexplorer.ui.presenter.ScanResultReceiver;
 import com.federicobarocci.wifiexplorer.ui.presenter.TaskExecutor;
 import com.federicobarocci.wifiexplorer.ui.presenter.WifiUtilDelegate;
@@ -136,5 +137,11 @@ public class DaggerModule {
     @Singleton
     TaskExecutor provideTaskExecutor(Context context, WifiUtilDelegate wifiUtilDelegate, ScanResultReceiver scanResultReceiver) {
         return new TaskExecutor(context, wifiUtilDelegate, scanResultReceiver);
+    }
+
+    @Provides
+    @Singleton
+    FilterDelegate provideFilterDelegate(WifiUtilDelegate wifiUtilDelegate) {
+        return new FilterDelegate(wifiUtilDelegate);
     }
 }

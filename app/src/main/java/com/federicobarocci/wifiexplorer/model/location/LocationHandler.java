@@ -48,6 +48,16 @@ public class LocationHandler {
         locationMap.putAll(dataBaseManager.selectLocationElements());
     }
 
+    public LatLng getCurrentLatLng() {
+        if (fusedLocationService == null || fusedLocationService.isLocationUnavailable()) {
+            return null;
+        }
+
+        final Location location = fusedLocationService.getLocation();
+
+        return new LatLng(location.getLatitude(), location.getLongitude());
+    }
+
     public void populate(List<WifiElement> wifiElementList) {
         //NB. fusedLocationService may be not yet available...
         if (fusedLocationService == null || fusedLocationService.isLocationUnavailable()) {

@@ -9,6 +9,8 @@ import android.view.ViewGroup;
 import com.federicobarocci.wifiexplorer.R;
 import com.federicobarocci.wifiexplorer.model.location.LocationKeeper;
 import com.federicobarocci.wifiexplorer.model.wifi.WifiElement;
+import com.google.android.gms.maps.CameraUpdate;
+import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
@@ -25,6 +27,8 @@ public class DetailMapFragment extends Fragment implements OnMapReadyCallback {
     public static final String ARGS_WIFI = "WifiElement";
     public static final String ARGS_LOCATION = "LocationKeeper";
     public static final String NAME = "Map";
+
+    private static final int ZOOM_LEVEL = 19;
 
     private WifiElement wifiElement;
     private LocationKeeper locationKeeper;
@@ -77,7 +81,10 @@ public class DetailMapFragment extends Fragment implements OnMapReadyCallback {
         //LocationKeeper locationKeeper = ((DetailActivity) getActivity()).locationExecutor.get(wifiElement.getBSSID());
 
         if (locationKeeper != null) {
-            LatLng center = locationKeeper.getCenter().getLocation();
+            final LatLng center = locationKeeper.getCenter().getLocation();
+            final CameraUpdate locationCamera = CameraUpdateFactory.newLatLngZoom(center, ZOOM_LEVEL);
+
+            map.animateCamera(locationCamera);
             map.addMarker(new MarkerOptions()
                     .position(center)
                     .title(wifiElement.getSSID()));

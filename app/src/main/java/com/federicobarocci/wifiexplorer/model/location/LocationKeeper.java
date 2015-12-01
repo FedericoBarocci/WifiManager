@@ -77,13 +77,13 @@ public class LocationKeeper implements Parcelable {
     private void computeCenter(LocationElement a, LocationElement b) {
         center.setLocation(SphericalUtil.interpolate(a.getLocation(), b.getLocation(), 0.5));
         computeFar();
-        center.setRadius(getMaxRadius()); /*SphericalUtil.computeDistanceBetween(center.getLocation(), far.getLocation()));*/
+        center.setRadius(getMaxRadius()); /*SphericalUtil.computeDistanceBetween(center.getCurrentLatLng(), far.getCurrentLatLng()));*/
     }
 
     private void computeCenter(LocationElement a, LocationElement b, LocationElement c) {
         center.setLocation(TrilaterationUtil.compute(a, b, c));
         computeFar();
-        center.setRadius(getMaxRadius()); /*SphericalUtil.computeDistanceBetween(center.getLocation(), far.getLocation()));*/
+        center.setRadius(getMaxRadius()); /*SphericalUtil.computeDistanceBetween(center.getCurrentLatLng(), far.getCurrentLatLng()));*/
     }
 
     private double getMaxRadius() {

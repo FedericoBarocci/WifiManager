@@ -48,18 +48,6 @@ public class TaskExecutor {
         scanResultReceiver.onWifiListReceive();
     }
 
-    public void showAllNetwork() {
-        wifiUtilDelegate.setWifiShowEnum(WifiShowMethods.ALL_NETWORK);
-    }
-
-    public void showOnlyOpenNetwork() {
-        wifiUtilDelegate.setWifiShowEnum(WifiShowMethods.OPEN_NETWORK);
-    }
-
-    public void showOnlyClosedNetwork() {
-        wifiUtilDelegate.setWifiShowEnum(WifiShowMethods.CLOSED_NETWORK);
-    }
-
     public void buildAlertMessageNoGps(Context activityContext) {
         final Context activityContextFinal = activityContext;
         final AlertDialog.Builder builder = new AlertDialog.Builder(activityContextFinal);
@@ -82,33 +70,5 @@ public class TaskExecutor {
 
         final AlertDialog alert = builder.create();
         alert.show();
-    }
-
-    public void showCurrentWifiList() {
-        wifiUtilDelegate.setWifiListEnum(WifiListEnum.NEAR);
-    }
-
-    public void showSessionWifiList() {
-        wifiUtilDelegate.setWifiListEnum(WifiListEnum.SESSION);
-    }
-
-    public boolean isNearSelected() {
-        return wifiUtilDelegate.getShowSelectionEnum() == WifiListEnum.NEAR;
-    }
-
-    public boolean isSessionSelected() {
-        return wifiUtilDelegate.getShowSelectionEnum() == WifiListEnum.SESSION;
-    }
-
-    public boolean isFilterAllSelected() {
-        return wifiUtilDelegate.getFilterSelection() == WifiShowMethods.ALL_NETWORK;
-    }
-
-    public boolean isFilterOpenSelected() {
-        return wifiUtilDelegate.getFilterSelection() == WifiShowMethods.OPEN_NETWORK;
-    }
-
-    public boolean isFilterClosedSelected() {
-        return wifiUtilDelegate.getFilterSelection() == WifiShowMethods.CLOSED_NETWORK;
     }
 }

@@ -40,4 +40,8 @@
     <string name="navigation_filter_closed_networks">Only closed networks</string>
 
     <string name="gps_auth_message">GPS is required for this application but seems to be disabled, do you want to enable it?</string>
+    <string name="map_filter_location">Filter by location</string>
+    <string name="map_filter_secure">Filter by security</string>
+    <string name="dialog_location_title">Filter by location</string>
+    <string name="dialog_secure_title">Filter by security</string>
 </resources>

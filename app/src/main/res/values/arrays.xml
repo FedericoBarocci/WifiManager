@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="locations_array">
+        <item>Nearby networks</item>
+        <item>Session discovered networks</item>
+        <item>Favourite networks</item>
+    </string-array>
+    <string-array name="secure_array">
+        <item>Open networks</item>
+        <item>Secure networks</item>
+        <item>All networks</item>
+    </string-array>
+</resources>
