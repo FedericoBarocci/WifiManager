@@ -2,7 +2,6 @@ package com.federicobarocci.wifiexplorer.model.db;
 
 import com.federicobarocci.wifiexplorer.model.db.sqlite.DataBaseElement;
 import com.federicobarocci.wifiexplorer.model.db.sqlite.DataBaseManager;
-import com.federicobarocci.wifiexplorer.model.location.LocationElement;
 import com.federicobarocci.wifiexplorer.model.location.LocationHandler;
 import com.federicobarocci.wifiexplorer.model.location.LocationKeeper;
 import com.federicobarocci.wifiexplorer.model.wifi.WifiElement;
