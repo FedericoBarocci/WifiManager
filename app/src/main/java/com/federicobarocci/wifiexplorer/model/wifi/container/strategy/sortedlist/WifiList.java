@@ -32,7 +32,7 @@ public class WifiList extends SortedList<WifiElement> implements Iterable<WifiEl
         return indexOf(wifiElement) != INVALID_POSITION;
     }
 
-    public void addUpdate(WifiElement wifiElement, boolean insertIfMissing) {
+    public boolean addUpdate(WifiElement wifiElement, boolean insertIfMissing) {
         int position = indexOfKey(wifiElement);
 
         if (position == INVALID_POSITION) {
@@ -42,7 +42,10 @@ public class WifiList extends SortedList<WifiElement> implements Iterable<WifiEl
         }
         else {
             updateItemAt(position, wifiElement);
+            return true;
         }
+
+        return false;
     }
 
     private int indexOfKey(WifiElement wifiElement) {

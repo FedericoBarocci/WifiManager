@@ -4,6 +4,7 @@ import com.federicobarocci.wifiexplorer.model.db.sqlite.DataBaseElement;
 import com.federicobarocci.wifiexplorer.model.db.sqlite.DataBaseManager;
 import com.federicobarocci.wifiexplorer.model.location.LocationElement;
 import com.federicobarocci.wifiexplorer.model.location.LocationHandler;
+import com.federicobarocci.wifiexplorer.model.location.LocationKeeper;
 import com.federicobarocci.wifiexplorer.model.wifi.WifiElement;
 import com.federicobarocci.wifiexplorer.model.wifi.WifiKeeper;
 import com.federicobarocci.wifiexplorer.model.wifi.container.strategy.sortedlist.WifiList;
@@ -46,15 +47,27 @@ public class DataBaseHandler {
     }
 
     private void save(WifiElement wifiElement) {
-        if (locationHandler.contain(wifiElement.getBSSID())) {
-            final LocationElement locationElement = locationHandler.get(wifiElement.getBSSID()).getCenter();
-            dataBaseManager.insert(wifiElement, locationElement);
+        final LocationKeeper locationKeeper = locationHandler.get(wifiElement.getBSSID());
+
+        if (locationKeeper == null) {
+            dataBaseManager.insert(wifiElement);
         }
         else {
-            dataBaseManager.insert(wifiElement);
+            dataBaseManager.insert(wifiElement, locationKeeper.getCenter());
         }
 
         wifiList.add(wifiElement);
+    }
+
+    private void update(WifiElement wifiElement) {
+        final LocationKeeper locationKeeper = locationHandler.get(wifiElement.getBSSID());
+
+        if (locationKeeper == null) {
+            dataBaseManager.update(wifiElement);
+        }
+        else {
+            dataBaseManager.update(wifiElement, locationKeeper.getCenter());
+        }
     }
 
     public int size() {
@@ -70,8 +83,10 @@ public class DataBaseHandler {
     }
 
     public void updateScanResults(List<WifiElement> wifiElementList) {
-        for(WifiElement wifiElement : wifiElementList) {
-            wifiList.addUpdate(wifiElement, false);
+        for (WifiElement wifiElement : wifiElementList) {
+            if (wifiList.addUpdate(wifiElement, false)) {
+                update(wifiElement);
+            }
         }
     }
 
