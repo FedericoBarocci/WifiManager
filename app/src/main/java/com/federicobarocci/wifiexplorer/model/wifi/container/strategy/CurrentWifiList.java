@@ -6,7 +6,7 @@ import com.federicobarocci.wifiexplorer.model.wifi.container.strategy.sortedlist
 import java.util.List;
 
 /**
- * Created by federico on 28/11/15.
+ * Created by Federico
  */
 public class CurrentWifiList extends WifiList implements WifiListPopulate {
     @Override

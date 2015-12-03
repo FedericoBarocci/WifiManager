@@ -1,7 +1,5 @@
 package com.federicobarocci.wifiexplorer.model.db;
 
-import android.support.v7.util.SortedList;
-
 import com.federicobarocci.wifiexplorer.model.db.sqlite.DataBaseElement;
 import com.federicobarocci.wifiexplorer.model.db.sqlite.DataBaseManager;
 import com.federicobarocci.wifiexplorer.model.location.LocationElement;
@@ -15,7 +13,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 /**
- * Created by federico on 11/11/15.
+ * Created by Federico
  */
 public class DataBaseHandler {
 
@@ -29,10 +27,7 @@ public class DataBaseHandler {
         this.dataBaseManager = dataBaseManager;
         this.locationHandler = locationHandler;
         this.wifiKeeper = wifiKeeper;
-
         this.wifiList = dataBaseManager.selectWifiElements();
-
-        //locationHandler.populate(elements);
     }
 
     public DataBaseElement toggleSave(WifiElement wifiElement) {
@@ -52,14 +47,11 @@ public class DataBaseHandler {
 
     private void save(WifiElement wifiElement) {
         if (locationHandler.contain(wifiElement.getBSSID())) {
-            LocationElement locationElement = locationHandler.get(wifiElement.getBSSID()).getCenter();
-
+            final LocationElement locationElement = locationHandler.get(wifiElement.getBSSID()).getCenter();
             dataBaseManager.insert(wifiElement, locationElement);
-            //elements.add(new DataBaseElement(wifiElement, locationElement));
         }
         else {
             dataBaseManager.insert(wifiElement);
-            //elements.add(new DataBaseElement(wifiElement));
         }
 
         wifiList.add(wifiElement);

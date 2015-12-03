@@ -1,6 +1,7 @@
 package com.federicobarocci.wifiexplorer.ui.activity;
 
 import android.os.Bundle;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -9,12 +10,15 @@ import android.support.v7.widget.Toolbar;
 
 import com.federicobarocci.wifiexplorer.R;
 import com.federicobarocci.wifiexplorer.WifiExplorerApplication;
+import com.federicobarocci.wifiexplorer.ui.adapter.FavouritesAdapter;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**
- * Created by federico on 10/11/15.
+ * Created by Federico
  */
 public class FavouritesActivity extends AppCompatActivity {
 
@@ -23,6 +27,9 @@ public class FavouritesActivity extends AppCompatActivity {
 
     @Bind(R.id.favouritesRecyclerView)
     RecyclerView recyclerView;
+
+    @Inject
+    FavouritesAdapter favouritesAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -35,15 +42,20 @@ public class FavouritesActivity extends AppCompatActivity {
 
     private void initializeInjectors() {
         ButterKnife.bind(this);
+        ((WifiExplorerApplication) getApplication()).getComponent().inject(this);
     }
 
     private void initializeViewComponents() {
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle(R.string.activity_favourites_title);
+
+        final ActionBar ab = getSupportActionBar();
+        if (ab != null) {
+            ab.setDisplayHomeAsUpEnabled(true);
+            ab.setTitle(R.string.activity_favourites_title);
+        }
 
         recyclerView.setLayoutManager(new LinearLayoutManager(this));
-        recyclerView.setAdapter(((WifiExplorerApplication) getApplication()).getComponent().provideFavouritesAdapter());
+        recyclerView.setAdapter(favouritesAdapter);
         recyclerView.setItemAnimator(new DefaultItemAnimator());
     }
 }

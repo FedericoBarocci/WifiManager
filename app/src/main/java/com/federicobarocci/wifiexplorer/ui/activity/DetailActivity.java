@@ -20,19 +20,20 @@ import android.os.Bundle;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Pair;
 import android.view.MenuItem;
 
-import com.federicobarocci.wifiexplorer.model.location.LocationKeeper;
-import com.federicobarocci.wifiexplorer.ui.activity.fragment.DetailInfoFragment;
-import com.federicobarocci.wifiexplorer.ui.activity.fragment.DetailMapFragment;
 import com.federicobarocci.wifiexplorer.R;
 import com.federicobarocci.wifiexplorer.WifiExplorerApplication;
-import com.federicobarocci.wifiexplorer.ui.adapter.DetailResultAdapter;
 import com.federicobarocci.wifiexplorer.model.location.LocationHandler;
+import com.federicobarocci.wifiexplorer.model.location.LocationKeeper;
 import com.federicobarocci.wifiexplorer.model.wifi.WifiElement;
+import com.federicobarocci.wifiexplorer.ui.activity.fragment.DetailInfoFragment;
+import com.federicobarocci.wifiexplorer.ui.activity.fragment.DetailMapFragment;
+import com.federicobarocci.wifiexplorer.ui.adapter.DetailResultAdapter;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,6 +43,9 @@ import javax.inject.Inject;
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
+/**
+ * Created by Federico
+ */
 public class DetailActivity extends AppCompatActivity {
 
     public static final String EXTRA_NAME = "scan_result";
@@ -54,9 +58,6 @@ public class DetailActivity extends AppCompatActivity {
 
     @Bind(R.id.tabs)
     TabLayout tabLayout;
-
-    /*@Inject
-    DetailResultAdapter detailResultAdapter;*/
 
     @Inject
     LocationHandler locationHandler;
@@ -73,20 +74,21 @@ public class DetailActivity extends AppCompatActivity {
     private void initializeInjectors() {
         ButterKnife.bind(this);
         ((WifiExplorerApplication) getApplication()).getComponent().inject(this);
-        /*DaggerWMDetailComponent.builder()
-                .detailModule(new DetailModule(this))
-                .build().inject(this);*/
     }
 
     private void initializeViewComponents() {
-        WifiElement wifiElement = getIntent().getParcelableExtra(EXTRA_NAME);
-        LocationKeeper locationKeeper = locationHandler.get(wifiElement.getBSSID());
+        final WifiElement wifiElement = getIntent().getParcelableExtra(EXTRA_NAME);
+        final LocationKeeper locationKeeper = locationHandler.get(wifiElement.getBSSID());
 
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle(wifiElement.getSSID());
 
-        DetailResultAdapter detailResultAdapter = new DetailResultAdapter(getSupportFragmentManager());
+        final ActionBar ab = getSupportActionBar();
+        if (ab != null) {
+            ab.setDisplayHomeAsUpEnabled(true);
+            ab.setTitle(wifiElement.getSSID());
+        }
+
+        final DetailResultAdapter detailResultAdapter = new DetailResultAdapter(getSupportFragmentManager());
         detailResultAdapter.addFragments(buildFragments(wifiElement, locationKeeper));
         viewPager.setAdapter(detailResultAdapter);
         tabLayout.setupWithViewPager(viewPager);
@@ -101,41 +103,14 @@ public class DetailActivity extends AppCompatActivity {
         return listFragments;
     }
 
-    /*@Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.toolbar_actions, menu);
-        return true;
-    }*/
-
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            // Respond to the action bar's Up/Home button
             case android.R.id.home:
                 finish();
                 return true;
         }
+
         return super.onOptionsItemSelected(item);
     }
-
-    /*
-    @Override
-    protected void onStart() {
-        super.onStart();
-        // Bind to LocalService
-        Intent intent = new Intent(this, LocalService.class);
-        bindService(intent, mConnection, Context.BIND_AUTO_CREATE);
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-        // Unbind from the service
-        if (mBound) {
-            unbindService(mConnection);
-            mBound = false;
-        }
-    }
-
-     */
 }

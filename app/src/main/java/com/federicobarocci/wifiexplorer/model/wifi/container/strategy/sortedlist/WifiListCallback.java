@@ -5,7 +5,7 @@ import android.support.v7.util.SortedList;
 import com.federicobarocci.wifiexplorer.model.wifi.WifiElement;
 
 /**
- * Created by federico on 25/11/15.
+ * Created by Federico
  */
 public class WifiListCallback extends SortedList.Callback<WifiElement> {
     @Override

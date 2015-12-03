@@ -8,22 +8,20 @@ import com.federicobarocci.wifiexplorer.module.DaggerModule;
 
 
 /**
- * Created by federico on 03/11/15.
+ * Created by Federico
  */
 public class WifiExplorerApplication extends Application {
-
-    /*@Inject
-    WifiManager wifiManager; // for some reason.*/
 
     private WifiExplorerComponent component;
 
     @Override
     public void onCreate() {
         super.onCreate();
+
         component = DaggerWifiExplorerComponent.builder()
                 .daggerModule(new DaggerModule(this))
                 .build();
-        getComponent().inject(this); // As of now, LocationManager should be injected into this.
+        component.inject(this);
     }
 
     public WifiExplorerComponent getComponent() {

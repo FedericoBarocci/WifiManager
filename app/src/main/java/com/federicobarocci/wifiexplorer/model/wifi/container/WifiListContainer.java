@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * Created by federico on 28/11/15.
+ * Created by Federico
  */
 public class WifiListContainer {
 

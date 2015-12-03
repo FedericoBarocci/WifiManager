@@ -6,7 +6,7 @@ import android.os.Parcelable;
 import com.google.android.gms.maps.model.LatLng;
 
 /**
- * Created by federico on 17/11/15.
+ * Created by Federico
  */
 public class LocationElement implements Parcelable {
     private LatLng location;
@@ -56,7 +56,6 @@ public class LocationElement implements Parcelable {
         dest.writeDouble(radius);
     }
 
-    @SuppressWarnings("unused")
     public static final Parcelable.Creator<LocationElement> CREATOR = new Parcelable.Creator<LocationElement>() {
         @Override
         public LocationElement createFromParcel(Parcel in) {

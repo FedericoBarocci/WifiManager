@@ -12,7 +12,7 @@ import com.federicobarocci.wifiexplorer.model.wifi.WifiElement;
 import javax.inject.Inject;
 
 /**
- * Created by federico on 16/11/15.
+ * Created by Federico
  */
 public class SnackBarUndoFavourites implements View.OnClickListener, SnackBarShowUndo {
     private final DataBaseHandler dataBaseHandler;
@@ -30,7 +30,6 @@ public class SnackBarUndoFavourites implements View.OnClickListener, SnackBarSho
     public void showUndo(RecyclerView.Adapter adapter, View view, WifiElement wifiElement) {
         this.adapter = adapter;
         this.view = view;
-        //this.wifiElement = wifiElement;
 
         dataBaseElement = dataBaseHandler.toggleSave(wifiElement);
         adapter.notifyDataSetChanged();

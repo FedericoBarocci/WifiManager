@@ -8,7 +8,7 @@ import com.federicobarocci.wifiexplorer.model.wifi.WifiKeeper;
 import javax.inject.Inject;
 
 /**
- * Created by federico on 12/11/15.
+ * Created by Federico
  */
 public class ResourceProvider {
     private final WifiKeeper wifiKeeper;
@@ -22,13 +22,12 @@ public class ResourceProvider {
 
     public int getWifiResource(WifiElement wifiElement) {
         if (wifiKeeper.contains(wifiElement.getBSSID()) && wifiElement.isLineOfSight()) {
-            return wifiElement.isSecure() ?
-                    WifiSecureImageEnum.values()[wifiElement.getSignalLevel()].getResource() :
-                    WifiImageEnum.values()[wifiElement.getSignalLevel()].getResource();
+            return wifiElement.isSecure()
+                    ? WifiSecureImageEnum.values()[wifiElement.getSignalLevel()].getResource()
+                    : WifiImageEnum.values()[wifiElement.getSignalLevel()].getResource();
         }
-        else {
-            return R.drawable.ic_signal_wifi_0_bar_black_24dp;
-        }
+
+        return R.drawable.ic_signal_wifi_0_bar_black_24dp;
     }
 
     public int getSavedResource() {
@@ -36,8 +35,8 @@ public class ResourceProvider {
     }
 
     public int getSavedResource(WifiElement wifiElement) {
-        return dataBaseHandler.contains(wifiElement) ?
-                R.drawable.ic_action_favourite :
-                R.drawable.ic_action_not_favourite;
+        return dataBaseHandler.contains(wifiElement)
+                ? R.drawable.ic_action_favourite
+                : R.drawable.ic_action_not_favourite;
     }
 }

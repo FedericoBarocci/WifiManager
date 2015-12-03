@@ -24,19 +24,17 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
- * Created by federico on 11/11/15.
+ * Created by Federico
  */
 public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.ViewHolder> {
 
     private final DataBaseHandler dataBaseHandler;
-    //private final WifiKeeper wifiKeeper;
     private final SnackBarUndoFavourites snackBarUndoFavourites;
     private final ResourceProvider resourceProvider;
 
     @Inject
-    public FavouritesAdapter(DataBaseHandler dataBaseHandler, /*WifiKeeper wifiKeeper,*/ SnackBarUndoFavourites snackBarUndoFavourites, ResourceProvider resourceProvider) {
+    public FavouritesAdapter(DataBaseHandler dataBaseHandler, SnackBarUndoFavourites snackBarUndoFavourites, ResourceProvider resourceProvider) {
         this.dataBaseHandler = dataBaseHandler;
-        //this.wifiKeeper = wifiKeeper;
         this.snackBarUndoFavourites = snackBarUndoFavourites;
         this.resourceProvider = resourceProvider;
     }
@@ -49,19 +47,12 @@ public class FavouritesAdapter extends RecyclerView.Adapter<FavouritesAdapter.Vi
 
     @Override
     public void onBindViewHolder(ViewHolder viewHolder, int position) {
-/*        DataBaseElement dataBaseElement = dataBaseHandler.get(position);//.toWifiElement();
-
-        WifiElement wifiElement = wifiKeeper.contains(dataBaseElement.getBSSID()) ?
-                wifiKeeper.getElement(dataBaseElement.getBSSID()) :
-                dataBaseElement.toWifiElement();
-*/
         WifiElement wifiElement = dataBaseHandler.get(position);
 
         viewHolder.wifiElement = wifiElement;
         viewHolder.textViewTitle.setText(wifiElement.getSSID());
         viewHolder.textViewBSSID.setText(wifiElement.getBSSID());
         viewHolder.textViewDetail.setText(wifiElement.getCapabilities());
-        //viewHolder.imgViewIcon.setImageResource(R.drawable.ic_signal_wifi_4_bar_black_24dp);
         viewHolder.imgViewIcon.setImageResource(resourceProvider.getWifiResource(wifiElement));
         viewHolder.imgSaveIcon.setImageResource(resourceProvider.getSavedResource());
     }

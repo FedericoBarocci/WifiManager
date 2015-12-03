@@ -1,23 +1,31 @@
 package com.federicobarocci.wifiexplorer.ui.activity.fragment;
 
+import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.federicobarocci.wifiexplorer.R;
+import com.federicobarocci.wifiexplorer.WifiExplorerApplication;
 import com.federicobarocci.wifiexplorer.model.location.LocationKeeper;
 import com.federicobarocci.wifiexplorer.model.wifi.WifiElement;
+import com.federicobarocci.wifiexplorer.ui.presenter.DataSetHandler;
+
+import javax.inject.Inject;
 
 import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**
- * Created by federico on 07/11/15.
+ * Created by Federico
  */
-public class DetailInfoFragment extends Fragment {
+public class DetailInfoFragment extends Fragment implements FloatingActionButton.OnClickListener {
     public static final String ARGS_WIFI = "WifiElement";
     public static final String ARGS_LOCATION = "LocationKeeper";
     public static final String NAME = "Info";
@@ -46,6 +54,12 @@ public class DetailInfoFragment extends Fragment {
     @Bind(R.id.card8)
     TextView card8;
 
+    @Bind(R.id.fab)
+    FloatingActionButton fabButton;
+
+    @Inject
+    DataSetHandler dataSetHandler;
+
     private WifiElement wifiElement;
     private LocationKeeper locationKeeper;
 
@@ -65,12 +79,16 @@ public class DetailInfoFragment extends Fragment {
         super.onCreate(savedInstanceState);
         wifiElement = getArguments().getParcelable(ARGS_WIFI);
         locationKeeper = getArguments().getParcelable(ARGS_LOCATION);
+
+        ((WifiExplorerApplication) getActivity().getApplication()).getComponent().inject(this);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_detail, container, false);
         ButterKnife.bind(this, view);
+
+        fabButton.setOnClickListener(this);
 
         card1.setText(wifiElement.getSSID());
         card2.setText(wifiElement.getBSSID());
@@ -80,14 +98,10 @@ public class DetailInfoFragment extends Fragment {
         card6.setText(wifiElement.getSignalLevelString());
         card7.setText(wifiElement.getDistanceString());
 
-        //LocationKeeper locationKeeper = ((DetailActivity) getActivity()).locationExecutor.get(wifiElement.getBSSID());
-
-        if (locationKeeper != null) {
+        if (locationKeeper != null)
             card8.setText(locationKeeper.toString());
-        }
-        else {
+        else
             card8.setText(R.string.no_information);
-        }
 
         return view;
     }
@@ -96,5 +110,34 @@ public class DetailInfoFragment extends Fragment {
     public void onDestroyView() {
         super.onDestroyView();
         ButterKnife.unbind(this);
+    }
+
+    @Override
+    public void onClick(final View v) {
+        final AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
+
+        if (dataSetHandler.isFavourite(wifiElement))
+            builder.setMessage(R.string.ask_remove_favourite);
+        else
+            builder.setMessage(R.string.ask_add_favourite);
+
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            public void onClick(final DialogInterface dialog, final int id) {
+                dataSetHandler.toggleSave(wifiElement);
+
+                if (dataSetHandler.isFavourite(wifiElement))
+                    Toast.makeText(v.getContext(), R.string.saved_wifi_element, Toast.LENGTH_SHORT).show();
+                else
+                    Toast.makeText(v.getContext(), R.string.removed_wifi_element, Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            public void onClick(final DialogInterface dialog, final int id) {
+                dialog.cancel();
+            }
+        });
+
+        builder.create().show();
     }
 }

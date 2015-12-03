@@ -2,19 +2,19 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="?android:attr/listPreferredItemHeight"
-    android:padding="6dip"
+    android:layout_marginTop="1dip"
     android:background="@color/window_background"
-    android:layout_marginTop="1dip">
+    android:padding="6dip">
 
     <ImageView
         android:id="@+id/network_info_img"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_marginLeft="6dip"
-        android:layout_marginStart="6dip"
-        android:layout_marginRight="12dip"
         android:layout_marginEnd="12dip"
+        android:layout_marginLeft="6dip"
+        android:layout_marginRight="12dip"
+        android:layout_marginStart="6dip"
         android:contentDescription="@string/list_item_signal_img" />
 
     <TextView
@@ -22,37 +22,37 @@
         android:layout_width="fill_parent"
         android:layout_height="20dip"
         android:layout_alignParentTop="true"
-        android:layout_toRightOf="@id/network_info_img"
         android:layout_toEndOf="@id/network_info_img"
+        android:layout_toRightOf="@id/network_info_img"
         android:ellipsize="marquee"
-        android:gravity="top|left"
-        android:textSize="16sp"
-        android:textColor="@color/cardview_dark_background"/>
+        android:gravity="top|start"
+        android:textColor="@color/cardview_dark_background"
+        android:textSize="16sp" />
 
     <TextView
         android:id="@+id/secondLine"
         android:layout_width="fill_parent"
         android:layout_height="16dip"
         android:layout_below="@id/firstLine"
-        android:layout_toRightOf="@id/network_info_img"
         android:layout_toEndOf="@id/network_info_img"
+        android:layout_toRightOf="@id/network_info_img"
         android:ellipsize="marquee"
-        android:singleLine="true"
         android:gravity="top"
+        android:singleLine="true"
         android:textSize="10sp" />
 
     <TextView
         android:id="@+id/thirdLine"
         android:layout_width="fill_parent"
         android:layout_height="14dip"
-        android:layout_marginRight="40dip"
-        android:layout_marginEnd="40dip"
-        android:layout_below="@id/secondLine"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
-        android:layout_toRightOf="@id/network_info_img"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/secondLine"
+        android:layout_marginEnd="40dip"
+        android:layout_marginRight="40dip"
         android:layout_toEndOf="@id/network_info_img"
+        android:layout_toRightOf="@id/network_info_img"
         android:ellipsize="marquee"
         android:singleLine="true"
         android:textSize="12sp" />
@@ -61,11 +61,11 @@
         android:id="@+id/saveicon"
         android:layout_width="wrap_content"
         android:layout_height="fill_parent"
-        android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
+        android:layout_alignParentRight="true"
         android:layout_centerVertical="true"
-        android:layout_marginRight="2dip"
         android:layout_marginEnd="2dip"
+        android:layout_marginRight="2dip"
         android:contentDescription="@string/list_item_save_img" />
 
 </RelativeLayout>

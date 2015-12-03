@@ -1,11 +1,9 @@
 package com.federicobarocci.wifiexplorer.model.db.sqlite;
 
-import com.federicobarocci.wifiexplorer.model.location.LocationElement;
 import com.federicobarocci.wifiexplorer.model.wifi.WifiElement;
-import com.google.android.gms.maps.model.LatLng;
 
 /**
- * Created by federico on 18/11/15.
+ * Created by Federico
  */
 public class DataBaseElement {
     public final String bssid;
@@ -26,9 +24,5 @@ public class DataBaseElement {
 
     public WifiElement toWifiElement() {
         return new WifiElement(bssid, ssid, capabilities);
-    }
-
-    public LocationElement toLocationElement() {
-        return new LocationElement(new LatLng(latitude, longitude), radius);
     }
 }

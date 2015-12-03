@@ -3,14 +3,14 @@ package com.federicobarocci.wifiexplorer.model.location;
 import android.os.Parcel;
 import android.os.Parcelable;
 
-import com.federicobarocci.wifiexplorer.model.location.util.TrilaterationUtil;
+import com.google.android.gms.maps.model.LatLng;
 import com.google.maps.android.SphericalUtil;
 
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by federico on 17/11/15.
+ * Created by Federico
  */
 public class LocationKeeper implements Parcelable {
     private static final int NUM_NEAR = 3;
@@ -70,7 +70,7 @@ public class LocationKeeper implements Parcelable {
     }
 
     private void computeCenter(LocationElement a) {
-        center.setLocation(nearList.get(0).getLocation());
+        center.setLocation(a.getLocation());
         center.setRadius(far.getRadius());
     }
 
@@ -81,9 +81,15 @@ public class LocationKeeper implements Parcelable {
     }
 
     private void computeCenter(LocationElement a, LocationElement b, LocationElement c) {
-        center.setLocation(TrilaterationUtil.compute(a, b, c));
+        center.setLocation(avgLocation(a.getLocation(), b.getLocation(), c.getLocation()));
         computeFar();
         center.setRadius(getMaxRadius()); /*SphericalUtil.computeDistanceBetween(center.getCurrentLatLng(), far.getCurrentLatLng()));*/
+    }
+
+    private LatLng avgLocation(LatLng a, LatLng b, LatLng c) {
+        final double lat = (a.latitude + b.latitude + c.latitude) / 3;
+        final double lng = (a.longitude + b.longitude + c.longitude) / 3;
+        return new LatLng(lat, lng);
     }
 
     private double getMaxRadius() {
@@ -117,11 +123,11 @@ public class LocationKeeper implements Parcelable {
 
         s.append("[ Near locations ]\n\n");
         for (LocationElement element : nearList) {
-            s.append(element.toString() + "\n\n");
+            s.append(element.toString()).append("\n\n");
         }
 
         s.append("\n[ Far location ]\n\n");
-        s.append(far.toString() + "\n");
+        s.append(far.toString()).append("\n");
 
         s.append("\n\n[ Center location ]\n\n");
         s.append(center.toString());
@@ -131,7 +137,7 @@ public class LocationKeeper implements Parcelable {
 
     /* Parcel section */
     protected LocationKeeper(Parcel in) {
-        nearList = new ArrayList<LocationElement>();
+        nearList = new ArrayList<>();
         in.readList(nearList, null);
         far = in.readParcelable(LocationElement.class.getClassLoader());
         center = in.readParcelable(LocationElement.class.getClassLoader());
@@ -149,7 +155,6 @@ public class LocationKeeper implements Parcelable {
         dest.writeParcelable(center, flags);
     }
 
-    @SuppressWarnings("unused")
     public static final Parcelable.Creator<LocationKeeper> CREATOR = new Parcelable.Creator<LocationKeeper>() {
         @Override
         public LocationKeeper createFromParcel(Parcel in) {

@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.federicobarocci.wifiexplorer.R;
+import com.federicobarocci.wifiexplorer.model.db.DataBaseHandler;
 import com.federicobarocci.wifiexplorer.model.location.LocationKeeper;
 import com.federicobarocci.wifiexplorer.model.wifi.WifiElement;
 import com.google.android.gms.maps.CameraUpdate;
@@ -18,10 +19,12 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import javax.inject.Inject;
+
 import butterknife.ButterKnife;
 
 /**
- * Created by federico on 07/11/15.
+ * Created by Federico
  */
 public class DetailMapFragment extends Fragment implements OnMapReadyCallback {
     public static final String ARGS_WIFI = "WifiElement";
@@ -32,7 +35,9 @@ public class DetailMapFragment extends Fragment implements OnMapReadyCallback {
 
     private WifiElement wifiElement;
     private LocationKeeper locationKeeper;
-    //private SupportMapFragment mapFragment;
+
+    @Inject
+    DataBaseHandler dataBaseHandler;
 
     public static DetailMapFragment newInstance(WifiElement wifiElement, LocationKeeper locationKeeper) {
         Bundle args = new Bundle();
@@ -57,16 +62,13 @@ public class DetailMapFragment extends Fragment implements OnMapReadyCallback {
         View view = inflater.inflate(R.layout.fragment_map, container, false);
         ButterKnife.bind(this, view);
 
-        //mapFragment = (SupportMapFragment) getActivity().getSupportFragmentManager().findFragmentById(R.id.map_fragment);
-
         return view;
     }
 
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        ((SupportMapFragment)getChildFragmentManager().findFragmentById(R.id.map_fragment)).getMapAsync(this);
-        //mapFragment.getMapAsync(this);
+        ((SupportMapFragment) getChildFragmentManager().findFragmentById(R.id.map_fragment)).getMapAsync(this);
     }
 
     @Override
@@ -77,26 +79,26 @@ public class DetailMapFragment extends Fragment implements OnMapReadyCallback {
 
     @Override
     public void onMapReady(GoogleMap map) {
-        map.setMyLocationEnabled(true);
-        //LocationKeeper locationKeeper = ((DetailActivity) getActivity()).locationExecutor.get(wifiElement.getBSSID());
-
-        if (locationKeeper != null) {
-            final LatLng center = locationKeeper.getCenter().getLocation();
-            final CameraUpdate locationCamera = CameraUpdateFactory.newLatLngZoom(center, ZOOM_LEVEL);
-
-            map.animateCamera(locationCamera);
-            map.addMarker(new MarkerOptions()
-                    .position(center)
-                    .title(wifiElement.getSSID()));
-
-            CircleOptions options = new CircleOptions();
-            options.center(center);
-            //Radius in meters
-            options.radius(locationKeeper.getCenter().getRadius());
-            options.fillColor(wifiElement.getLightColor());
-            options.strokeColor(wifiElement.getBoldColor());
-            options.strokeWidth(5);
-            map.addCircle(options);
+        if (locationKeeper == null) {
+            return;
         }
+
+        final LatLng center = locationKeeper.getCenter().getLocation();
+        final CameraUpdate locationCamera = CameraUpdateFactory.newLatLngZoom(center, ZOOM_LEVEL);
+
+        map.setMyLocationEnabled(true);
+        map.animateCamera(locationCamera);
+        map.addMarker(new MarkerOptions()
+                .position(center)
+                .title(wifiElement.getSSID()));
+
+        final CircleOptions options = new CircleOptions();
+        options.center(center);
+        options.radius(locationKeeper.getCenter().getRadius());
+        options.fillColor(wifiElement.getLightColor());
+        options.strokeColor(wifiElement.getBoldColor());
+        options.strokeWidth(5);
+
+        map.addCircle(options);
     }
 }

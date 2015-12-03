@@ -15,7 +15,7 @@ import com.federicobarocci.wifiexplorer.model.wifi.container.strategy.sortedlist
 import javax.inject.Inject;
 
 /**
- * Created by federico on 10/11/15.
+ * Created by Federico
  */
 public class DataBaseManager extends SQLiteOpenHelper {
 
@@ -26,8 +26,6 @@ public class DataBaseManager extends SQLiteOpenHelper {
     public static final String FIELD_BSSID = "bssid";
     public static final String FIELD_SSID = "ssid";
     public static final String FIELD_CAPABILITIES = "capabilities";
-    //public static final String FIELD_FREQUENCY = "frequency";
-    //public static final String FIELD_LEVEL = "level";
     public static final String FIELD_LAT = "latitude";
     public static final String FIELD_LONG = "longitude";
     public static final String FIELD_RADIUS = "radius";
@@ -54,28 +52,6 @@ public class DataBaseManager extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    /*public List<DataBaseElement> select() {
-        SQLiteDatabase db = this.getReadableDatabase();
-        final String query = "select * from " + TABLE_WIFI;
-
-        Cursor c = db.rawQuery(query, null);
-        List<DataBaseElement> list = new ArrayList<>();
-
-        if (c != null && c.moveToFirst()) {
-            do {
-                list.add(new DataBaseElement(
-                        c.getString(c.getColumnIndex(FIELD_BSSID)),
-                        c.getString(c.getColumnIndex(FIELD_SSID)),
-                        c.getString(c.getColumnIndex(FIELD_CAPABILITIES)),
-                        c.getDouble(c.getColumnIndex(FIELD_LAT)),
-                        c.getDouble(c.getColumnIndex(FIELD_LONG)),
-                        c.getDouble(c.getColumnIndex(FIELD_RADIUS))));
-            } while (c.moveToNext());
-        }
-
-        return list;
-    }*/
-
     public WifiList selectWifiElements() {
         SQLiteDatabase db = this.getReadableDatabase();
 
@@ -92,6 +68,8 @@ public class DataBaseManager extends SQLiteOpenHelper {
                         c.getString(c.getColumnIndex(FIELD_SSID)),
                         c.getString(c.getColumnIndex(FIELD_CAPABILITIES))));
             } while (c.moveToNext());
+
+            c.close();
         }
 
         return list;
@@ -113,6 +91,8 @@ public class DataBaseManager extends SQLiteOpenHelper {
                         c.getDouble(c.getColumnIndex(FIELD_LONG)),
                         c.getDouble(c.getColumnIndex(FIELD_RADIUS)));
             } while (c.moveToNext());
+
+            c.close();
         }
 
         return map;
@@ -181,6 +161,8 @@ public class DataBaseManager extends SQLiteOpenHelper {
                     c.getDouble(c.getColumnIndex(FIELD_LAT)),
                     c.getDouble(c.getColumnIndex(FIELD_LONG)),
                     c.getDouble(c.getColumnIndex(FIELD_RADIUS)));
+
+            c.close();
         }
 
         return dataBaseElement;
@@ -207,13 +189,5 @@ public class DataBaseManager extends SQLiteOpenHelper {
         contentValues.put(FIELD_CAPABILITIES, wifiElement.getCapabilities());
 
         return db.update(TABLE_WIFI, contentValues, FIELD_BSSID + " = ?", new String[]{wifiElement.getBSSID()});
-    }
-
-    public void closeDB() {
-        SQLiteDatabase db = this.getReadableDatabase();
-
-        if(db != null && db.isOpen()) {
-            db.close();
-        }
     }
 }

@@ -32,11 +32,10 @@ public class SnackBarUndoMain implements View.OnClickListener, SnackBarShowUndo 
         this.view = view;
 
         dataBaseElement = dataBaseHandler.toggleSave(wifiElement);
-
         adapter.notifyDataSetChanged();
 
         if(dataBaseElement == null) {
-            Snackbar.make(view, R.string.new_wifi_element, Snackbar.LENGTH_SHORT).show();
+            Snackbar.make(view, R.string.saved_wifi_element, Snackbar.LENGTH_SHORT).show();
         }
         else {
             Snackbar.make(view, R.string.removed_wifi_element, Snackbar.LENGTH_INDEFINITE).setAction(R.string.undo, this).show();

@@ -8,17 +8,16 @@ import com.federicobarocci.wifiexplorer.model.db.DataBaseHandler;
 import com.federicobarocci.wifiexplorer.model.db.sqlite.DataBaseManager;
 import com.federicobarocci.wifiexplorer.model.location.LocationHandler;
 import com.federicobarocci.wifiexplorer.model.wifi.WifiKeeper;
+import com.federicobarocci.wifiexplorer.model.wifi.container.WifiListContainer;
 import com.federicobarocci.wifiexplorer.model.wifi.container.strategy.CurrentWifiList;
 import com.federicobarocci.wifiexplorer.model.wifi.container.strategy.SessionWifiList;
-import com.federicobarocci.wifiexplorer.model.wifi.container.WifiListContainer;
 import com.federicobarocci.wifiexplorer.ui.adapter.FavouritesAdapter;
 import com.federicobarocci.wifiexplorer.ui.adapter.ScanResultAdapter;
 import com.federicobarocci.wifiexplorer.ui.adapter.controller.SnackBarUndoFavourites;
 import com.federicobarocci.wifiexplorer.ui.adapter.controller.SnackBarUndoMain;
+import com.federicobarocci.wifiexplorer.ui.presenter.DataSetExecutor;
+import com.federicobarocci.wifiexplorer.ui.presenter.DataSetHandler;
 import com.federicobarocci.wifiexplorer.ui.presenter.FilterDelegate;
-import com.federicobarocci.wifiexplorer.ui.presenter.ScanResultReceiver;
-import com.federicobarocci.wifiexplorer.ui.presenter.TaskExecutor;
-import com.federicobarocci.wifiexplorer.ui.presenter.WifiUtilDelegate;
 import com.federicobarocci.wifiexplorer.ui.util.ResourceProvider;
 
 import javax.inject.Singleton;
@@ -27,7 +26,7 @@ import dagger.Module;
 import dagger.Provides;
 
 /**
- * Created by federico on 20/10/15.
+ * Created by Federico
  */
 @Module
 public class DaggerModule {
@@ -105,12 +104,6 @@ public class DaggerModule {
 
     @Provides
     @Singleton
-    WifiUtilDelegate provideWifiUtilDelegate(WifiManager wifiManager, WifiKeeper wifiKeeper, ScanResultAdapter adapter) {
-        return new WifiUtilDelegate(wifiManager, wifiKeeper, adapter);
-    }
-
-    @Provides
-    @Singleton
     ResourceProvider provideResourceProvider(WifiKeeper wifiKeeper, DataBaseHandler dataBaseHandler) {
         return new ResourceProvider(wifiKeeper, dataBaseHandler);
     }
@@ -129,19 +122,19 @@ public class DaggerModule {
 
     @Provides
     @Singleton
-    ScanResultReceiver provideScanResultReceiver(WifiKeeper wifiKeeper, DataBaseHandler dataBaseHandler, LocationHandler locationHandler, WifiManager wifiManager, ScanResultAdapter scanResultAdapter, FavouritesAdapter favouritesAdapter) {
-        return new ScanResultReceiver(wifiKeeper, dataBaseHandler, locationHandler, wifiManager, scanResultAdapter, favouritesAdapter);
+    FilterDelegate provideFilterDelegate(WifiKeeper wifiKeeper, ScanResultAdapter scanResultAdapter) {
+        return new FilterDelegate(wifiKeeper, scanResultAdapter);
     }
 
     @Provides
     @Singleton
-    TaskExecutor provideTaskExecutor(Context context, WifiUtilDelegate wifiUtilDelegate, ScanResultReceiver scanResultReceiver) {
-        return new TaskExecutor(context, wifiUtilDelegate, scanResultReceiver);
+    DataSetExecutor provideDataSetExecutor(WifiKeeper wifiKeeper, DataBaseHandler dataBaseHandler, LocationHandler locationHandler, WifiManager wifiManager) {
+        return new DataSetExecutor(wifiKeeper, dataBaseHandler, locationHandler, wifiManager);
     }
 
     @Provides
     @Singleton
-    FilterDelegate provideFilterDelegate(WifiUtilDelegate wifiUtilDelegate) {
-        return new FilterDelegate(wifiUtilDelegate);
+    DataSetHandler provideDataSetHandler(DataSetExecutor dataSetExecutor, FavouritesAdapter favouritesAdapter, ScanResultAdapter scanResultAdapter) {
+        return new DataSetHandler(dataSetExecutor, favouritesAdapter, scanResultAdapter);
     }
 }

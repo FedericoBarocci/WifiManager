@@ -6,10 +6,11 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * Created by federico on 25/11/15.
+ * Created by Federico
  */
 public class WifiListIterator implements Iterator<WifiElement> {
     private final WifiList wifiList;
+
     private int cursor;
 
     public WifiListIterator(WifiList wifiList) {

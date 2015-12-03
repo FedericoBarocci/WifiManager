@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.Toast;
 
 import com.federicobarocci.wifiexplorer.R;
 import com.federicobarocci.wifiexplorer.WifiExplorerApplication;
@@ -35,7 +34,7 @@ import butterknife.Bind;
 import butterknife.ButterKnife;
 
 /**
- * Created by federico on 05/11/15.
+ * Created by Federico
  */
 public class MapActivity extends AppCompatActivity implements
         OnMapReadyCallback, WifiLocationDialog.WifiLocationDialogListener,
@@ -47,9 +46,6 @@ public class MapActivity extends AppCompatActivity implements
 
     @Bind(R.id.toolbar)
     Toolbar toolbar;
-
-    /*Bind(R.id.nav_view)
-    NavigationView navigationView;*/
 
     @Inject
     WifiKeeper wifiKeeper;
@@ -79,23 +75,16 @@ public class MapActivity extends AppCompatActivity implements
 
     private void initializeViewComponents() {
         setSupportActionBar(toolbar);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar().setTitle(R.string.activity_map_title);
-        //navigationView.setNavigationItemSelectedListener(this);
 
         final ActionBar ab = getSupportActionBar();
-        ab.setDisplayHomeAsUpEnabled(true);
+        if (ab != null) {
+            ab.setDisplayHomeAsUpEnabled(true);
+            ab.setTitle(R.string.activity_map_title);
+            ab.setDisplayHomeAsUpEnabled(true);
+        }
 
         ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMapAsync(this);
-//        final SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
-//        mapFragment.getMapAsync(this);
     }
-
-   /* @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.toolbar_actions, menu);
-        return true;
-    }*/
 
     @Override
     public void onMapReady(GoogleMap map) {
@@ -164,8 +153,7 @@ public class MapActivity extends AppCompatActivity implements
         map.clear();
         map.setMyLocationEnabled(true);
 
-        LatLng currentLatLng = locationHandler.getCurrentLatLng();
-
+        final LatLng currentLatLng = locationHandler.getCurrentLatLng();
         if (currentLatLng != null) {
             final CameraUpdate locationCamera = CameraUpdateFactory.newLatLngZoom(currentLatLng, ZOOM_LEVEL);
             map.animateCamera(locationCamera);
@@ -174,21 +162,21 @@ public class MapActivity extends AppCompatActivity implements
         for(WifiElement wifiElement : wifiList) {
             LocationKeeper locationKeeper = locationHandler.get(wifiElement.getBSSID());
 
-            if (locationKeeper != null) {
-                LatLng center = locationKeeper.getCenter().getLocation();
-                map.addMarker(new MarkerOptions()
-                        .position(center)
-                        .title(wifiElement.getSSID()));
+            if (locationKeeper == null)
+                continue;
 
-                CircleOptions options = new CircleOptions();
-                options.center(center);
-                options.radius(locationKeeper.getCenter().getRadius());
-                options.fillColor(wifiElement.getLightColor());
-                options.strokeColor(wifiElement.getBoldColor());
-                options.strokeWidth(5);
+            LatLng center = locationKeeper.getCenter().getLocation();
 
-                map.addCircle(options);
-            }
+            map.addMarker(new MarkerOptions().position(center).title(wifiElement.getSSID()));
+
+            CircleOptions options = new CircleOptions();
+            options.center(center);
+            options.radius(locationKeeper.getCenter().getRadius());
+            options.fillColor(wifiElement.getLightColor());
+            options.strokeColor(wifiElement.getBoldColor());
+            options.strokeWidth(5);
+
+            map.addCircle(options);
         }
     }
 }

@@ -1,8 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <style name="Theme.WifiExplorer" parent="Base.Theme.WifiExplorer">
-    </style>
+    <style name="Theme.WifiExplorer" parent="Base.Theme.WifiExplorer"></style>
 
     <style name="Base.Theme.WifiExplorer" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/brand_primary</item>

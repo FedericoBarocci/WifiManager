@@ -11,7 +11,7 @@ import java.util.List;
 import javax.inject.Inject;
 
 /**
- * Created by federico on 07/11/15.
+ * Created by Federico
  */
 public class DetailResultAdapter extends FragmentPagerAdapter {
     private List<Pair<String, Fragment>> fragments = new ArrayList<>();

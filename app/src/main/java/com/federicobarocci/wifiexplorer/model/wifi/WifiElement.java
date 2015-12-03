@@ -8,7 +8,7 @@ import android.os.Parcelable;
 import com.federicobarocci.wifiexplorer.ui.util.WifiColorGMap;
 
 /**
- * Created by federico on 11/11/15.
+ * Created by Federico
  */
 public class WifiElement implements Parcelable {
     public static final int RSSI_LEVEL = 4;
@@ -29,9 +29,8 @@ public class WifiElement implements Parcelable {
         this.lineOfSight = false;
     }
 
-    /* Constructors */
-    public WifiElement(String bbsid, String ssid, String capabilities, int frequency, int level) {
-        this.bssid = bbsid;
+    public WifiElement(String bssid, String ssid, String capabilities, int frequency, int level) {
+        this.bssid = bssid;
         this.ssid = ssid;
         this.capabilities = capabilities;
         this.frequency = frequency;
@@ -52,7 +51,6 @@ public class WifiElement implements Parcelable {
         lineOfSight = false;
     }
 
-    /* Standard Getters */
     public String getBSSID() {
         return bssid;
     }
@@ -65,9 +63,6 @@ public class WifiElement implements Parcelable {
         return capabilities;
     }
 
-//    public int getFrequency() {
-//        return frequency;
-//    }
 
     public boolean isLineOfSight() {
         return lineOfSight;
@@ -95,27 +90,6 @@ public class WifiElement implements Parcelable {
         return lineOfSight ? String.format("%f m", calculateDistance()) : UNKNOWN;
     }
 
-    /* Standard Setters */
-    /*public void setCapabilities(String capabilities) {
-        this.capabilities = capabilities;
-    }
-
-    public void setSsid(String ssid) {
-        this.ssid = ssid;
-    }
-
-    public void setFrequency(int frequency) {
-        this.frequency = frequency;
-    }
-
-    public void setLevel(int level) {
-        this.level = level;
-    }
-    public CharSequence getInfo() {
-        return String.format("%s   %d dBm %d/%d", getCapabilities(), getdBm(), getSignalLevel(), RSSI_LEVEL);
-    }*/
-
-    /* Convenience Getters */
     public int getSignalLevel() {
         return WifiManager.calculateSignalLevel(level, RSSI_LEVEL);
     }
@@ -125,8 +99,8 @@ public class WifiElement implements Parcelable {
     }
 
     private double calculateDistance(double levelInDb, double freqInMHz) {
-        /*27.55*/
-        double exp = (10 - (20 * Math.log10(freqInMHz)) + Math.abs(levelInDb)) / 20.0;
+        final double const_FSPL = 10.0; /*27.55*/
+        double exp = (const_FSPL - (20 * Math.log10(freqInMHz)) + Math.abs(levelInDb)) / 20.0;
         return Math.pow(10.0, exp);
     }
 
@@ -167,7 +141,6 @@ public class WifiElement implements Parcelable {
         dest.writeByte((byte) (lineOfSight ? 1 : 0));
     }
 
-    @SuppressWarnings("unused")
     public static final Parcelable.Creator<WifiElement> CREATOR = new Parcelable.Creator<WifiElement>() {
         @Override
         public WifiElement createFromParcel(Parcel in) {

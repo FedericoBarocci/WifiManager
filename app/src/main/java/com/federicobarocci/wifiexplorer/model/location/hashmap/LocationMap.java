@@ -2,13 +2,12 @@ package com.federicobarocci.wifiexplorer.model.location.hashmap;
 
 import com.federicobarocci.wifiexplorer.model.location.LocationElement;
 import com.federicobarocci.wifiexplorer.model.location.LocationKeeper;
-import com.federicobarocci.wifiexplorer.model.wifi.WifiElement;
 import com.google.android.gms.maps.model.LatLng;
 
 import java.util.HashMap;
 
 /**
- * Created by federico on 25/11/15.
+ * Created by Federico
  */
 public class LocationMap extends HashMap<String, LocationKeeper> {
 
@@ -19,11 +18,9 @@ public class LocationMap extends HashMap<String, LocationKeeper> {
     public void insert(String bssid, LocationElement locationElement) {
         final LocationKeeper locationKeeper = get(bssid);
 
-        if (locationKeeper == null) {
+        if (locationKeeper == null)
             put(bssid, new LocationKeeper(locationElement));
-        } else {
+        else
             locationKeeper.addNear(locationElement);
-        }
-
     }
 }

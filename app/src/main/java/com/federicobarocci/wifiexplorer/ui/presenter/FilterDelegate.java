@@ -1,59 +1,80 @@
 package com.federicobarocci.wifiexplorer.ui.presenter;
 
+import com.federicobarocci.wifiexplorer.model.wifi.WifiKeeper;
 import com.federicobarocci.wifiexplorer.model.wifi.WifiShowMethods;
 import com.federicobarocci.wifiexplorer.model.wifi.container.WifiListEnum;
+import com.federicobarocci.wifiexplorer.ui.adapter.ScanResultAdapter;
 
 import javax.inject.Inject;
 
 /**
- * Created by federico on 01/12/15.
+ * Created by Federico
  */
 public class FilterDelegate {
-
-    private final WifiUtilDelegate wifiUtilDelegate;
+    private final WifiKeeper wifiKeeper;
+    private final ScanResultAdapter scanResultAdapter;
 
     @Inject
-    public FilterDelegate(WifiUtilDelegate wifiUtilDelegate) {
-        this.wifiUtilDelegate = wifiUtilDelegate;
+    public FilterDelegate(WifiKeeper wifiKeeper, ScanResultAdapter scanResultAdapter) {
+        this.wifiKeeper = wifiKeeper;
+        this.scanResultAdapter = scanResultAdapter;
     }
 
     public void showAllNetworks() {
-        wifiUtilDelegate.setWifiShowEnum(WifiShowMethods.ALL_NETWORK);
+        setWifiShowEnum(WifiShowMethods.ALL_NETWORK);
     }
 
     public void showOnlyOpenNetworks() {
-        wifiUtilDelegate.setWifiShowEnum(WifiShowMethods.OPEN_NETWORK);
+        setWifiShowEnum(WifiShowMethods.OPEN_NETWORK);
     }
 
     public void showOnlyClosedNetworks() {
-        wifiUtilDelegate.setWifiShowEnum(WifiShowMethods.CLOSED_NETWORK);
+        setWifiShowEnum(WifiShowMethods.CLOSED_NETWORK);
     }
 
     public void showNearbyWifiList() {
-        wifiUtilDelegate.setWifiListEnum(WifiListEnum.NEAR);
+        setWifiListEnum(WifiListEnum.NEAR);
     }
 
     public void showSessionWifiList() {
-        wifiUtilDelegate.setWifiListEnum(WifiListEnum.SESSION);
+        setWifiListEnum(WifiListEnum.SESSION);
     }
 
     public boolean isNearSelected() {
-        return wifiUtilDelegate.getShowSelectionEnum() == WifiListEnum.NEAR;
+        return getShowSelectionEnum() == WifiListEnum.NEAR;
     }
 
     public boolean isSessionSelected() {
-        return wifiUtilDelegate.getShowSelectionEnum() == WifiListEnum.SESSION;
+        return getShowSelectionEnum() == WifiListEnum.SESSION;
     }
 
     public boolean isFilterAllSelected() {
-        return wifiUtilDelegate.getFilterSelection() == WifiShowMethods.ALL_NETWORK;
+        return getFilterSelection() == WifiShowMethods.ALL_NETWORK;
     }
 
     public boolean isFilterOpenSelected() {
-        return wifiUtilDelegate.getFilterSelection() == WifiShowMethods.OPEN_NETWORK;
+        return getFilterSelection() == WifiShowMethods.OPEN_NETWORK;
     }
 
     public boolean isFilterClosedSelected() {
-        return wifiUtilDelegate.getFilterSelection() == WifiShowMethods.CLOSED_NETWORK;
+        return getFilterSelection() == WifiShowMethods.CLOSED_NETWORK;
+    }
+
+    private void setWifiShowEnum(WifiShowMethods wifiShowMethods) {
+        wifiKeeper.setWifiShowMethods(wifiShowMethods);
+        scanResultAdapter.notifyDataSetChanged();
+    }
+
+    private void setWifiListEnum(WifiListEnum wifiListEnum) {
+        wifiKeeper.setWifiListEnum(wifiListEnum);
+        scanResultAdapter.notifyDataSetChanged();
+    }
+
+    private WifiListEnum getShowSelectionEnum() {
+        return wifiKeeper.getWifiListEnum();
+    }
+
+    private WifiShowMethods getFilterSelection() {
+        return wifiKeeper.getWifiShowMethodsEnum();
     }
 }

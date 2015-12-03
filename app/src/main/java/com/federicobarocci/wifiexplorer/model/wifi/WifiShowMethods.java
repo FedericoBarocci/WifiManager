@@ -3,7 +3,7 @@ package com.federicobarocci.wifiexplorer.model.wifi;
 import com.federicobarocci.wifiexplorer.model.wifi.container.strategy.sortedlist.WifiList;
 
 /**
- * Created by federico on 24/11/15.
+ * Created by Federico
  */
 public enum WifiShowMethods {
     OPEN_NETWORK {

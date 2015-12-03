@@ -24,7 +24,7 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 
 /**
- * Created by federico on 29/10/15.
+ * Created by Federico
  */
 public class ScanResultAdapter extends RecyclerView.Adapter<ScanResultAdapter.ViewHolder> {
     private final WifiKeeper wifiKeeper;

@@ -3,7 +3,7 @@ package com.federicobarocci.wifiexplorer.ui.util;
 import com.federicobarocci.wifiexplorer.R;
 
 /**
- * Created by federico on 12/11/15.
+ * Created by Federico
  */
 public enum WifiImageEnum {
     LEVEL_0 {

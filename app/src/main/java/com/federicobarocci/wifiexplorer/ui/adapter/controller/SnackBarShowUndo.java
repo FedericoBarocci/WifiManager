@@ -6,7 +6,7 @@ import android.view.View;
 import com.federicobarocci.wifiexplorer.model.wifi.WifiElement;
 
 /**
- * Created by federico on 16/11/15.
+ * Created by Federico
  */
 public interface SnackBarShowUndo {
     void showUndo(RecyclerView.Adapter adapter, View view, WifiElement wifiElement);

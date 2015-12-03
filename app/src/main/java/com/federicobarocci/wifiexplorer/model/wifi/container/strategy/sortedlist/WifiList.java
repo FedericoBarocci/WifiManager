@@ -8,7 +8,7 @@ import com.federicobarocci.wifiexplorer.model.wifi.WifiShowMethods;
 import java.util.Iterator;
 
 /**
- * Created by federico on 25/11/15.
+ * Created by Federico
  */
 public class WifiList extends SortedList<WifiElement> implements Iterable<WifiElement> {
 

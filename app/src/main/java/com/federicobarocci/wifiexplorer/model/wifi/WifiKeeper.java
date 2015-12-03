@@ -1,28 +1,25 @@
 package com.federicobarocci.wifiexplorer.model.wifi;
 
-import com.federicobarocci.wifiexplorer.model.location.LocationHandler;
+import com.federicobarocci.wifiexplorer.model.wifi.container.WifiListContainer;
 import com.federicobarocci.wifiexplorer.model.wifi.container.WifiListEnum;
 import com.federicobarocci.wifiexplorer.model.wifi.container.strategy.sortedlist.WifiList;
-import com.federicobarocci.wifiexplorer.model.wifi.container.WifiListContainer;
 
 import java.util.List;
 
 import javax.inject.Inject;
 
 /**
- * Created by federico on 03/11/15.
+ * Created by Federico
  */
 public class WifiKeeper {
     private final WifiListContainer wifiListContainer;
-//    private final LocationHandler locationHandler;
 
     private WifiShowMethods wifiShowMethods = WifiShowMethods.ALL_NETWORK;
     private WifiListEnum currentWifiList = WifiListEnum.NEAR;
 
     @Inject
-    public WifiKeeper(WifiListContainer wifiListContainer/*, LocationHandler locationHandler*/) {
+    public WifiKeeper(WifiListContainer wifiListContainer) {
         this.wifiListContainer = wifiListContainer;
-//        this.locationHandler = locationHandler;
     }
 
     public void clear() {
@@ -30,14 +27,6 @@ public class WifiKeeper {
     }
 
     public void populate(List<WifiElement> wifiElementList) {
-//        //List<WifiElement> list = new ArrayList<>(scanResults.size());
-//
-//        for (WifiElement wifiElement : wifiElementList) {
-//            //WifiElement wifiElement = new WifiElement(scanResult);
-//            //list.add(wifiElement);
-//            locationHandler.store(wifiElement);
-//        }
-
         wifiListContainer.populate(wifiElementList);
     }
 
@@ -51,14 +40,6 @@ public class WifiKeeper {
 
     public WifiList getFilteredList() {
         return wifiListContainer.getList(currentWifiList).filter(wifiShowMethods);
-    }
-
-    public boolean contains(String bssid) {
-        return wifiListContainer.getList(currentWifiList).getKey(bssid) != null;
-    }
-
-    public WifiElement getElement(String bssid) {
-        return wifiListContainer.getList(currentWifiList).getKey(bssid);
     }
 
     public void setWifiShowMethods(WifiShowMethods wifiShowMethods) {
@@ -81,17 +62,7 @@ public class WifiKeeper {
         return wifiListContainer.getList(WifiListEnum.SESSION).getKey(bssid);
     }
 
-    /*private boolean addUpdate(String key, ScanResult scanResult) {
-        for(int i = 0; i < wifiList.size(); i++) {
-            Pair<String, WifiElement> pair = wifiList.get(i);
-
-            if(pair.first.equals(key)) {
-                wifiList.set(i, new Pair<>(scanResult.BSSID, new WifiElement(scanResult)));
-
-                return true;
-            }
-        }
-
-        return false;
-    }*/
+    public boolean contains(String bssid) {
+        return getUnfilteredElement(bssid) != null;
+    }
 }
