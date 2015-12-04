@@ -15,7 +15,7 @@ import com.federicobarocci.wifiexplorer.R;
 import com.federicobarocci.wifiexplorer.WifiExplorerApplication;
 import com.federicobarocci.wifiexplorer.model.location.LocationKeeper;
 import com.federicobarocci.wifiexplorer.model.wifi.WifiElement;
-import com.federicobarocci.wifiexplorer.ui.presenter.DataBaseAction;
+import com.federicobarocci.wifiexplorer.ui.util.DataBaseAction;
 import com.federicobarocci.wifiexplorer.ui.presenter.DataSetHandler;
 
 import javax.inject.Inject;

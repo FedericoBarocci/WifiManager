@@ -3,6 +3,7 @@ package com.federicobarocci.wifiexplorer.ui.presenter;
 import com.federicobarocci.wifiexplorer.model.wifi.WifiElement;
 import com.federicobarocci.wifiexplorer.ui.adapter.FavouritesAdapter;
 import com.federicobarocci.wifiexplorer.ui.adapter.ScanResultAdapter;
+import com.federicobarocci.wifiexplorer.ui.util.DataBaseAction;
 
 import javax.inject.Inject;
 

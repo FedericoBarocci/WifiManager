@@ -1,4 +1,4 @@
-package com.federicobarocci.wifiexplorer.ui.presenter;
+package com.federicobarocci.wifiexplorer.ui.util;
 
 import com.federicobarocci.wifiexplorer.R;
 

@@ -33,24 +33,38 @@ public class LocationKeeper implements Parcelable {
         nearList.add(near);
 
         if (nearList.size() > NUM_NEAR) {
-            removeMaxRadius();
+            removeSmallestArea();
+            //removeMaxRadius();
         }
 
         computeCenter();
     }
 
-    private void removeMaxRadius() {
-        double maxRadius = 0;
-        int indexMaxRadius = 0;
+    private void removeSmallestArea() {
+        double a[] = new double[4];
+        a[0] = SphericalUtil.computeArea(testList(1,2,3)); //remove 0
+        a[1] = SphericalUtil.computeArea(testList(0,2,3)); //remove 1
+        a[2] = SphericalUtil.computeArea(testList(0,1,3)); //remove 2
+        a[3] = SphericalUtil.computeArea(testList(0,1,2)); //remove 3
 
-        for (int i = 0; i < nearList.size(); i++) {
-            if (nearList.get(i).getRadius() > maxRadius) {
-                maxRadius = nearList.get(i).getRadius();
-                indexMaxRadius = i;
+        int minIndex = 0;
+        double minValue = a[0];
+        for (int i = 1; i < 4; i++) {
+            if (a[i] < minValue) {
+                minIndex = i;
+                minValue = a[i];
             }
         }
 
-        nearList.remove(indexMaxRadius);
+        nearList.remove(minIndex);
+    }
+
+    private List<LatLng> testList(int a, int b, int c) {
+        List<LatLng> list = new ArrayList<>(NUM_NEAR);
+        list.add(nearList.get(a).getLocation());
+        list.add(nearList.get(b).getLocation());
+        list.add(nearList.get(c).getLocation());
+        return list;
     }
 
     private void computeCenter() {
@@ -77,13 +91,13 @@ public class LocationKeeper implements Parcelable {
     private void computeCenter(LocationElement a, LocationElement b) {
         center.setLocation(SphericalUtil.interpolate(a.getLocation(), b.getLocation(), 0.5));
         computeFar();
-        center.setRadius(getMaxRadius()); /*SphericalUtil.computeDistanceBetween(center.getCurrentLatLng(), far.getCurrentLatLng()));*/
+        center.setRadius(getMaxRadius());
     }
 
     private void computeCenter(LocationElement a, LocationElement b, LocationElement c) {
         center.setLocation(avgLocation(a.getLocation(), b.getLocation(), c.getLocation()));
         computeFar();
-        center.setRadius(getMaxRadius()); /*SphericalUtil.computeDistanceBetween(center.getCurrentLatLng(), far.getCurrentLatLng()));*/
+        center.setRadius(getMaxRadius());
     }
 
     private LatLng avgLocation(LatLng a, LatLng b, LatLng c) {
