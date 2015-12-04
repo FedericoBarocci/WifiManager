@@ -29,7 +29,7 @@ public class WifiList extends SortedList<WifiElement> implements Iterable<WifiEl
     }
 
     public boolean contains(WifiElement wifiElement) {
-        return indexOf(wifiElement) != INVALID_POSITION;
+        return indexOfKey(wifiElement) != INVALID_POSITION;
     }
 
     public boolean addUpdate(WifiElement wifiElement, boolean insertIfMissing) {
@@ -58,7 +58,7 @@ public class WifiList extends SortedList<WifiElement> implements Iterable<WifiEl
         return INVALID_POSITION;
     }
 
-    public WifiElement getKey(String bssid) {
+    public WifiElement getByKey(String bssid) {
         for(WifiElement wifiElement : this) {
             if (wifiElement.getBSSID().equals(bssid)) {
                 return wifiElement;
@@ -66,6 +66,18 @@ public class WifiList extends SortedList<WifiElement> implements Iterable<WifiEl
         }
 
         return null;
+    }
+
+    @Override
+    public boolean remove(WifiElement wifiElement) {
+        int key = indexOfKey(wifiElement);
+
+        if (key == INVALID_POSITION) {
+            return false;
+        }
+
+        removeItemAt(key);
+        return true;
     }
 
     @Override

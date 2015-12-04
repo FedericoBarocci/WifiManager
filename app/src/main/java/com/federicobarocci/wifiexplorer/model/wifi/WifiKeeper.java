@@ -59,7 +59,7 @@ public class WifiKeeper {
     }
 
     public WifiElement getUnfilteredElement(String bssid) {
-        return wifiListContainer.getList(WifiListEnum.SESSION).getKey(bssid);
+        return wifiListContainer.getList(WifiListEnum.SESSION).getByKey(bssid);
     }
 
     public boolean contains(String bssid) {

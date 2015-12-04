@@ -27,8 +27,14 @@ public class DataSetHandler {
         scanResultAdapter.notifyDataSetChanged();
     }
 
-    public boolean isFavourite(WifiElement wifiElement) {
-        return dataSetExecutor.isFavourite(wifiElement);
+//    public boolean isFavourite(WifiElement wifiElement) {
+//        return dataSetExecutor.isSaved(wifiElement);
+//    }
+
+    public DataBaseAction getDataBaseAction(WifiElement wifiElement) {
+        return dataSetExecutor.isSaved(wifiElement)
+                ? DataBaseAction.IS_PRESENT
+                : DataBaseAction.NOT_PRESENT;
     }
 
     public void toggleSave(WifiElement wifiElement) {

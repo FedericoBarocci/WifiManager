@@ -247,7 +247,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="end|bottom"
             android:layout_margin="@dimen/fab_margin"
-            android:src="@drawable/ic_perm_scan_wifi_white_24dp" />
+            android:src="@drawable/ic_grade_white_24dp" />
 
     </LinearLayout>
 

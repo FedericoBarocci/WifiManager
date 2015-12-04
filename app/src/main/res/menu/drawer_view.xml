@@ -4,23 +4,23 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/navigation_refresh"
-            android:icon="@drawable/ic_dashboard"
+            android:icon="@drawable/ic_autorenew_black_24dp"
             android:title="@string/navigation_refresh" />
         <item
             android:id="@+id/navigation_near_wifi_list"
-            android:icon="@drawable/ic_event"
+            android:icon="@drawable/ic_near_me_black_24dp"
             android:title="@string/navigation_near_wifi_list" />
         <item
             android:id="@+id/navigation_session_wifi_list"
-            android:icon="@drawable/ic_event"
+            android:icon="@drawable/ic_history_black_24dp"
             android:title="@string/navigation_session_wifi_list" />
         <item
             android:id="@+id/navigation_favourites"
-            android:icon="@drawable/ic_event"
+            android:icon="@drawable/ic_grade_black_24dp"
             android:title="@string/navigation_favourites" />
         <item
             android:id="@+id/navigation_map"
-            android:icon="@drawable/ic_headset"
+            android:icon="@drawable/ic_place_black_24dp"
             android:title="@string/navigation_map" />
     </group>
 
@@ -28,15 +28,15 @@
         <menu>
             <item
                 android:id="@+id/navigation_filter_all_networks"
-                android:icon="@drawable/ic_forum"
+                android:icon="@drawable/ic_wifi_black_24dp"
                 android:title="@string/navigation_filter_all_networks" />
             <item
                 android:id="@+id/navigation_filter_open_networks"
-                android:icon="@drawable/ic_dashboard"
+                android:icon="@drawable/ic_lock_open_black_24dp"
                 android:title="@string/navigation_filter_open_networks" />
             <item
                 android:id="@+id/navigation_filter_closed_networks"
-                android:icon="@drawable/ic_forum"
+                android:icon="@drawable/ic_lock_black_24dp"
                 android:title="@string/navigation_filter_closed_networks" />
         </menu>
     </item>

@@ -43,7 +43,7 @@ public class DataSetExecutor {
         locationHandler.populate(wifiElementList);
     }
 
-    public boolean isFavourite(WifiElement wifiElement) {
+    public boolean isSaved(WifiElement wifiElement) {
         return dataBaseHandler.contains(wifiElement);
     }
 

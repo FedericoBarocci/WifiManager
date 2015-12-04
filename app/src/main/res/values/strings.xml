@@ -2,7 +2,7 @@
 <resources>
     <string name="app_name">Wifi Explorer</string>
 
-    <string name="notify.scan">Scan wifi network…</string>
+    <string name="notify.scan">Scan wifi networks…</string>
     <string name="notify.enable_scan">Turning on wifi…</string>
     <string name="notify.scan.success">Wifi scan results available</string>
 
@@ -31,13 +31,13 @@
 
     <string name="navigation_refresh">Refresh scan results</string>
     <string name="navigation_near_wifi_list">Nearby networks</string>
-    <string name="navigation_session_wifi_list">All discovered networks</string>
+    <string name="navigation_session_wifi_list">Session discovered networks</string>
     <string name="navigation_favourites">Favourites</string>
     <string name="navigation_map">Map locations</string>
     <string name="navigation_filters">Filter results</string>
     <string name="navigation_filter_all_networks">All networks</string>
     <string name="navigation_filter_open_networks">Only open networks</string>
-    <string name="navigation_filter_closed_networks">Only closed networks</string>
+    <string name="navigation_filter_closed_networks">Only secure networks</string>
 
     <string name="gps_auth_message">GPS is required for this application but seems to be disabled, do you want to enable it?</string>
     <string name="map_filter_location">Filter by location</string>
@@ -45,6 +45,7 @@
     <string name="dialog_location_title">Filter by location</string>
     <string name="dialog_secure_title">Filter by security</string>
 
-    <string name="ask_remove_favourite">Do you want to remove this from favourites?</string>
-    <string name="ask_add_favourite">Do you want to add this to favourites?</string>
+    <string name="ask_remove_favourite">Remove this from favourites?</string>
+    <string name="ask_add_favourite">Add this to favourites?</string>
+    <string name="map_favourites">Map favourites</string>
 </resources>

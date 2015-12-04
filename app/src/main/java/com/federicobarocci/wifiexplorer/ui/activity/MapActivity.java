@@ -40,9 +40,11 @@ public class MapActivity extends AppCompatActivity implements
         OnMapReadyCallback, WifiLocationDialog.WifiLocationDialogListener,
         WifiSecureDialog.WifiSecureDialogListener {
 
+    public static final String EXTRA_WIFI_FAVOURITES = "wifi_list";
     private static final int ZOOM_LEVEL = 19;
 
     private GoogleMap map;
+    private boolean favouritesMap;
 
     @Bind(R.id.toolbar)
     Toolbar toolbar;
@@ -80,16 +82,20 @@ public class MapActivity extends AppCompatActivity implements
         if (ab != null) {
             ab.setDisplayHomeAsUpEnabled(true);
             ab.setTitle(R.string.activity_map_title);
-            ab.setDisplayHomeAsUpEnabled(true);
         }
 
+        favouritesMap = getIntent().getBooleanExtra(EXTRA_WIFI_FAVOURITES, false);
         ((SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map)).getMapAsync(this);
     }
 
     @Override
     public void onMapReady(GoogleMap map) {
         this.map = map;
-        renderMap(map, wifiKeeper.getFilteredList());
+
+        if (favouritesMap)
+            renderMap(map, dataBaseHandler.getList());
+        else
+            renderMap(map, wifiKeeper.getFilteredList());
     }
 
     @Override
@@ -101,6 +107,10 @@ public class MapActivity extends AppCompatActivity implements
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+            case android.R.id.home:
+                finish();
+                return true;
+
             case R.id.map_filter_location:
                 DialogFragment wifiLocationDialog = new WifiLocationDialog();
                 wifiLocationDialog.show(getSupportFragmentManager(), "WifiLocationDialog");
