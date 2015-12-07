@@ -28,10 +28,6 @@ public class DataSetHandler {
         scanResultAdapter.notifyDataSetChanged();
     }
 
-//    public boolean isFavourite(WifiElement wifiElement) {
-//        return dataSetExecutor.isSaved(wifiElement);
-//    }
-
     public DataBaseAction getDataBaseAction(WifiElement wifiElement) {
         return dataSetExecutor.isSaved(wifiElement)
                 ? DataBaseAction.IS_PRESENT

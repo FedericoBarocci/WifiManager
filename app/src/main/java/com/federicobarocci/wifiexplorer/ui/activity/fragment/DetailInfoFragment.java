@@ -89,13 +89,7 @@ public class DetailInfoFragment extends Fragment implements FloatingActionButton
         View view = inflater.inflate(R.layout.fragment_detail, container, false);
         ButterKnife.bind(this, view);
 
-        /*if (dataSetHandler.isFavourite(wifiElement))
-            fabButton.setImageResource(R.drawable.ic_grade_black_24dp);
-        else
-            fabButton.setImageResource(R.drawable.ic_grade_white_24dp);*/
-
         fabButton.setImageResource(dataSetHandler.getDataBaseAction(wifiElement).getImage());
-
         fabButton.setOnClickListener(this);
 
         card1.setText(wifiElement.getSSID());
@@ -123,13 +117,7 @@ public class DetailInfoFragment extends Fragment implements FloatingActionButton
     @Override
     public void onClick(final View v) {
         final AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
-
         builder.setMessage(dataSetHandler.getDataBaseAction(wifiElement).getMessage());
-//        if (dataSetHandler.isFavourite(wifiElement))
-//            builder.setMessage(R.string.ask_remove_favourite);
-//        else
-//            builder.setMessage(R.string.ask_add_favourite);
-
         builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
             public void onClick(final DialogInterface dialog, final int id) {
                 dataSetHandler.toggleSave(wifiElement);
@@ -137,15 +125,6 @@ public class DetailInfoFragment extends Fragment implements FloatingActionButton
                 DataBaseAction dba = dataSetHandler.getDataBaseAction(wifiElement);
                 fabButton.setImageResource(dba.getImage());
                 Toast.makeText(v.getContext(), dba.getResultMessage(), Toast.LENGTH_SHORT).show();
-
-//                if (dataSetHandler.isFavourite(wifiElement)) {
-//                    fabButton.setImageResource(R.drawable.ic_grade_black_24dp);
-//                    Toast.makeText(v.getContext(), R.string.saved_wifi_element, Toast.LENGTH_SHORT).show();
-//                }
-//                else {
-//                    fabButton.setImageResource(R.drawable.ic_grade_white_24dp);
-//                    Toast.makeText(v.getContext(), R.string.removed_wifi_element, Toast.LENGTH_SHORT).show();
-//                }
             }
         });
 
@@ -154,7 +133,6 @@ public class DetailInfoFragment extends Fragment implements FloatingActionButton
                 dialog.cancel();
             }
         });
-
         builder.create().show();
     }
 }

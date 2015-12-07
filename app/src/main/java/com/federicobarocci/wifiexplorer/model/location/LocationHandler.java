@@ -69,7 +69,7 @@ public class LocationHandler {
         return locationMap.get(bssid);
     }
 
-    public boolean contain(String bssid) {
-        return locationMap.containsKey(bssid);
-    }
+    //public boolean contain(String bssid) {
+//        return locationMap.containsKey(bssid);
+//    }
 }
